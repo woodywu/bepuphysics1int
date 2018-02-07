@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using BEPUutilities;
 using BEPUutilities.DataStructures;
+using FixMath.NET;
 
 namespace BEPUik
 {
@@ -35,14 +36,14 @@ namespace BEPUik
         internal Vector3 linearVelocity;
 
 
-        internal float inverseMass;
+        internal Fix64 inverseMass;
 
         /// <summary>
         /// Gets or sets the mass of the bone.
         /// High mass bones resist motion more than those of small mass.
         /// Setting the mass updates the inertia tensor of the bone.
         /// </summary>
-        public float Mass
+        public Fix64 Mass
         {
             get { return 1 / inverseMass; }
             set
@@ -51,9 +52,9 @@ namespace BEPUik
                 //Attempting to invert them would result in NaNs.
                 //Clamp the lowest mass to 1e-7f.
                 if (value > Toolbox.Epsilon)
-                    inverseMass = 1f / value;
+                    inverseMass = 1 / value;
                 else
-                    inverseMass = 1e7f;
+                    inverseMass = (Fix64)1e7m;
                 ComputeLocalInertiaTensor();
             }
         }
@@ -64,7 +65,7 @@ namespace BEPUik
         /// <summary>
         /// An arbitrary scaling factor is applied to the inertia tensor. This tends to improve stability.
         /// </summary>
-        public static float InertiaTensorScaling = 2.5f;
+        public static Fix64 InertiaTensorScaling = (Fix64)2.5m;
 
         /// <summary>
         /// Gets the list of joints affecting this bone.
@@ -85,12 +86,12 @@ namespace BEPUik
         /// </summary>
         public bool IsActive { get; internal set; }
 
-        private float radius;
+        private Fix64 radius;
         /// <summary>
         /// Gets or sets the radius of the bone.
         /// Setting the radius changes the inertia tensor of the bone.
         /// </summary>
-        public float Radius
+        public Fix64 Radius
         {
             get
             { return radius; }
@@ -101,13 +102,13 @@ namespace BEPUik
             }
         }
 
-        private float halfHeight;
+        private Fix64 halfHeight;
         /// <summary>
         /// Gets or sets the height, divided by two, of the bone.
         /// The half height extends both ways from the center position of the bone.
         /// Setting the half height changes the inertia tensor of the bone.
         /// </summary>
-        public float HalfHeight
+        public Fix64 HalfHeight
         {
             get { return halfHeight; }
             set
@@ -121,7 +122,7 @@ namespace BEPUik
         /// Gets or sets the height of the bone.
         /// Setting the height changes the inertia tensor of the bone.
         /// </summary>
-        public float Height
+        public Fix64 Height
         {
             get { return halfHeight * 2; }
             set
@@ -139,7 +140,7 @@ namespace BEPUik
         /// <param name="radius">Radius of the bone.</param>
         /// <param name="height">Height of the bone.</param>
         /// <param name="mass">Mass of the bone.</param>
-        public Bone(Vector3 position, Quaternion orientation, float radius, float height, float mass)
+        public Bone(Vector3 position, Quaternion orientation, Fix64 radius, Fix64 height, Fix64 mass)
             :this(position, orientation, radius, height)
         {
             Mass = mass;
@@ -152,7 +153,7 @@ namespace BEPUik
         /// <param name="orientation">Initial orientation of the bone.</param>
         /// <param name="radius">Radius of the bone.</param>
         /// <param name="height">Height of the bone.</param>
-        public Bone(Vector3 position, Quaternion orientation, float radius, float height)
+        public Bone(Vector3 position, Quaternion orientation, Fix64 radius, Fix64 height)
         {
             Mass = 1;
             Position = position;
@@ -166,9 +167,9 @@ namespace BEPUik
         {
             var localInertiaTensor = new Matrix3x3();
             var multiplier = Mass * InertiaTensorScaling;
-            float diagValue = (.0833333333f * Height * Height + .25f * Radius * Radius) * multiplier;
+            Fix64 diagValue = (Fix64Utils.PointZeroEightThrees * Height * Height + Fix64Utils.PointTwoFive * Radius * Radius) * multiplier;
             localInertiaTensor.M11 = diagValue;
-            localInertiaTensor.M22 = .5f * Radius * Radius * multiplier;
+            localInertiaTensor.M22 = Fix64Utils.PointFive * Radius * Radius * multiplier;
             localInertiaTensor.M33 = diagValue;
             Matrix3x3.Invert(ref localInertiaTensor, out localInertiaTensorInverse);
         }
@@ -196,7 +197,7 @@ namespace BEPUik
 
             //Update the orientation based on the angular velocity.
             Vector3 increment;
-            Vector3.Multiply(ref angularVelocity, .5f, out increment);
+            Vector3.Multiply(ref angularVelocity, Fix64Utils.PointFive, out increment);
             var multiplier = new Quaternion(increment.X, increment.Y, increment.Z, 0);
             Quaternion.Multiply(ref multiplier, ref Orientation, out multiplier);
             Quaternion.Add(ref Orientation, ref multiplier, out Orientation);

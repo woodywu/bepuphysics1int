@@ -142,6 +142,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="FixMath.NET">
+      <HintPath>..\..\FixedMath.Net\src\bin\Release\FixMath.NET.dll</HintPath>
+    </Reference>
     <Reference Include="MonoGame.Framework, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Dependencies\MonoGame\Tools\MonoGame.Framework.dll</HintPath>

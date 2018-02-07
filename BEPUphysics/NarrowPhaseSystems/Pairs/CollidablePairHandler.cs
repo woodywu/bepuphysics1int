@@ -8,6 +8,7 @@ using BEPUphysics.CollisionTests;
 using System;
 using BEPUphysics.Constraints.SolverGroups;
 using BEPUphysics.Materials;
+using FixMath.NET;
 
 namespace BEPUphysics.NarrowPhaseSystems.Pairs
 {
@@ -56,13 +57,13 @@ namespace BEPUphysics.NarrowPhaseSystems.Pairs
         }
 
 
-        protected internal float timeOfImpact = 1;
+        protected internal Fix64 timeOfImpact = 1;
         ///<summary>
         /// Gets the last computed time of impact of the pair handler.
         /// This is only computed when one of the members is a continuously
         /// updated object.
         ///</summary>
-        public float TimeOfImpact
+        public Fix64 TimeOfImpact
         {
             get
             {
@@ -75,7 +76,7 @@ namespace BEPUphysics.NarrowPhaseSystems.Pairs
         ///</summary>
         ///<param name="requester">Collidable requesting the update.</param>
         ///<param name="dt">Timestep duration.</param>
-        public abstract void UpdateTimeOfImpact(Collidable requester, float dt);
+        public abstract void UpdateTimeOfImpact(Collidable requester, Fix64 dt);
 
 
         protected bool suppressEvents;

@@ -26,6 +26,8 @@
     <DocumentationFile>bin\Debug\BEPUutilities.XML</DocumentationFile>
     <Prefer32Bit>false</Prefer32Bit>
     <UseVSHostingProcess>true</UseVSHostingProcess>
+    <NoWarn>
+    </NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -107,6 +109,7 @@
     <Compile Include="DataStructures\QuickList.cs" />
     <Compile Include="DataStructures\QuickQueue.cs" />
     <Compile Include="DataStructures\QuickSet.cs" />
+    <Compile Include="Fix64Utils.cs" />
     <Compile Include="Int2.cs" />
     <Compile Include="PermutationMapper.cs" />
     <Compile Include="ResourceManagement\BufferPool.cs" />
@@ -154,6 +157,9 @@
     <Compile Include="Toolbox.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="FixMath.NET">
+      <HintPath>..\..\FixedMath.Net\src\bin\Release\FixMath.NET.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

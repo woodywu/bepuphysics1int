@@ -1,5 +1,6 @@
 ﻿using System;
 using BEPUutilities;
+using FixMath.NET;
 
 namespace BEPUik
 {
@@ -35,24 +36,24 @@ namespace BEPUik
             set { LocalAnchorB = Quaternion.Transform(value - ConnectionB.Position, Quaternion.Conjugate(ConnectionB.Orientation)); }
         }
 
-        private float minimumDistance;
+        private Fix64 minimumDistance;
         /// <summary>
         /// Gets or sets the minimum distance that the joint connections should be kept from each other.
         /// </summary>
-        public float MinimumDistance
+        public Fix64 MinimumDistance
         {
             get { return minimumDistance; }
-            set { minimumDistance = Math.Max(0, value); }
+            set { minimumDistance = MathHelper.Max(0, value); }
         }
 
-         private float maximumDistance;
+         private Fix64 maximumDistance;
         /// <summary>
         /// Gets or sets the maximum distance that the joint connections should be kept from each other.
         /// </summary>
-        public float MaximumDistance
+        public Fix64 MaximumDistance
         {
             get { return maximumDistance; }
-            set { maximumDistance = Math.Max(0, value); }
+            set { maximumDistance = MathHelper.Max(0, value); }
         }
 
         /// <summary>
@@ -64,7 +65,7 @@ namespace BEPUik
         /// <param name="anchorB">Anchor point on the second bone in world space.</param>
         /// <param name="minimumDistance">Minimum distance that the joint connections should be kept from each other.</param>
         /// <param name="maximumDistance">Maximum distance that the joint connections should be kept from each other.</param>
-        public IKDistanceLimit(Bone connectionA, Bone connectionB, Vector3 anchorA, Vector3 anchorB, float minimumDistance, float maximumDistance)
+        public IKDistanceLimit(Bone connectionA, Bone connectionB, Vector3 anchorA, Vector3 anchorB, Fix64 minimumDistance, Fix64 maximumDistance)
             : base(connectionA, connectionB)
         {
             AnchorA = anchorA;
@@ -86,7 +87,7 @@ namespace BEPUik
             //Compute the distance.
             Vector3 separation;
             Vector3.Subtract(ref anchorB, ref anchorA, out separation);
-            float currentDistance = separation.Length();
+            Fix64 currentDistance = separation.Length();
 
             //Compute jacobians
             Vector3 linearA;
@@ -111,7 +112,7 @@ namespace BEPUik
                     //The limit can only push in one direction. Flip the jacobian!
                     Vector3.Negate(ref linearA, out linearA);
                 }
-                else if (currentDistance - minimumDistance > (maximumDistance - minimumDistance) * 0.5f)
+                else if (currentDistance - minimumDistance > (maximumDistance - minimumDistance) * Fix64Utils.PointFive)
                 {
                     //The objects are closer to hitting the maximum limit.
                     velocityBias = new Vector3(currentDistance - maximumDistance, 0, 0);

@@ -2,6 +2,7 @@
 using BEPUphysics.Constraints.TwoEntity.JointLimits;
 using Microsoft.Xna.Framework;
 using ConversionHelper;
+using FixMath.NET;
 
 namespace BEPUphysicsDrawer.Lines
 {
@@ -42,20 +43,20 @@ namespace BEPUphysicsDrawer.Lines
         {
             //Move lines around
             axis.PositionA = MathConverter.Convert(LineObject.ConnectionB.Position);
-            axis.PositionB = MathConverter.Convert(LineObject.ConnectionB.Position + LineObject.TwistAxisB * 1.5f);
+            axis.PositionB = MathConverter.Convert(LineObject.ConnectionB.Position + LineObject.TwistAxisB * BEPUutilities.Fix64Utils.OnePointFive);
 
 
-            float angleIncrement = 4 * MathHelper.Pi / limitLines.Length; //Each loop iteration moves this many radians forward.
+			Fix64 angleIncrement = 4 * BEPUutilities.MathHelper.Pi / (Fix64)limitLines.Length; //Each loop iteration moves this many radians forward.
             for (int i = 0; i < limitLines.Length / 2; i++)
             {
                 Line pointToPreviousPoint = limitLines[2 * i];
                 Line centerToPoint = limitLines[2 * i + 1];
 
-                float currentAngle = i * angleIncrement;
+				Fix64 currentAngle = i * angleIncrement;
 
                 //Using the parametric equation for an ellipse, compute the axis of rotation and angle.
-                Vector3 rotationAxis = MathConverter.Convert(LineObject.Basis.XAxis * LineObject.MaximumAngleX * (float) Math.Cos(currentAngle) +
-                                                             LineObject.Basis.YAxis * LineObject.MaximumAngleY * (float) Math.Sin(currentAngle));
+                Vector3 rotationAxis = MathConverter.Convert(LineObject.Basis.XAxis * LineObject.MaximumAngleX * Fix64.Cos(currentAngle) +
+                                                             LineObject.Basis.YAxis * LineObject.MaximumAngleY * Fix64.Sin(currentAngle));
                 float angle = rotationAxis.Length();
                 rotationAxis /= angle;
 

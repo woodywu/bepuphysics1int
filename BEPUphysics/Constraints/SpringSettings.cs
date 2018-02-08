@@ -81,7 +81,7 @@ namespace BEPUphysics.Constraints
         public Fix64 Stiffness
         {
             get { return stiffness; }
-            set { stiffness = Fix64Utils.Max(0, value); }
+            set { stiffness = MathHelper.Max(0, value); }
         }
 
         /// <summary>

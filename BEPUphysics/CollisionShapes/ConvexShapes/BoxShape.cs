@@ -132,7 +132,7 @@ namespace BEPUphysics.CollisionShapes.ConvexShapes
             description.EntityShapeVolume.VolumeDistribution.M33 = (widthSquared + heightSquared) * inv12;
 
             description.MaximumRadius = Fix64Utils.PointFive * Fix64.Sqrt(width * width + height * height + length * length);
-            description.MinimumRadius = Fix64Utils.PointFive * Fix64Utils.Min(width, Fix64Utils.Min(height, length));
+            description.MinimumRadius = Fix64Utils.PointFive * MathHelper.Min(width, MathHelper.Min(height, length));
 
             description.CollisionMargin = collisionMargin;
             return description;
@@ -224,10 +224,10 @@ namespace BEPUphysics.CollisionShapes.ConvexShapes
                 tempNormal *= -1;
             }
             temp = tmin;
-            tmin = Fix64Utils.Max(tmin, t1);
+            tmin = MathHelper.Max(tmin, t1);
             if (temp != tmin)
                 normal = tempNormal;
-            tmax = Fix64Utils.Min(tmax, t2);
+            tmax = MathHelper.Min(tmax, t2);
             if (tmin > tmax)
                 return false;
             if (Fix64.Abs(localDirection.Y) < Toolbox.Epsilon && (localOrigin.Y < -halfHeight || localOrigin.Y > halfHeight))
@@ -244,10 +244,10 @@ namespace BEPUphysics.CollisionShapes.ConvexShapes
                 tempNormal *= -1;
             }
             temp = tmin;
-            tmin = Fix64Utils.Max(tmin, t1);
+            tmin = MathHelper.Max(tmin, t1);
             if (temp != tmin)
                 normal = tempNormal;
-            tmax = Fix64Utils.Min(tmax, t2);
+            tmax = MathHelper.Min(tmax, t2);
             if (tmin > tmax)
                 return false;
             if (Fix64.Abs(localDirection.Z) < Toolbox.Epsilon && (localOrigin.Z < -halfLength || localOrigin.Z > halfLength))
@@ -264,10 +264,10 @@ namespace BEPUphysics.CollisionShapes.ConvexShapes
                 tempNormal *= -1;
             }
             temp = tmin;
-            tmin = Fix64Utils.Max(tmin, t1);
+            tmin = MathHelper.Max(tmin, t1);
             if (temp != tmin)
                 normal = tempNormal;
-            tmax = Fix64Utils.Min(tmax, t2);
+            tmax = MathHelper.Min(tmax, t2);
             if (tmin > tmax)
                 return false;
             hit.T = tmin;

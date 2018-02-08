@@ -28,7 +28,7 @@ namespace BEPUutilities
         /// <summary>
         /// Represents an invalid Vector3.
         /// </summary>
-        public static readonly Vector3 NoVector = new Vector3(Fix64.MinValue, Fix64.MinValue, Fix64.MinValue);
+        public static readonly Vector3 NoVector = new Vector3(-Fix64.MaxValue, -Fix64.MaxValue, -Fix64.MaxValue);
 
         /// <summary>
         /// Reference for a vector with dimensions (0,0,1).

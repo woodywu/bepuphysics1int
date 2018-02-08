@@ -30,20 +30,33 @@ namespace BEPUutilities
 {
 	public static class Fix64Utils
 	{
+		public static readonly Fix64 PointNineNine = (Fix64).99m;
+		public static readonly Fix64 PointNine = (Fix64).9m;
 		public static readonly Fix64 OnePointFive = (Fix64)1.5m;
 		public static readonly Fix64 PointFive = (Fix64)0.5m;
 		public static readonly Fix64 PointOne = (Fix64)0.1m;
+		public static readonly Fix64 PointSevenFive = (Fix64)0.75m;
+		public static readonly Fix64 PointOneFive = (Fix64)0.15m;
+		public static readonly Fix64 PointZeroSixTwoFive = (Fix64)0.0625m;
+		public static readonly Fix64 OnePointOne = (Fix64)1.1m;
 		public static readonly Fix64 OneThird = Fix64.One / 3;
+		public static readonly Fix64 OneEighth = Fix64.One / 8;
 		public static readonly Fix64 FourThirds = new Fix64(4) / 3;
 		public static readonly Fix64 TwoFifths = new Fix64(2) / 5;
 		public static readonly Fix64 PointTwoFive = (Fix64)0.25m;
+		public static readonly Fix64 PointTwo = (Fix64)0.2m;
 		public static readonly Fix64 PointThree = (Fix64)0.3m;
+		public static readonly Fix64 PointEight = (Fix64)0.8m;
 		public static readonly Fix64 PointZeroOne = (Fix64)0.01m;
 		public static readonly Fix64 PointZeroZeroOne = (Fix64)0.001m;
 		public static readonly Fix64 EMinusFourteen = (Fix64)1e-14m;
 		public static readonly Fix64 EMinusNine = (Fix64)1e-9m;
+		public static readonly Fix64 EMinusSeven = (Fix64)1e-7m;
 		public static readonly Fix64 EMinusFive = (Fix64)1e-5m;
+		public static readonly Fix64 EMinusFour = (Fix64)1e-4m;
 		public static readonly Fix64 EMinusTen = (Fix64)1e-10m;
+		public static readonly Fix64 EEleven = (Fix64)1e11m;
+		public static readonly Fix64 MinusPointTwoFive = (Fix64)(-0.25m);
 		public static readonly Fix64 MinusEMinusNine = (Fix64)(-1e-9m);
 		public static readonly Fix64 MinusPointNineNineNineNine = (Fix64)(-0.9999m);
 		public static readonly Fix64 OneMinusEMinus12 = 1 - (Fix64)1e-12m;

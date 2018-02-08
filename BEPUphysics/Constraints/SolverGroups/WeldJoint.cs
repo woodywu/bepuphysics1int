@@ -32,7 +32,7 @@ namespace BEPUphysics.Constraints.SolverGroups
             if (connectionB != null)
                 anchor += connectionB.position;
             if (connectionA != null && connectionB != null)
-                anchor *= 0.5f;
+                anchor *= Fix64Utils.PointFive;
             return anchor;
         }
 

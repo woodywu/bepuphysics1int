@@ -380,10 +380,10 @@ namespace BEPUphysics.CollisionShapes.ConvexShapes
                 bo += scaledTetrahedronVolume * (2 * v2.X * v2.Z + v3.X * v2.Z + v4.X * v2.Z + v2.X * v3.Z + 2 * v3.X * v3.Z + v4.X * v3.Z + v2.X * v4.Z + v3.X * v4.Z + 2 * v4.X * v4.Z);
                 co += scaledTetrahedronVolume * (2 * v2.X * v2.Y + v3.X * v2.Y + v4.X * v2.Y + v2.X * v3.Y + 2 * v3.X * v3.Y + v4.X * v3.Y + v2.X * v4.Y + v3.X * v4.Y + 2 * v4.X * v4.Y);
             }
-            volume = scaledVolume / Fix64Utils.Six;
+            volume = scaledVolume / 6;
             Fix64 scaledDensity = 1 / volume;
-            Fix64 diagonalFactor = scaledDensity / Fix64Utils.Sixty;
-            Fix64 offFactor = -scaledDensity / Fix64Utils.OneTwenty;
+            Fix64 diagonalFactor = scaledDensity / 60;
+            Fix64 offFactor = -scaledDensity / 120;
             a *= diagonalFactor;
             b *= diagonalFactor;
             c *= diagonalFactor;
@@ -461,10 +461,10 @@ namespace BEPUphysics.CollisionShapes.ConvexShapes
             else
             {
                 Vector3.Multiply(ref summedCenter, Fix64Utils.PointTwoFive / scaledVolume, out center);
-                volume = scaledVolume / Fix64Utils.Six;
+                volume = scaledVolume / 6;
                 Fix64 scaledDensity = 1 / volume;
-                Fix64 diagonalFactor = scaledDensity / Fix64Utils.Sixty;
-                Fix64 offFactor = -scaledDensity / Fix64Utils.OneTwenty;
+                Fix64 diagonalFactor = scaledDensity / 60;
+                Fix64 offFactor = -scaledDensity / 120;
                 a *= diagonalFactor;
                 b *= diagonalFactor;
                 c *= diagonalFactor;

@@ -5,6 +5,7 @@ using BEPUutilities.DataStructures;
 using BEPUutilities.ResourceManagement;
 using BEPUutilities;
 using BEPUutilities.Threading;
+using FixMath.NET;
 
 namespace BEPUphysics.BroadPhaseSystems.Hierarchies
 {
@@ -326,13 +327,13 @@ namespace BEPUphysics.BroadPhaseSystems.Hierarchies
         /// Useful for comparing against other trees.
         /// </summary>
         /// <returns>Cost of the tree.</returns>
-        public float MeasureCostMetric()
+        public Fix64 MeasureCostMetric()
         {
             if (root != null)
             {
                 var offset = root.BoundingBox.Max - root.BoundingBox.Min;
                 var volume = offset.X * offset.Y * offset.Z;
-                if (volume < 1e-9f)
+                if (volume < Fix64Utils.EMinusNine)
                     return 0;
                 return root.MeasureSubtreeCost() / volume;
             }

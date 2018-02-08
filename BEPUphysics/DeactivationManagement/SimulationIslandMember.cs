@@ -117,7 +117,7 @@ namespace BEPUphysics.DeactivationManagement
                     else
                     {
                         //If velocity is not zero, then the flag is set to 'this is active.'
-                        velocityTimeBelowLimit = Fix64Utils.MinusOne;
+                        velocityTimeBelowLimit = -1;
                     }
 
                     if (velocityTimeBelowLimit <= 0)
@@ -273,7 +273,7 @@ namespace BEPUphysics.DeactivationManagement
             {
                 //"Wake up" the kinematic entity.
                 //The time is used as a flag.  If time <= 0, that means the object will be considered active until the subsequent update.
-                velocityTimeBelowLimit = Fix64Utils.MinusOne;
+                velocityTimeBelowLimit = -1;
             }
 
         }

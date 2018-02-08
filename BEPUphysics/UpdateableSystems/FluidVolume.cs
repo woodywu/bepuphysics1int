@@ -329,7 +329,7 @@ namespace BEPUphysics.UpdateableSystems
                 {
 
                     //The approximation can sometimes output a volume greater than the shape itself. Don't let that error seep into usage.
-                    Fix64 fractionSubmerged = Fix64Utils.Min(1, submergedVolume / entityCollidable.entity.CollisionInformation.Shape.Volume);
+                    Fix64 fractionSubmerged = MathHelper.Min(1, submergedVolume / entityCollidable.entity.CollisionInformation.Shape.Volume);
 
 					//Divide the volume by the density multiplier if present.
 					Fix64 densityMultiplier;
@@ -344,10 +344,10 @@ namespace BEPUphysics.UpdateableSystems
                     //Flow
                     if (FlowForce != 0)
                     {
-                        Fix64 dot = Fix64Utils.Max(Vector3.Dot(entityCollidable.entity.linearVelocity, flowDirection), 0);
+                        Fix64 dot = MathHelper.Max(Vector3.Dot(entityCollidable.entity.linearVelocity, flowDirection), 0);
                         if (dot < MaxFlowSpeed)
                         {
-                            force = Fix64Utils.Min(FlowForce, (MaxFlowSpeed - dot) * entityCollidable.entity.mass) * dt * fractionSubmerged * FlowDirection;
+                            force = MathHelper.Min(FlowForce, (MaxFlowSpeed - dot) * entityCollidable.entity.mass) * dt * fractionSubmerged * FlowDirection;
                             entityCollidable.entity.ApplyLinearImpulse(ref force);
                         }
                     }
@@ -508,7 +508,7 @@ namespace BEPUphysics.UpdateableSystems
                     RigidTransform.TransformByInverse(ref rayHit.Location, ref surfaceTransform, out rayHit.Location);
                     Vector3.Add(ref rayHit.Location, ref bottomPosition, out volumeCenter);
                     Vector3.Multiply(ref volumeCenter, Fix64Utils.PointFive, out volumeCenter);
-                    return Fix64Utils.Min(-bottomY, boundingBoxHeight - rayHit.T - bottom);
+                    return MathHelper.Min(-bottomY, boundingBoxHeight - rayHit.T - bottom);
                 }
                 //This inner raycast should always hit, but just in case it doesn't due to some numerical problem, give it a graceful way out.
                 volumeCenter = Vector3.Zero;

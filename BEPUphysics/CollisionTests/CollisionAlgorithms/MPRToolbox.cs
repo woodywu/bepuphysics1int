@@ -2275,7 +2275,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             {
                 //We can scoot ourselves almost all the way up to the intersection with the outer sphere.
                 //Stop just short to prevent a possible erroneous 'just-barely-contained' result.
-                sphereHit.T = Fix64Utils.Max(sphereHit.T - Fix64Utils.PointOne, 0);
+                sphereHit.T = MathHelper.Max(sphereHit.T - Fix64Utils.PointOne, 0);
                 Vector3 offset;
                 Vector3.Multiply(ref localRay.Direction, -sphereHit.T, out offset);
                 Vector3.Add(ref localRay.Position, ref offset, out localRay.Position);

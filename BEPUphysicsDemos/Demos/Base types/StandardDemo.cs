@@ -14,6 +14,7 @@ using Microsoft.Xna.Framework.Input;
 using Ray = BEPUutilities.Ray;
 using Vector2 = BEPUutilities.Vector2;
 using Vector3 = BEPUutilities.Vector3;
+using FixMath.NET;
 
 namespace BEPUphysicsDemos.Demos
 {
@@ -26,7 +27,7 @@ namespace BEPUphysicsDemos.Demos
     {
         protected FreeCameraControlScheme freeCameraControlScheme;
         protected CharacterControllerInput character;
-        protected float grabDistance;
+        protected Fix64 grabDistance;
         protected MotorizedGrabSpring grabber;
         protected LineDisplayObjectBase grabberGraphic;
         protected Entity kapow;
@@ -48,10 +49,10 @@ namespace BEPUphysicsDemos.Demos
             var wheelTexture = game.Content.Load<Texture2D>("wheel");
             whitePixel = game.Content.Load<Texture2D>("whitePixel");
             vehicle = new VehicleInput(new Vector3(10000, 0, 0), Space, game.Camera, game, game.ModelDrawer, wheelModel, wheelTexture);
-            Space.ForceUpdater.Gravity = new Vector3(0, -9.81f, 0f); //If left unset, the default value is (0,0,0).
+            Space.ForceUpdater.Gravity = new Vector3(0, (Fix64)(-9.81f), 0); //If left unset, the default value is (0,0,0).
 
             //Create the tossable ball.
-            kapow = new Sphere(new Vector3(11000, 0, 0), .6f, 20);
+            kapow = new Sphere(new Vector3(11000, 0, 0), (Fix64).6f, 20);
             kapowMaker = new Explosion(Vector3.Zero, 400, 15, Space);
             //Create the right-click grab spring.
             grabber = new MotorizedGrabSpring();
@@ -90,7 +91,7 @@ namespace BEPUphysicsDemos.Demos
             return entry != character.CharacterController.Body.CollisionInformation && entry.CollisionRules.Personal <= CollisionRule.Normal;
         }
 
-        public override void Update(float dt)
+        public override void Update(Fix64 dt)
         {
             #region Kapow-Shooter Input
 

@@ -9,6 +9,7 @@ using BEPUphysics.CollisionShapes.ConvexShapes;
 using BEPUphysics.CollisionShapes;
 using BEPUutilities;
 using ConversionHelper;
+using FixMath.NET;
 
 namespace BEPUphysicsDemos.AlternateMovement
 {
@@ -31,18 +32,18 @@ namespace BEPUphysicsDemos.AlternateMovement
         /// <summary>
         /// Speed that the vehicle tries towreach when moving backward.
         /// </summary>
-        public float BackwardSpeed = -15;
+        public Fix64 BackwardSpeed = -15;
 
         /// <summary>
         /// Default coefficient of sliding friction on an individual wheel in the tank track.
         /// </summary>
-        public float BaseSlidingFriction;
+        public Fix64 BaseSlidingFriction;
 
 
         /// <summary>
         /// Speed that the vehicle tries to reach when moving forward.
         /// </summary>
-        public float ForwardSpeed = 15;
+        public Fix64 ForwardSpeed = 15;
 
         /// <summary>
         /// Whether or not to use the vehicle's input.
@@ -52,7 +53,7 @@ namespace BEPUphysicsDemos.AlternateMovement
         /// <summary>
         /// Default maximum force that an individual wheel in a tank track can exert.
         /// </summary>
-        public float MaximumDriveForce;
+        public Fix64 MaximumDriveForce;
 
         /// <summary>
         /// Draws the body and wheels.
@@ -74,7 +75,7 @@ namespace BEPUphysicsDemos.AlternateMovement
         /// </summary>
         public List<DisplayModel> WheelModels;
 
-        float FrictionBlender(float wheelFriction, float supportFriction, bool isKineticFriction, Wheel wheel)
+		Fix64 FrictionBlender(Fix64 wheelFriction, Fix64 supportFriction, bool isKineticFriction, Wheel wheel)
         {
             //The default friction blender is multiplicative.  This tank had its coefficients designed for averaged coefficients.
             //So, let's average the friction coefficients!
@@ -102,11 +103,11 @@ namespace BEPUphysicsDemos.AlternateMovement
         {
             var bodies = new List<CompoundShapeEntry>()
             {
-                new CompoundShapeEntry(new BoxShape(4f, 1, 8), new Vector3(0, 0, 0), 500),
-                new CompoundShapeEntry(new BoxShape(3, .7f, 4f), new Vector3(0, .5f + .35f, .5f), 1)
+                new CompoundShapeEntry(new BoxShape(4, 1, 8), new Vector3(0, 0, 0), 500),
+                new CompoundShapeEntry(new BoxShape(3, (Fix64).7f, 4), new Vector3(0, (Fix64)(.5f + .35f), (Fix64).5f), 1)
             };
             var body = new CompoundBody(bodies, 501);
-            body.CollisionInformation.LocalPosition = new Vector3(0, .5f, 0);
+            body.CollisionInformation.LocalPosition = new Vector3(0, (Fix64).5f, 0);
             body.Position = (position); //At first, just keep it out of the way.
             Vehicle = new Vehicle(body);
 
@@ -120,10 +121,10 @@ namespace BEPUphysicsDemos.AlternateMovement
             for (int i = 0; i < 6; i++)
             {
                 var toAdd = new Wheel(
-                    new RaycastWheelShape(.375f, wheelGraphicRotation),
-                    new WheelSuspension(2000, 300f, Vector3.Down, 1.3f, new Vector3(-1.9f, 0, -2.9f + i * 1.15f)),
+                    new RaycastWheelShape((Fix64).375f, wheelGraphicRotation),
+                    new WheelSuspension(2000, 300, Vector3.Down, (Fix64)1.3f, new Vector3((Fix64)(-1.9f), 0, (Fix64)(-2.9f) + i * (Fix64)1.15f)),
                     new WheelDrivingMotor(10, MaximumDriveForce, MaximumDriveForce),
-                    new WheelBrake(7, 7, 1.0f),
+                    new WheelBrake(7, 7, 1),
                     new WheelSlidingFriction(BaseSlidingFriction, BaseSlidingFriction));
                 toAdd.DrivingMotor.GripFrictionBlender = FrictionBlender;
                 toAdd.Brake.FrictionBlender = FrictionBlender;
@@ -134,10 +135,10 @@ namespace BEPUphysicsDemos.AlternateMovement
             for (int i = 0; i < 6; i++)
             {
                 var toAdd = new Wheel(
-                    new RaycastWheelShape(.375f, wheelGraphicRotation),
-                    new WheelSuspension(2000, 300f, Vector3.Down, 1.3f, new Vector3(1.9f, 0, -2.9f + i * 1.15f)),
+                    new RaycastWheelShape((Fix64).375f, wheelGraphicRotation),
+                    new WheelSuspension(2000, 300, Vector3.Down, (Fix64)1.3f, new Vector3((Fix64)1.9f, 0, (Fix64)(-2.9f) + i * (Fix64)1.15f)),
                     new WheelDrivingMotor(10, 2000, 1000),
-                    new WheelBrake(7, 7, 1.0f),
+                    new WheelBrake(7, 7, 1),
                     new WheelSlidingFriction(BaseSlidingFriction, BaseSlidingFriction));
                 toAdd.DrivingMotor.GripFrictionBlender = FrictionBlender;
                 toAdd.Brake.FrictionBlender = FrictionBlender;
@@ -178,7 +179,7 @@ namespace BEPUphysicsDemos.AlternateMovement
 
 
 
-            CameraControlScheme = new ChaseCameraControlScheme(Vehicle.Body, new Vector3(0, 0.6f, 0), true, 10, camera, game);
+            CameraControlScheme = new ChaseCameraControlScheme(Vehicle.Body, new Vector3(0, (Fix64)0.6f, 0), true, 10, camera, game);
 
         }
 

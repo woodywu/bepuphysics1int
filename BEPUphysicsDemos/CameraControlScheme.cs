@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FixMath.NET;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -30,7 +31,7 @@ namespace BEPUphysicsDemos
         /// Updates the camera state according to the control scheme.
         /// </summary>
         /// <param name="dt">Time elapsed since previous frame.</param>
-        public virtual void Update(float dt)
+        public virtual void Update(Fix64 dt)
         {
 #if XBOX360
             Yaw += Game.GamePadInput.ThumbSticks.Right.X * -1.5f * dt;
@@ -39,8 +40,8 @@ namespace BEPUphysicsDemos
             //Only turn if the mouse is controlled by the game.
             if (!Game.IsMouseVisible)
             {
-                Camera.Yaw((200 - Game.MouseInput.X) * dt * .12f);
-                Camera.Pitch((200 - Game.MouseInput.Y) * dt * .12f);
+                Camera.Yaw((200 - Game.MouseInput.X) * dt * (Fix64).12f);
+                Camera.Pitch((200 - Game.MouseInput.Y) * dt * (Fix64).12f);
             }
 #endif
         }

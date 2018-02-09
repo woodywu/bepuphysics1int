@@ -7,6 +7,7 @@ using BEPUphysics.NarrowPhaseSystems.Pairs;
 using BEPUphysics.PositionUpdating;
 using BEPUphysics.Settings;
 using BEPUutilities;
+using FixMath.NET;
 
 namespace BEPUphysicsDemos
 {
@@ -45,25 +46,25 @@ namespace BEPUphysicsDemos
             MotionSettings.UseExtraExpansionForContinuousBoundingBoxes = false;
 
             //Set all the scaling settings back to their defaults.
-            space.DeactivationManager.VelocityLowerLimit = 0.26f;
+            space.DeactivationManager.VelocityLowerLimit = (Fix64)0.26f;
             CollisionResponseSettings.MaximumPenetrationRecoverySpeed = 2;
             CollisionResponseSettings.BouncinessVelocityThreshold = 1;
-            CollisionResponseSettings.StaticFrictionVelocityThreshold = .2f;
-            CollisionDetectionSettings.ContactInvalidationLength = .1f;
-            CollisionDetectionSettings.ContactMinimumSeparationDistance = .03f;
-            CollisionDetectionSettings.MaximumContactDistance = .1f;
-            CollisionDetectionSettings.DefaultMargin = .04f;
-            CollisionDetectionSettings.AllowedPenetration = .01f;
-            SolverSettings.DefaultMinimumImpulse = 0.001f;
+            CollisionResponseSettings.StaticFrictionVelocityThreshold = (Fix64).2f;
+            CollisionDetectionSettings.ContactInvalidationLength = (Fix64).1f;
+            CollisionDetectionSettings.ContactMinimumSeparationDistance = (Fix64).03f;
+            CollisionDetectionSettings.MaximumContactDistance = (Fix64).1f;
+            CollisionDetectionSettings.DefaultMargin = (Fix64).04f;
+            CollisionDetectionSettings.AllowedPenetration = (Fix64).01f;
+            SolverSettings.DefaultMinimumImpulse = (Fix64)0.001f;
 
             //Adjust epsilons back to defaults.
-            Toolbox.Epsilon = 1e-7f;
-            Toolbox.BigEpsilon = 1e-5f;
-            MPRToolbox.DepthRefinementEpsilon = 1e-4f;
-            MPRToolbox.RayCastSurfaceEpsilon = 1e-9f;
-            MPRToolbox.SurfaceEpsilon = 1e-7f;
-            PairSimplex.DistanceConvergenceEpsilon = 1e-7f;
-            PairSimplex.ProgressionEpsilon = 1e-8f;
+            Toolbox.Epsilon = (Fix64)1e-7m;
+            Toolbox.BigEpsilon = (Fix64)1e-5m;
+            MPRToolbox.DepthRefinementEpsilon = (Fix64)1e-4m;
+            MPRToolbox.RayCastSurfaceEpsilon = (Fix64)1e-9m;
+            MPRToolbox.SurfaceEpsilon = (Fix64)1e-7m;
+            PairSimplex.DistanceConvergenceEpsilon = (Fix64)1e-7m;
+            PairSimplex.ProgressionEpsilon = (Fix64)1e-8m;
 
         }
 
@@ -134,27 +135,27 @@ namespace BEPUphysicsDemos
         /// </summary>
         /// <param name="space">Space to configure.</param>
         /// <param name="scale">Scale to apply to relevant configuration settings.</param>
-        public static void ApplyScale(Space space, float scale)
+        public static void ApplyScale(Space space, Fix64 scale)
         {
             //Set all values to default values * scale.
-            space.DeactivationManager.VelocityLowerLimit = 0.26f * scale;
+            space.DeactivationManager.VelocityLowerLimit = (Fix64)0.26f * scale;
             CollisionResponseSettings.MaximumPenetrationRecoverySpeed = 2 * scale;
             CollisionResponseSettings.BouncinessVelocityThreshold = 1 * scale;
-            CollisionResponseSettings.StaticFrictionVelocityThreshold = .2f * scale;
-            CollisionDetectionSettings.ContactInvalidationLength = .1f * scale;
-            CollisionDetectionSettings.ContactMinimumSeparationDistance = .03f * scale;
-            CollisionDetectionSettings.MaximumContactDistance = .1f * scale;
-            CollisionDetectionSettings.DefaultMargin = .04f * scale;
-            CollisionDetectionSettings.AllowedPenetration = .01f * scale;
+            CollisionResponseSettings.StaticFrictionVelocityThreshold = (Fix64).2f * scale;
+            CollisionDetectionSettings.ContactInvalidationLength = (Fix64).1f * scale;
+            CollisionDetectionSettings.ContactMinimumSeparationDistance = (Fix64).03f * scale;
+            CollisionDetectionSettings.MaximumContactDistance = (Fix64).1f * scale;
+            CollisionDetectionSettings.DefaultMargin = (Fix64).04f * scale;
+            CollisionDetectionSettings.AllowedPenetration = (Fix64).01f * scale;
 
             //Adjust epsilons, too.
-            Toolbox.Epsilon = 1e-7f * scale;
-            Toolbox.BigEpsilon = 1e-5f * scale;
-            MPRToolbox.DepthRefinementEpsilon = 1e-4f * scale;
-            MPRToolbox.RayCastSurfaceEpsilon = 1e-9f * scale;
-            MPRToolbox.SurfaceEpsilon = 1e-7f * scale;
-            PairSimplex.DistanceConvergenceEpsilon = 1e-7f * scale;
-            PairSimplex.ProgressionEpsilon = 1e-8f * scale;
+            Toolbox.Epsilon = (Fix64)1e-7m * scale;
+            Toolbox.BigEpsilon = (Fix64)1e-5m * scale;
+            MPRToolbox.DepthRefinementEpsilon = (Fix64)1e-4m * scale;
+            MPRToolbox.RayCastSurfaceEpsilon = (Fix64)1e-9m * scale;
+            MPRToolbox.SurfaceEpsilon = (Fix64)1e-7m * scale;
+            PairSimplex.DistanceConvergenceEpsilon = (Fix64)1e-7m * scale;
+            PairSimplex.ProgressionEpsilon = (Fix64)1e-8m * scale;
 
             //While not fully a size-related parameter, you may find that adjusting the SolverSettings.DefaultMinimumImpulse can help the simulation quality.
             //It is related to 'mass scale' instead of 'size scale.'

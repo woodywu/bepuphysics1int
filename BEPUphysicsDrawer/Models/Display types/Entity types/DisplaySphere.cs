@@ -28,7 +28,7 @@ namespace BEPUphysicsDrawer.Models
 
             var n = new Vector3();
             float angleBetweenFacets = MathHelper.TwoPi / NumSides;
-            float radius = sphereShape.Radius;
+            float radius = (float)sphereShape.Radius;
 
             //Create the vertex list
             vertices.Add(new VertexPositionNormalTexture(new Vector3(0, radius, 0), Vector3.Up, Vector2.Zero));

@@ -4,6 +4,7 @@ using BEPUphysics.BroadPhaseSystems;
 using BEPUphysics.Entities;
 using BEPUphysics.UpdateableSystems.ForceFields;
 using BEPUutilities;
+using FixMath.NET;
 
 namespace BEPUphysicsDemos.SampleCode
 {
@@ -20,32 +21,32 @@ namespace BEPUphysicsDemos.SampleCode
         /// <summary>
         /// Radius of the tornado at the bottom.
         /// </summary>
-        public float BottomRadius;
+        public Fix64 BottomRadius;
 
         /// <summary>
         /// Height of the tornado; objects above or below the tornado will not be affected by its winds.
         /// </summary>
-        public float Height;
+        public Fix64 Height;
 
         /// <summary>
         /// Circular force applied within the tornado.  Force magnitude decreases as distance from axis increases past the radius.
         /// </summary>
-        public float HorizontalForce;
+        public Fix64 HorizontalForce;
 
         /// <summary>
         /// Maximum horizontal wind speed of the tornado; objects will not be accelerated by the wind past this speed in the direction of the wind.
         /// </summary>
-        public float HorizontalWindSpeed;
+        public Fix64 HorizontalWindSpeed;
 
         /// <summary>
         /// Magnitude of the inward-sucking force within the tornado.  Magnitude decreases as distance from the axis increases past the radius.
         /// </summary>
-        public float InwardForce;
+        public Fix64 InwardForce;
 
         /// <summary>
         /// Maximum inward sucking wind speed; objects will not be accelerated by the wind past this speed inward.
         /// </summary>
-        public float InwardSuctionSpeed;
+        public Fix64 InwardSuctionSpeed;
 
         /// <summary>
         /// Spin direction of the tornado.  Looking down from the top of the tornado (the furthest forward along the tornado axis).
@@ -55,17 +56,17 @@ namespace BEPUphysicsDemos.SampleCode
         /// <summary>
         /// Radius of the tornado at the top.
         /// </summary>
-        public float TopRadius;
+        public Fix64 TopRadius;
 
         /// <summary>
         /// Magnitude of upward-pushing force within the tornado.  Magnitude decreases as distance from the axis increases past the radius.
         /// </summary>
-        public float UpwardForce;
+        public Fix64 UpwardForce;
 
         /// <summary>
         /// Maximum upward pushing wind speed; objects will not be accelerated by the wind past this speed upward.
         /// </summary>
-        public float UpwardSuctionSpeed;
+        public Fix64 UpwardSuctionSpeed;
 
         /// <summary>
         /// Creates a simple, constant force field.
@@ -84,10 +85,10 @@ namespace BEPUphysicsDemos.SampleCode
         /// <param name="topRadius">Radius of the tornado at the top.</param>
         /// <param name="bottomRadius">Radius of the tornado at the bottom.</param>
         public Tornado(ForceFieldShape shape, Vector3 position, Vector3 axis,
-                       float height, bool spinClockwise, float horizontalWindSpeed,
-                       float upwardSuctionSpeed, float inwardSuctionSpeed,
-                       float horizontalForce, float upwardForce, float inwardForce,
-                       float topRadius, float bottomRadius)
+                       Fix64 height, bool spinClockwise, Fix64 horizontalWindSpeed,
+                       Fix64 upwardSuctionSpeed, Fix64 inwardSuctionSpeed,
+                       Fix64 horizontalForce, Fix64 upwardForce, Fix64 inwardForce,
+                       Fix64 topRadius, Fix64 bottomRadius)
             : base(shape)
         {
             Axis = Vector3.Normalize(axis);
@@ -115,26 +116,26 @@ namespace BEPUphysicsDemos.SampleCode
         /// <param name="e">Target of the impulse.</param>
         /// <param name="dt">Time since the last frame in simulation seconds.</param>
         /// <param name="impulse">Force to apply at the given position.</param>
-        protected override void CalculateImpulse(Entity e, float dt, out Vector3 impulse)
+        protected override void CalculateImpulse(Entity e, Fix64 dt, out Vector3 impulse)
         {
             Vector3 position = Position; //Referenced a lot, and passed using ref parameter.
             Vector3 entityPosition = e.Position;
 
-            float entityHeight = Vector3.Dot(Axis, entityPosition - position + Axis * (Height / 2));
+            Fix64 entityHeight = Vector3.Dot(Axis, entityPosition - position + Axis * (Height / 2));
             if (entityHeight < 0 || entityHeight > Height)
                 impulse = Toolbox.ZeroVector;
             else
             {
-                float tornadoRadius = BottomRadius * (1 - entityHeight / Height) + TopRadius * (entityHeight / Height);
+                Fix64 tornadoRadius = BottomRadius * (1 - entityHeight / Height) + TopRadius * (entityHeight / Height);
                 Vector3 closestPoint;
                 Vector3 endpointA = position + Axis * Height / 2;
                 Vector3 endpointB = position - Axis * Height / 2;
                 Toolbox.GetClosestPointOnSegmentToPoint(ref endpointA, ref endpointB, ref entityPosition, out closestPoint);
-                float entityDistanceFromTornado;
+                Fix64 entityDistanceFromTornado;
                 Vector3.Distance(ref entityPosition, ref closestPoint, out entityDistanceFromTornado);
                 //Compute the axis to the 
                 Vector3 posClosest;
-                float forceMultiplier;
+                Fix64 forceMultiplier;
                 if (entityDistanceFromTornado > tornadoRadius)
                 {
                     //outside tornado
@@ -144,12 +145,12 @@ namespace BEPUphysicsDemos.SampleCode
                 else if (entityDistanceFromTornado > Toolbox.Epsilon)
                 {
                     //inside tornado
-                    forceMultiplier = .5f + .5f * entityDistanceFromTornado / tornadoRadius;
+                    forceMultiplier = Fix64Utils.PointFive + Fix64Utils.PointFive * entityDistanceFromTornado / tornadoRadius;
                     posClosest = (closestPoint - entityPosition) / entityDistanceFromTornado;
                 }
                 else
                 {
-                    forceMultiplier = .5f;
+                    forceMultiplier = Fix64Utils.PointFive;
                     posClosest = Toolbox.ZeroVector;
                 }
 
@@ -164,7 +165,7 @@ namespace BEPUphysicsDemos.SampleCode
                     Vector3.Cross(ref posClosest, ref Axis, out tangentDirection);
 
                 //Current velocity along the tangent direction.
-                float dot = Vector3.Dot(e.LinearVelocity, tangentDirection);
+                Fix64 dot = Vector3.Dot(e.LinearVelocity, tangentDirection);
                 //Compute the velocity difference between the current and the maximum
                 dot = HorizontalWindSpeed - dot;
                 //Compute the force needed to reach the maximum, but clamp it to the amount of force that the tornado can apply

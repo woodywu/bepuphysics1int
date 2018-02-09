@@ -1,6 +1,7 @@
 using BEPUphysics.Entities;
 using BEPUphysics.UpdateableSystems;
 using BEPUutilities;
+using FixMath.NET;
 
 namespace BEPUphysicsDemos.SampleCode
 {
@@ -27,7 +28,7 @@ namespace BEPUphysicsDemos.SampleCode
         /// <param name="correctiveStrength">Factor of the position error to use in corrective impulses each frame.</param>
         /// <param name="linearDamp">Damping to apply to the grabbed entity's linear momentum.</param>
         /// <param name="angularDamp">Damping to apply to the grabbed entity's angular momentum.</param>
-        public GrabSpring(float correctiveStrength, float linearDamp, float angularDamp)
+        public GrabSpring(Fix64 correctiveStrength, Fix64 linearDamp, Fix64 angularDamp)
         {
             CorrectionFactor = correctiveStrength;
             LinearDamping = linearDamp;
@@ -47,17 +48,17 @@ namespace BEPUphysicsDemos.SampleCode
         /// <summary>
         /// Gets or sets the factor of the position error to use in corrective impulses each frame.
         /// </summary>
-        public float CorrectionFactor { get; set; }
+        public Fix64 CorrectionFactor { get; set; }
 
         /// <summary>
         /// Getes or sets damping to apply to the grabbed entity's linear momentum.
         /// </summary>
-        public float LinearDamping { get; set; }
+        public Fix64 LinearDamping { get; set; }
 
         /// <summary>
         /// Gets or sets damping to apply to the grabbed entity's angular momentum.
         /// </summary>
-        public float AngularDamping { get; set; }
+        public Fix64 AngularDamping { get; set; }
 
         /// <summary>
         /// Gets the last updated position of the grab location on the surface of the entity.
@@ -82,7 +83,7 @@ namespace BEPUphysicsDemos.SampleCode
         /// Called automatically by the space.
         /// </summary>
         /// <param name="dt">Time since last frame in simulation seconds.</param>
-        void IDuringForcesUpdateable.Update(float dt)
+        void IDuringForcesUpdateable.Update(Fix64 dt)
         {
             if (Entity.IsDynamic)
             {
@@ -105,7 +106,7 @@ namespace BEPUphysicsDemos.SampleCode
         /// Updates the grab constraint's grab position after the end of a frame.
         /// </summary>
         /// <param name="dt">Time since last frame in simulation seconds.</param>
-        void IEndOfFrameUpdateable.Update(float dt)
+        void IEndOfFrameUpdateable.Update(Fix64 dt)
         {
             //Since the grabbed position is usually examined graphically, 
             //it's good to use the interpolated positions in case the 

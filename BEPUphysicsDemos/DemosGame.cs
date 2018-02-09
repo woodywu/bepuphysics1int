@@ -9,6 +9,7 @@ using BEPUphysicsDrawer.Font;
 using BEPUphysicsDrawer.Lines;
 using BEPUphysicsDrawer.Models;
 using ConversionHelper;
+using FixMath.NET;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -117,7 +118,7 @@ namespace BEPUphysicsDemos
 
             Graphics.PreferredBackBufferWidth = 1280;
             Graphics.PreferredBackBufferHeight = 720;
-            Camera = new Camera(BEPUutilities.Vector3.Zero, 0, 0, BEPUutilities.Matrix.CreatePerspectiveFieldOfViewRH(MathHelper.PiOver4, Graphics.PreferredBackBufferWidth / (float)Graphics.PreferredBackBufferHeight, .1f, 10000));
+            Camera = new Camera(BEPUutilities.Vector3.Zero, 0, 0, BEPUutilities.Matrix.CreatePerspectiveFieldOfViewRH((Fix64)MathHelper.PiOver4, Graphics.PreferredBackBufferWidth / (Fix64)Graphics.PreferredBackBufferHeight, .1m, 10000));
 
             Exiting += DemosGameExiting;
         }
@@ -253,7 +254,7 @@ namespace BEPUphysicsDemos
         {
             PreviousKeyboardInput = KeyboardInput;
             KeyboardInput = Keyboard.GetState();
-            var dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            var dt = (Fix64)gameTime.ElapsedGameTime.TotalSeconds;
 #if WINDOWS
             PreviousMouseInput = MouseInput;
             MouseInput = Mouse.GetState();
@@ -436,7 +437,7 @@ namespace BEPUphysicsDemos
                     double avg = FPStotalSinceLast / FPStotalFramesSinceLast;
                     FPSlastTime = gameTime.TotalGameTime.TotalSeconds;
                     FPStoDisplay = Math.Round(1 / avg, 1);
-                    averagePhysicsTime = Math.Round(1000 * currentSimulation.PhysicsTime, 1);
+                    averagePhysicsTime = Math.Round(1000 * (float)currentSimulation.PhysicsTime, 1);
                     FPStotalSinceLast = 0;
                     FPStotalFramesSinceLast = 0;
                 }

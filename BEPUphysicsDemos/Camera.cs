@@ -1,5 +1,6 @@
 using System;
 using BEPUutilities;
+using FixMath.NET;
 using Microsoft.Xna.Framework.Input;
 
 namespace BEPUphysicsDemos
@@ -46,15 +47,15 @@ namespace BEPUphysicsDemos
             get { return viewDirection; }
             set
             {
-                float lengthSquared = value.LengthSquared();
+                Fix64 lengthSquared = value.LengthSquared();
                 if (lengthSquared > Toolbox.Epsilon)
                 {
-                    Vector3.Divide(ref value, (float) Math.Sqrt(lengthSquared), out value);
-                    //Validate the input. A temporary violation of the maximum pitch is permitted as it will be fixed as the user looks around.
-                    //However, we cannot allow a view direction parallel to the locked up direction.
-                    float dot;
+                    Vector3.Divide(ref value, Fix64.Sqrt(lengthSquared), out value);
+					//Validate the input. A temporary violation of the maximum pitch is permitted as it will be fixed as the user looks around.
+					//However, we cannot allow a view direction parallel to the locked up direction.
+					Fix64 dot;
                     Vector3.Dot(ref value, ref lockedUp, out dot);
-                    if (Math.Abs(dot) > 1 - Toolbox.BigEpsilon)
+                    if (Fix64.Abs(dot) > 1 - Toolbox.BigEpsilon)
                     {
                         //The view direction must not be aligned with the locked up direction.
                         //Silently fail without changing the view direction.
@@ -65,11 +66,11 @@ namespace BEPUphysicsDemos
             }
         }
 
-        private float maximumPitch = MathHelper.PiOver2 * 0.99f;
+        private Fix64 maximumPitch = MathHelper.PiOver2 * (Fix64)0.99m;
         /// <summary>
         /// Gets or sets how far the camera can look up or down in radians.
         /// </summary>
-        public float MaximumPitch
+        public Fix64 MaximumPitch
         {
             get { return maximumPitch; }
             set
@@ -92,10 +93,10 @@ namespace BEPUphysicsDemos
             set
             {
                 var oldUp = lockedUp;
-                float lengthSquared = value.LengthSquared();
+				Fix64 lengthSquared = value.LengthSquared();
                 if (lengthSquared > Toolbox.Epsilon)
                 {
-                    Vector3.Divide(ref value, (float)Math.Sqrt(lengthSquared), out lockedUp);
+                    Vector3.Divide(ref value, Fix64.Sqrt(lengthSquared), out lockedUp);
                     //Move the view direction with the transform. This helps guarantee that the view direction won't end up aligned with the up vector.
                     Quaternion rotation;
                     Quaternion.GetQuaternionBetweenNormalizedVectors(ref oldUp, ref lockedUp, out rotation);
@@ -113,7 +114,7 @@ namespace BEPUphysicsDemos
         /// <param name="pitch">Initial pitch angle of the camera.</param>
         /// <param name="yaw">Initial yaw value of the camera.</param>
         /// <param name="projectionMatrix">Projection matrix used.</param>
-        public Camera(Vector3 position, float pitch, float yaw, Matrix projectionMatrix)
+        public Camera(Vector3 position, Fix64 pitch, Fix64 yaw, Matrix projectionMatrix)
         {
             Position = position;
             Yaw(yaw);
@@ -127,7 +128,7 @@ namespace BEPUphysicsDemos
         /// Moves the camera forward.
         /// </summary>
         /// <param name="distance">Distance to move.</param>
-        public void MoveForward(float distance)
+        public void MoveForward(Fix64 distance)
         {
             Position += WorldMatrix.Forward * distance;
         }
@@ -136,7 +137,7 @@ namespace BEPUphysicsDemos
         /// Moves the camera to the right.
         /// </summary>
         /// <param name="distance">Distance to move.</param>
-        public void MoveRight(float distance)
+        public void MoveRight(Fix64 distance)
         {
             Position += WorldMatrix.Right * distance;
         }
@@ -145,7 +146,7 @@ namespace BEPUphysicsDemos
         /// Moves the camera up.
         /// </summary>
         /// <param name="distance">Distance to move.</param>
-        public void MoveUp(float distance)
+        public void MoveUp(Fix64 distance)
         {
             Position += new Vector3(0, distance, 0);
         }
@@ -155,7 +156,7 @@ namespace BEPUphysicsDemos
         /// Rotates the camera around its locked up vector.
         /// </summary>
         /// <param name="radians">Amount to rotate.</param>
-        public void Yaw(float radians)
+        public void Yaw(Fix64 radians)
         {
             //Rotate around the up vector.
             Matrix3x3 rotation;
@@ -170,18 +171,18 @@ namespace BEPUphysicsDemos
         /// Rotates the view direction up or down relative to the locked up vector.
         /// </summary>
         /// <param name="radians">Amount to rotate.</param>
-        public void Pitch(float radians)
+        public void Pitch(Fix64 radians)
         {
             //Do not allow the new view direction to violate the maximum pitch.
-            float dot;
+            Fix64 dot;
             Vector3.Dot(ref viewDirection, ref lockedUp, out dot);
 
             //While this could be rephrased in terms of dot products alone, converting to actual angles can be more intuitive.
             //Consider +Pi/2 to be up, and -Pi/2 to be down.
-            float currentPitch = (float)Math.Acos(MathHelper.Clamp(-dot, -1, 1)) - MathHelper.PiOver2;
+            Fix64 currentPitch = Fix64Utils.Acos(MathHelper.Clamp(-dot, -1, 1)) - MathHelper.PiOver2;
             //Compute our new pitch by clamping the current + change.
-            float newPitch = MathHelper.Clamp(currentPitch + radians, -maximumPitch, maximumPitch);
-            float allowedChange = newPitch - currentPitch;
+            Fix64 newPitch = MathHelper.Clamp(currentPitch + radians, -maximumPitch, maximumPitch);
+            Fix64 allowedChange = newPitch - currentPitch;
 
             //Compute and apply the rotation.
             Vector3 pitchAxis;

@@ -21,12 +21,12 @@ namespace BEPUphysicsDrawer.Models
                 throw new ArgumentException("Wrong shape type.");
 
             var boundingBox = new BoundingBox(
-                new Vector3(-boxShape.HalfWidth,
-                            -boxShape.HalfHeight,
-                            -boxShape.HalfLength),
-                new Vector3(boxShape.HalfWidth,
-                            boxShape.HalfHeight,
-                            boxShape.HalfLength));
+                new Vector3((float)-boxShape.HalfWidth,
+							(float)-boxShape.HalfHeight,
+							(float)-boxShape.HalfLength),
+                new Vector3((float)boxShape.HalfWidth,
+							(float)boxShape.HalfHeight,
+							(float)boxShape.HalfLength));
 
 
             Vector3[] corners = boundingBox.GetCorners();

@@ -98,7 +98,11 @@ namespace BEPUutilities
 			if (x == Fix64.Zero)
 				return Fix64.PiOver2;
 
-			return Fix64.Atan2(Fix64.Sqrt(1 - x * x) / x, 1);
+			Fix64 result = Fix64.Atan2(Fix64.Sqrt(1 - x * x) / x, 1);
+			if (x < 0)
+				return result + Fix64.Pi;
+			else
+				return result;
 		}				
 
 		public static Fix64 Sign(Fix64 v)

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2020
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BEPUphysicsDemos", "BEPUphysicsDemos\BEPUphysicsDemos.csproj", "{D1CB3D50-699C-4A1E-BF09-E5E689E6B853}"
 EndProject
@@ -14,6 +14,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConversionHelper", "ConversionHelper\ConversionHelper.csproj", "{AA264458-F33C-4B6B-90C1-B3209470893B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BEPUphysicsDrawer", "BEPUphysicsDrawer\BEPUphysicsDrawer.csproj", "{20CC0765-E7F5-44CB-9B86-EC8CDD1852CE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BEPUtests", "BEPUtests\BEPUtests.csproj", "{74AC3B9E-FDC4-491C-98D2-CCA0F100D051}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -97,8 +99,23 @@ Global
 		{20CC0765-E7F5-44CB-9B86-EC8CDD1852CE}.Release|x64.Build.0 = Release|x64
 		{20CC0765-E7F5-44CB-9B86-EC8CDD1852CE}.Release|x86.ActiveCfg = Release|x86
 		{20CC0765-E7F5-44CB-9B86-EC8CDD1852CE}.Release|x86.Build.0 = Release|x86
+		{74AC3B9E-FDC4-491C-98D2-CCA0F100D051}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74AC3B9E-FDC4-491C-98D2-CCA0F100D051}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74AC3B9E-FDC4-491C-98D2-CCA0F100D051}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{74AC3B9E-FDC4-491C-98D2-CCA0F100D051}.Debug|x64.Build.0 = Debug|Any CPU
+		{74AC3B9E-FDC4-491C-98D2-CCA0F100D051}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{74AC3B9E-FDC4-491C-98D2-CCA0F100D051}.Debug|x86.Build.0 = Debug|Any CPU
+		{74AC3B9E-FDC4-491C-98D2-CCA0F100D051}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74AC3B9E-FDC4-491C-98D2-CCA0F100D051}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74AC3B9E-FDC4-491C-98D2-CCA0F100D051}.Release|x64.ActiveCfg = Release|Any CPU
+		{74AC3B9E-FDC4-491C-98D2-CCA0F100D051}.Release|x64.Build.0 = Release|Any CPU
+		{74AC3B9E-FDC4-491C-98D2-CCA0F100D051}.Release|x86.ActiveCfg = Release|Any CPU
+		{74AC3B9E-FDC4-491C-98D2-CCA0F100D051}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6B982661-176E-4ABD-9CA5-5063E993E4D7}
 	EndGlobalSection
 EndGlobal

@@ -104,10 +104,10 @@ namespace BEPUphysicsDemos.AlternateMovement
             var bodies = new List<CompoundShapeEntry>()
             {
                 new CompoundShapeEntry(new BoxShape(4, 1, 8), new Vector3(0, 0, 0), 500),
-                new CompoundShapeEntry(new BoxShape(3, (Fix64).7f, 4), new Vector3(0, (Fix64)(.5f + .35f), (Fix64).5f), 1)
+                new CompoundShapeEntry(new BoxShape(3, (Fix64).7m, 4), new Vector3(0, (Fix64)(.5m + .35m), (Fix64).5m), 1)
             };
             var body = new CompoundBody(bodies, 501);
-            body.CollisionInformation.LocalPosition = new Vector3(0, (Fix64).5f, 0);
+            body.CollisionInformation.LocalPosition = new Vector3(0, (Fix64).5m, 0);
             body.Position = (position); //At first, just keep it out of the way.
             Vehicle = new Vehicle(body);
 
@@ -121,8 +121,8 @@ namespace BEPUphysicsDemos.AlternateMovement
             for (int i = 0; i < 6; i++)
             {
                 var toAdd = new Wheel(
-                    new RaycastWheelShape((Fix64).375f, wheelGraphicRotation),
-                    new WheelSuspension(2000, 300, Vector3.Down, (Fix64)1.3f, new Vector3((Fix64)(-1.9f), 0, (Fix64)(-2.9f) + i * (Fix64)1.15f)),
+                    new RaycastWheelShape((Fix64).375m, wheelGraphicRotation),
+                    new WheelSuspension(2000, 300, Vector3.Down, (Fix64)1.3m, new Vector3((Fix64)(-1.9m), 0, (Fix64)(-2.9m) + i * (Fix64)1.15m)),
                     new WheelDrivingMotor(10, MaximumDriveForce, MaximumDriveForce),
                     new WheelBrake(7, 7, 1),
                     new WheelSlidingFriction(BaseSlidingFriction, BaseSlidingFriction));
@@ -135,8 +135,8 @@ namespace BEPUphysicsDemos.AlternateMovement
             for (int i = 0; i < 6; i++)
             {
                 var toAdd = new Wheel(
-                    new RaycastWheelShape((Fix64).375f, wheelGraphicRotation),
-                    new WheelSuspension(2000, 300, Vector3.Down, (Fix64)1.3f, new Vector3((Fix64)1.9f, 0, (Fix64)(-2.9f) + i * (Fix64)1.15f)),
+                    new RaycastWheelShape((Fix64).375m, wheelGraphicRotation),
+                    new WheelSuspension(2000, 300, Vector3.Down, (Fix64)1.3m, new Vector3((Fix64)1.9m, 0, (Fix64)(-2.9m) + i * (Fix64)1.15m)),
                     new WheelDrivingMotor(10, 2000, 1000),
                     new WheelBrake(7, 7, 1),
                     new WheelSlidingFriction(BaseSlidingFriction, BaseSlidingFriction));
@@ -179,7 +179,7 @@ namespace BEPUphysicsDemos.AlternateMovement
 
 
 
-            CameraControlScheme = new ChaseCameraControlScheme(Vehicle.Body, new Vector3(0, (Fix64)0.6f, 0), true, 10, camera, game);
+            CameraControlScheme = new ChaseCameraControlScheme(Vehicle.Body, new Vector3(0, (Fix64)0.6m, 0), true, 10, camera, game);
 
         }
 
@@ -217,7 +217,7 @@ namespace BEPUphysicsDemos.AlternateMovement
         /// <param name="dt">Time since last frame in simulation seconds.</param>
         /// <param name="keyboardInput">Keyboard state.</param>
         /// <param name="gamePadInput">Gamepad state.</param>
-        public void Update(float dt, KeyboardState keyboardInput, GamePadState gamePadInput)
+        public void Update(Fix64 dt, KeyboardState keyboardInput, GamePadState gamePadInput)
         {
             //Update the wheel's graphics.
             for (int k = 0; k < WheelModels.Count; k++)
@@ -248,7 +248,7 @@ namespace BEPUphysicsDemos.AlternateMovement
                 //Going at full speed and reversing a track's direction can be a little jarring, so
                 //its maximum force is modified dynamically to make it feel more correct.
 #if XBOX360
-                float speed = gamePadInput.Triggers.Right * ForwardSpeed + gamePadInput.Triggers.Left * BackwardSpeed;
+                Fix64 speed = gamePadInput.Triggers.Right * ForwardSpeed + gamePadInput.Triggers.Left * BackwardSpeed;
                 foreach (Wheel wheel in Vehicle.Wheels)
                 {
                     wheel.DrivingMotor.TargetSpeed = speed;
@@ -258,9 +258,9 @@ namespace BEPUphysicsDemos.AlternateMovement
                     wheel.SlidingFriction.StaticCoefficient = BaseSlidingFriction;
                 }
                 //Thumbsticks can have small values even when left alone, so allow a little margin.
-                const float stickMargin = .1f;
+                const Fix64 stickMargin = .1m;
                 //"Approximately stationary" is good enough to turn normally.  Pick a reasonable tolerance.
-                const float fullTurnSpeedLimit = 1;
+                const Fix64 fullTurnSpeedLimit = 1;
                 if (speed > fullTurnSpeedLimit)
                 {
 
@@ -513,8 +513,8 @@ namespace BEPUphysicsDemos.AlternateMovement
             ////Careful- with sliding friction reduction, the tank can twirl pretty fast!
             //foreach (Wheel wheel in Vehicle.Wheels)
             //{
-            //    wheel.SlidingFriction.StaticCoefficient = BaseSlidingFriction * .8f;
-            //    wheel.SlidingFriction.KineticCoefficient = BaseSlidingFriction * .8f;
+            //    wheel.SlidingFriction.StaticCoefficient = BaseSlidingFriction * .8m;
+            //    wheel.SlidingFriction.KineticCoefficient = BaseSlidingFriction * .8m;
             //}
         }
     }

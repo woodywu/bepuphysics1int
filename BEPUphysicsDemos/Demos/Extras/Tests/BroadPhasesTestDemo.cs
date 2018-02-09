@@ -274,8 +274,8 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
         {
             for (int i = 0; i < entities.Count; i++)
             {
-				Fix64 speed = (Fix64).1f;
-                //entities[i].Position += new Vector3((float)rand.NextDouble() * speed - speed * .5f, (float)rand.NextDouble() * speed - speed * .5f, (float)rand.NextDouble() * speed - speed * .5f);
+				Fix64 speed = (Fix64).1m;
+                //entities[i].Position += new Vector3((Fix64)rand.NextDouble() * speed - speed * .5m, (Fix64)rand.NextDouble() * speed - speed * .5m, (Fix64)rand.NextDouble() * speed - speed * .5m);
                 entities[i].Position += new Vector3(0, speed, 0);
                 entities[i].CollisionInformation.UpdateBoundingBox(0);
             }

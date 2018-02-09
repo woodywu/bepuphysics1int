@@ -4,6 +4,7 @@ using BEPUphysics.Entities.Prefabs;
 using BEPUphysics.Paths;
 using BEPUphysics.Paths.PathFollowing;
 using BEPUutilities;
+using FixMath.NET;
 
 namespace BEPUphysicsDemos.Demos
 {
@@ -35,7 +36,7 @@ namespace BEPUphysicsDemos.Demos
         /// <summary>
         /// Incremented and used to evaluate paths in the update method. 
         /// </summary>
-        private double pathTime;
+        private Fix64 pathTime;
 
         /// <summary>
         /// Constructs a new demo.
@@ -66,15 +67,15 @@ namespace BEPUphysicsDemos.Demos
             //aren't actually reached by the curve in a CardinalSpline3D; they are used
             //to define the tangents on the interior points.
             wrappedPositionCurve.ControlPoints.Add(-1, new Vector3(0, 30, 0));
-            wrappedPositionCurve.ControlPoints.Add(0f, new Vector3(0, 20, 0));
+            wrappedPositionCurve.ControlPoints.Add(0, new Vector3(0, 20, 0));
             //Add a bunch of random control points to the curve.
             var random = new Random();
             for (int i = 1; i <= 10; i++)
             {
                 wrappedPositionCurve.ControlPoints.Add(i, new Vector3(
-                                                              (float) random.NextDouble() * 20 - 10,
-                                                              (float) random.NextDouble() * 12,
-                                                              (float) random.NextDouble() * 20 - 10));
+                                                              (Fix64) random.NextDouble() * 20 - 10,
+                                                              (Fix64) random.NextDouble() * 12,
+                                                              (Fix64) random.NextDouble() * 20 - 10));
             }
 
             positionPath = wrappedPositionCurve;
@@ -111,17 +112,17 @@ namespace BEPUphysicsDemos.Demos
             int numColumns = 7;
             int numRows = 7;
             int numHigh = 3;
-            float xSpacing = 2.09f;
-            float ySpacing = 2.08f;
-            float zSpacing = 2.09f;
+            Fix64 xSpacing = 2.09m;
+            Fix64 ySpacing = 2.08m;
+            Fix64 zSpacing = 2.09m;
             for (int i = 0; i < numRows; i++)
                 for (int j = 0; j < numColumns; j++)
                     for (int k = 0; k < numHigh; k++)
                     {
                         Space.Add(new Box(new Vector3(
-                                              xSpacing * i - (numRows - 1) * xSpacing / 2f,
-                                              1.58f + k * (ySpacing),
-                                              2 + zSpacing * j - (numColumns - 1) * zSpacing / 2f),
+                                              xSpacing * i - (numRows - 1) * xSpacing / 2,
+                                              1.58m + k * (ySpacing),
+                                              2 + zSpacing * j - (numColumns - 1) * zSpacing / 2),
                                           2, 2, 2, 10));
                     }
 
@@ -136,7 +137,7 @@ namespace BEPUphysicsDemos.Demos
             get { return "Path Following"; }
         }
 
-        public override void Update(float dt)
+        public override void Update(Fix64 dt)
         {
             //Increment the time.  Note that the space's timestep is used
             //instead of the method's dt.  This is because the demos, by

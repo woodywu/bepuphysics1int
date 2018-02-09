@@ -279,7 +279,7 @@
 //        void Work(int i)
 //        {
 //            for (int j = 0; j <20; j++)
-//                list.Elements[i] = Math.Cos(Math.Sin(Math.Sqrt(list.Elements[i] + 8) * 100.5) % Math.Pow(list.Elements[i], .9f));
+//                list.Elements[i] = Math.Cos(Math.Sin(Math.Sqrt(list.Elements[i] + 8) * 100.5) % Math.Pow(list.Elements[i], .9m));
 //        }
 
 //        RawList<double> lockedList = new RawList<double>();

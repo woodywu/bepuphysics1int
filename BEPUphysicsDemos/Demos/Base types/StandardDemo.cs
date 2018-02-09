@@ -49,10 +49,10 @@ namespace BEPUphysicsDemos.Demos
             var wheelTexture = game.Content.Load<Texture2D>("wheel");
             whitePixel = game.Content.Load<Texture2D>("whitePixel");
             vehicle = new VehicleInput(new Vector3(10000, 0, 0), Space, game.Camera, game, game.ModelDrawer, wheelModel, wheelTexture);
-            Space.ForceUpdater.Gravity = new Vector3(0, (Fix64)(-9.81f), 0); //If left unset, the default value is (0,0,0).
+            Space.ForceUpdater.Gravity = new Vector3(0, (Fix64)(-9.81m), 0); //If left unset, the default value is (0,0,0).
 
             //Create the tossable ball.
-            kapow = new Sphere(new Vector3(11000, 0, 0), (Fix64).6f, 20);
+            kapow = new Sphere(new Vector3(11000, 0, 0), (Fix64).6m, 20);
             kapowMaker = new Explosion(Vector3.Zero, 400, 15, Space);
             //Create the right-click grab spring.
             grabber = new MotorizedGrabSpring();

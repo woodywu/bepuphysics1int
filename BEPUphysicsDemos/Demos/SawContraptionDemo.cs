@@ -4,6 +4,8 @@ using BEPUphysics.Constraints.SolverGroups;
 using BEPUphysics.Constraints.TwoEntity.Motors;
 using BEPUphysics.Entities.Prefabs;
 using BEPUutilities;
+using FixMath.NET;
+
 namespace BEPUphysicsDemos.Demos
 {
     /// <summary>
@@ -19,12 +21,12 @@ namespace BEPUphysicsDemos.Demos
             : base(game)
         {
             //Add a kinematic entity that will form the base for the strange contraption.
-            var pistonGroundAttachment = new Box(new Vector3(0, -1, 0), 1, 2, .5f);
-            pistonGroundAttachment.AngularVelocity = new Vector3(0, .2f, 0); //Make it spin a little to rotate the whole thing.
+            var pistonGroundAttachment = new Box(new Vector3(0, -1, 0), 1, 2, .5m);
+            pistonGroundAttachment.AngularVelocity = new Vector3(0, .2m, 0); //Make it spin a little to rotate the whole thing.
             Space.Add(pistonGroundAttachment);
 
-            var pistonBox1 = new Box(pistonGroundAttachment.Position + new Vector3(0f, 0, 1), 1, 1, 1, 100);
-            var pistonBox2 = new Box(pistonBox1.Position + new Vector3(0, 2, 0), .5f, .8f, .5f, 10);
+            var pistonBox1 = new Box(pistonGroundAttachment.Position + new Vector3(0, 0, 1), 1, 1, 1, 100);
+            var pistonBox2 = new Box(pistonBox1.Position + new Vector3(0, 2, 0), .5m, .8m, .5m, 10);
             Space.Add(pistonBox1);
             Space.Add(pistonBox2);
 
@@ -64,7 +66,7 @@ namespace BEPUphysicsDemos.Demos
             Space.Add(piston);
 
             //Create a saw bladey object on the end of the piston.
-            var blade = new Box(pistonBox2.Position + new Vector3(0, 0, .5f), .3f, 2.5f, .1f, 5);
+            var blade = new Box(pistonBox2.Position + new Vector3(0, 0, .5m), .3m, 2.5m, .1m, 5);
             Space.Add(blade);
 
             //Connect the saw to the piston with a second axis joint.
@@ -78,12 +80,12 @@ namespace BEPUphysicsDemos.Demos
             axisJoint.Motor.Settings.MaximumForce = 200;
 
             //Add some ground.
-            Space.Add(new Box(new Vector3(0, -3f, 0), 20f, 1, 20f));
+            Space.Add(new Box(new Vector3(0, -3, 0), 20, 1, 20));
 
             //Make some debris for the saw to chop.
-            for (double k = 0; k < Math.PI * 2; k += Math.PI / 20)
+            for (Fix64 k = 0; k < MathHelper.Pi * 2; k += MathHelper.Pi / 20)
             {
-                Space.Add(new Box(new Vector3((float) Math.Cos(k) * 4f, -2, (float) Math.Sin(k) * 6.5f), .5f, 1f, .5f, 10));
+                Space.Add(new Box(new Vector3(Fix64.Cos(k) * 4, -2, Fix64.Sin(k) * 6.5m), .5m, 1, .5m, 10));
             }
 
 

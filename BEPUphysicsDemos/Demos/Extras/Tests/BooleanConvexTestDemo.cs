@@ -5,6 +5,7 @@ using System;
 using BEPUphysics.CollisionShapes.ConvexShapes;
 using BEPUphysics.CollisionTests.CollisionAlgorithms;
 using BEPUutilities.DataStructures;
+using FixMath.NET;
 
 namespace BEPUphysicsDemos.Demos.Extras.Tests
 {
@@ -28,7 +29,7 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
             int numberOfTestsPerConfiguration = 10000;
 
 
-            float size = 2;
+            Fix64 size = 2;
             var aPositionBounds = new BoundingBox(new Vector3(-size, -size, -size), new Vector3(size, size, size));
             var bPositionBounds = new BoundingBox(new Vector3(-size, -size, -size), new Vector3(size, size, size));
 
@@ -69,14 +70,14 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
 
                 //Generate some random tranforms for the shapes.
                 RigidTransform aTransform;
-                var axis = Vector3.Normalize(new Vector3((float)((random.NextDouble() - .5f) * 2), (float)((random.NextDouble() - .5f) * 2), (float)((random.NextDouble() - .5f) * 2)));
-                var angle = (float)random.NextDouble() * MathHelper.TwoPi;
+                var axis = Vector3.Normalize(new Vector3(((Fix64)random.NextDouble() - .5m) * 2, ((Fix64)random.NextDouble() - .5m) * 2, ((Fix64)random.NextDouble() - .5m) * 2));
+                var angle = (Fix64)random.NextDouble() * MathHelper.TwoPi;
                 Quaternion.CreateFromAxisAngle(ref axis, angle, out aTransform.Orientation);
                 GetRandomPointInBoundingBox(random, ref aPositionBounds, out aTransform.Position);
 
                 RigidTransform bTransform;
-                axis = Vector3.Normalize(new Vector3((float)((random.NextDouble() - .5f) * 2), (float)((random.NextDouble() - .5f) * 2), (float)((random.NextDouble() - .5f) * 2)));
-                angle = (float)random.NextDouble() * MathHelper.TwoPi;
+                axis = Vector3.Normalize(new Vector3(((Fix64)random.NextDouble() - .5m) * 2, ((Fix64)random.NextDouble() - .5m) * 2, ((Fix64)random.NextDouble() - .5m) * 2));
+                angle = (Fix64)random.NextDouble() * MathHelper.TwoPi;
                 Quaternion.CreateFromAxisAngle(ref axis, angle, out bTransform.Orientation);
                 GetRandomPointInBoundingBox(random, ref bPositionBounds, out bTransform.Position);
 
@@ -131,9 +132,9 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
 #if XBOX360
             point = new Vector3();
 #endif
-            point.X = (float)(random.NextDouble() * (box.Max.X - box.Min.X) + box.Min.X);
-            point.Y = (float)(random.NextDouble() * (box.Max.Y - box.Min.Y) + box.Min.Y);
-            point.Z = (float)(random.NextDouble() * (box.Max.Z - box.Min.Z) + box.Min.Z);
+            point.X = (Fix64)random.NextDouble() * (box.Max.X - box.Min.X) + box.Min.X;
+			point.Y = (Fix64)random.NextDouble() * (box.Max.Y - box.Min.Y) + box.Min.Y;
+            point.Z = (Fix64)random.NextDouble() * (box.Max.Z - box.Min.Z) + box.Min.Z;
         }
 
 
@@ -152,9 +153,9 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
             Game.DataTextDrawer.Draw("GJK Time (ns): ", timeGJK * 1e9, 0, new Microsoft.Xna.Framework.Vector2(40, 70));
             Game.DataTextDrawer.Draw("GJK Separating Axis Time (ns): ", timeGJKSeparatingAxis * 1e9, 0, new Microsoft.Xna.Framework.Vector2(40, 100));
 
-            Game.DataTextDrawer.Draw("MPR overlaps: ", overlapsMPR, new Microsoft.Xna.Framework.Vector2(40, 150));
-            Game.DataTextDrawer.Draw("GJK overlaps: ", overlapsGJK, new Microsoft.Xna.Framework.Vector2(40, 180));
-            Game.DataTextDrawer.Draw("GJK Separating Axis overlaps: ", overlapsGJKSeparatingAxis, new Microsoft.Xna.Framework.Vector2(40, 210));
+            Game.DataTextDrawer.Draw("MPR overlaps: ", (Fix64)overlapsMPR, new Microsoft.Xna.Framework.Vector2(40, 150));
+            Game.DataTextDrawer.Draw("GJK overlaps: ", (Fix64)overlapsGJK, new Microsoft.Xna.Framework.Vector2(40, 180));
+            Game.DataTextDrawer.Draw("GJK Separating Axis overlaps: ", (Fix64)overlapsGJKSeparatingAxis, new Microsoft.Xna.Framework.Vector2(40, 210));
             base.DrawUI();
         }
 

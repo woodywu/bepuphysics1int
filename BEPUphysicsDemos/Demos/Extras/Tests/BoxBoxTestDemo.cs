@@ -3,6 +3,7 @@ using BEPUphysics.Entities;
 using BEPUphysics.Entities.Prefabs;
 using System.Diagnostics;
 using BEPUutilities;
+using FixMath.NET;
 
 namespace BEPUphysicsDemos.Demos.Extras.Tests
 {
@@ -18,9 +19,9 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
         public BoxBoxTestDemo(DemosGame game)
             : base(game)
         {
-            //float blockWidth = 2;
-            //float blockHeight = 2;
-            //float blockLength = 6f;
+            //Fix64 blockWidth = 2;
+            //Fix64 blockHeight = 2;
+            //Fix64 blockLength = 6f;
             //Entity toAdd;
 
 
@@ -32,25 +33,25 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
             int numColumns = 3;
             int numRows = 3;
             int numHigh = 30;
-            float xSpacing = 1.01f;
-            float ySpacing = 1.01f;
-            float zSpacing = 1.01f;
+            Fix64 xSpacing = 1.01m;
+            Fix64 ySpacing = 1.01m;
+            Fix64 zSpacing = 1.01m;
             for (int i = 0; i < numRows; i++)
                 for (int j = 0; j < numColumns; j++)
                     for (int k = 0; k < numHigh; k++)
                     {
                         Space.Add(new Box(new Vector3(
-                                                 xSpacing * i - (numRows - 1) * xSpacing / 2f,
-                                                 1f + k * (ySpacing),
-                                                 zSpacing * j - (numColumns - 1) * zSpacing / 2f),
-                                             .5f, .5f, .5f, 5));
+                                                 xSpacing * i - (numRows - 1) * xSpacing / 2,
+                                                 1 + k * (ySpacing),
+                                                 zSpacing * j - (numColumns - 1) * zSpacing / 2),
+                                             .5m, .5m, .5m, 5));
                     }
 
-            Space.Add(new Box(new Vector3(0, 0, 0), 20, 1f, 20));
+            Space.Add(new Box(new Vector3(0, 0, 0), 20, 1, 20));
             game.Camera.Position = new Vector3(0, 3, 10);
         }
 
-        public override void Update(float dt)
+        public override void Update(Fix64 dt)
         {
             if (Game.WasKeyPressed(Microsoft.Xna.Framework.Input.Keys.P))
                 Debug.WriteLine("break.");

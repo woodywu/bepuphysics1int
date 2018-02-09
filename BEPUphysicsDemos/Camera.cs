@@ -173,6 +173,7 @@ namespace BEPUphysicsDemos
         /// <param name="radians">Amount to rotate.</param>
         public void Pitch(Fix64 radians)
         {
+			return;
             //Do not allow the new view direction to violate the maximum pitch.
             Fix64 dot;
             Vector3.Dot(ref viewDirection, ref lockedUp, out dot);

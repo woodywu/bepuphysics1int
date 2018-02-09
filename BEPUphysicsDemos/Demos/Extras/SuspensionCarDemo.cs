@@ -8,6 +8,7 @@ using BEPUphysics.Constraints.TwoEntity.Joints;
 using BEPUphysics.Constraints.TwoEntity.JointLimits;
 using Microsoft.Xna.Framework.Input;
 using System;
+using FixMath.NET;
 
 namespace BEPUphysicsDemos.Demos.Extras
 {
@@ -26,8 +27,8 @@ namespace BEPUphysicsDemos.Demos.Extras
         private readonly RevoluteMotor steeringMotor1;
         private readonly RevoluteMotor steeringMotor2;
 
-        private float driveSpeed = 70;
-        private float maximumTurnAngle = MathHelper.Pi * .2f;
+        private Fix64 driveSpeed = 70;
+        private Fix64 maximumTurnAngle = MathHelper.Pi * .2m;
 
         /// <summary>
         /// Constructs a new demo.
@@ -40,14 +41,14 @@ namespace BEPUphysicsDemos.Demos.Extras
 
             Space.Add(new Box(new Vector3(0, -5, 0), 20, 1, 20));
 
-            var body = new Box(new Vector3(0, 0, 0), 4, .5f, 5, 20);
-            body.CollisionInformation.LocalPosition = new Vector3(0, .8f, 0);
+            var body = new Box(new Vector3(0, 0, 0), 4, .5m, 5, 20);
+            body.CollisionInformation.LocalPosition = new Vector3(0, .8m, 0);
             Space.Add(body);
 
-            AddBackWheel(new Vector3(-1.8f, -.2f, 2.1f), body);
-            AddBackWheel(new Vector3(1.8f, -.2f, 2.1f), body);
-            var wheel1 = AddDriveWheel(new Vector3(-1.8f, -.2f, -2.1f), body, out drivingMotor1, out steeringMotor1);
-            var wheel2 = AddDriveWheel(new Vector3(1.8f, -.2f, -2.1f), body, out drivingMotor2, out steeringMotor2);
+            AddBackWheel(new Vector3(-1.8m, -.2m, 2.1m), body);
+            AddBackWheel(new Vector3(1.8m, -.2m, 2.1m), body);
+            var wheel1 = AddDriveWheel(new Vector3(-1.8m, -.2m, -2.1m), body, out drivingMotor1, out steeringMotor1);
+            var wheel2 = AddDriveWheel(new Vector3(1.8m, -.2m, -2.1m), body, out drivingMotor2, out steeringMotor2);
 
             //Add a stabilizer so that the wheels can't point different directions.
             var steeringStabilizer = new RevoluteAngularJoint(wheel1, wheel2, Vector3.Right);
@@ -59,18 +60,18 @@ namespace BEPUphysicsDemos.Demos.Extras
             int xLength = 180;
             int zLength = 180;
 
-            float xSpacing = 8f;
-            float zSpacing = 8f;
-            var heights = new float[xLength, zLength];
+            Fix64 xSpacing = 8;
+            Fix64 zSpacing = 8;
+            var heights = new Fix64[xLength, zLength];
             for (int i = 0; i < xLength; i++)
             {
                 for (int j = 0; j < zLength; j++)
                 {
-                    float x = i - xLength / 2;
-                    float z = j - zLength / 2;
-                    //heights[i,j] = (float)(x * y / 1000f);
-                    heights[i, j] = (float)(10 * (Math.Sin(x / 8) + Math.Sin(z / 8)));
-                    //heights[i,j] = 3 * (float)Math.Sin(x * y / 100f);
+                    Fix64 x = i - xLength / 2;
+                    Fix64 z = j - zLength / 2;
+                    //heights[i,j] = (Fix64)(x * y / 1000f);
+                    heights[i, j] = 10 * (Fix64.Sin(x / 8) + Fix64.Sin(z / 8));
+                    //heights[i,j] = 3 * (Fix64)Math.Sin(x * y / 100f);
                     //heights[i,j] = (x * x * x * y - y * y * y * x) / 1000f;
                 }
             }
@@ -89,9 +90,9 @@ namespace BEPUphysicsDemos.Demos.Extras
 
         void AddBackWheel(Vector3 wheelOffset, Entity body)
         {
-            var wheel = new Cylinder(body.Position + wheelOffset, .4f, .5f, 5f);
-            wheel.Material.KineticFriction = 2.5f;
-            wheel.Material.StaticFriction = 3.5f;
+            var wheel = new Cylinder(body.Position + wheelOffset, .4m, .5m, 5);
+            wheel.Material.KineticFriction = 2.5m;
+            wheel.Material.StaticFriction = 3.5m;
             wheel.Orientation = Quaternion.CreateFromAxisAngle(Vector3.Forward, MathHelper.PiOver2);
 
             //Preventing the occasional pointless collision pair can speed things up.
@@ -119,9 +120,9 @@ namespace BEPUphysicsDemos.Demos.Extras
 
         Entity AddDriveWheel(Vector3 wheelOffset, Entity body, out RevoluteMotor drivingMotor, out RevoluteMotor steeringMotor)
         {
-            var wheel = new Cylinder(body.Position + wheelOffset, .4f, .5f, 5f);
-            wheel.Material.KineticFriction = 2.5f;
-            wheel.Material.StaticFriction = 3.5f;
+            var wheel = new Cylinder(body.Position + wheelOffset, .4m, .5m, 5);
+            wheel.Material.KineticFriction = 2.5m;
+            wheel.Material.StaticFriction = 3.5m;
             wheel.Orientation = Quaternion.CreateFromAxisAngle(Vector3.Forward, MathHelper.PiOver2);
 
             //Preventing the occasional pointless collision pair can speed things up.
@@ -140,7 +141,7 @@ namespace BEPUphysicsDemos.Demos.Extras
             var swivelHingeAngularJoint = new SwivelHingeAngularJoint(body, wheel, Vector3.Up, Vector3.Right);
             //Motorize the wheel.
             drivingMotor = new RevoluteMotor(body, wheel, Vector3.Left);
-            drivingMotor.Settings.VelocityMotor.Softness = .3f;
+            drivingMotor.Settings.VelocityMotor.Softness = .3m;
             drivingMotor.Settings.MaximumForce = 100;
             //Let it roll when the user isn't giving specific commands.
             drivingMotor.IsActive = false;
@@ -195,7 +196,7 @@ namespace BEPUphysicsDemos.Demos.Extras
             get { return "Suspension Car Demo"; }
         }
 
-        public override void Update(float dt)
+        public override void Update(Fix64 dt)
         {
 
             if (Game.KeyboardInput.IsKeyDown(Keys.NumPad8))

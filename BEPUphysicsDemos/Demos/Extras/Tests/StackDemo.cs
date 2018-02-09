@@ -1,5 +1,6 @@
 ﻿using BEPUphysics.Entities.Prefabs;
 using BEPUutilities;
+using FixMath.NET;
 
 namespace BEPUphysicsDemos.Demos.Extras.Tests
 {
@@ -17,9 +18,9 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
         {
             kapow.PositionUpdateMode = BEPUphysics.PositionUpdating.PositionUpdateMode.Continuous;
             int height = 50;
-            float blockWidth = 3f;
-            float blockHeight = 1f;
-            float blockLength = 3f;
+            Fix64 blockWidth = 3;
+            Fix64 blockHeight = 1;
+            Fix64 blockLength = 3;
 
             for (int i = 0; i < height; i++)
             {
@@ -27,13 +28,13 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
                         new Box(
                             new Vector3(
                                 0,
-                                blockHeight * .5f + i * (blockHeight),
+                                blockHeight * .5m + i * (blockHeight),
                                 0),
                             blockWidth, blockHeight, blockLength, 10);
                     Space.Add(toAdd);
             }
 
-            Box ground = new Box(new Vector3(0, -.5f, 0), 50, 1, 50);
+            Box ground = new Box(new Vector3(0, -.5m, 0), 50, 1, 50);
             Space.Add(ground);
 
             game.Camera.Position = new Vector3(0, 6, 15);

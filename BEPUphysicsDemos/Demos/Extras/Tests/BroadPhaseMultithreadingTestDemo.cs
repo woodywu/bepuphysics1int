@@ -9,6 +9,7 @@ using BEPUphysics.CollisionRuleManagement;
 using BEPUphysics.BroadPhaseSystems;
 using BEPUphysics.BroadPhaseSystems.Hierarchies;
 using BEPUutilities.Threading;
+using FixMath.NET;
 
 namespace BEPUphysicsDemos.Demos.Extras.Tests
 {
@@ -135,9 +136,9 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
             RawList<Entity> entities = new RawList<Entity>();
             for (int k = 0; k < 10000; k++)
             {
-                Vector3 position = new Vector3((float)(rand.NextDouble() * (box.Max.X - box.Min.X) + box.Min.X),
-                                               (float)(rand.NextDouble() * (box.Max.Y - box.Min.Y) + box.Min.Y),
-                                               (float)(rand.NextDouble() * (box.Max.Z - box.Min.Z) + box.Min.Z));
+                Vector3 position = new Vector3((Fix64)rand.NextDouble() * (box.Max.X - box.Min.X) + box.Min.X,
+                                               (Fix64)rand.NextDouble() * (box.Max.Y - box.Min.Y) + box.Min.Y,
+                                               (Fix64)rand.NextDouble() * (box.Max.Z - box.Min.Z) + box.Min.Z);
                 toAdd = new Box(position, 1, 1, 1, 1);
                 toAdd.CollisionInformation.CollisionRules.Personal = CollisionRule.NoNarrowPhasePair;
                 toAdd.CollisionInformation.UpdateBoundingBox(0);
@@ -268,16 +269,16 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
                 #endregion
                 #region Ray cast timing
                 case Test.RayCast:
-                    float rayLength = 100;
+                    Fix64 rayLength = 100;
                     RawList<Ray> rays = new RawList<Ray>();
                     for (int i = 0; i < numRuns; i++)
                     {
                         rays.Add(new Ray()
                         {
-                            Position = new Vector3((float)(rand.NextDouble() * (box.Max.X - box.Min.X) + box.Min.X),
-                                               (float)(rand.NextDouble() * (box.Max.Y - box.Min.Y) + box.Min.Y),
-                                               (float)(rand.NextDouble() * (box.Max.Z - box.Min.Z) + box.Min.Z)),
-                            Direction = Vector3.Normalize(new Vector3((float)(rand.NextDouble() - .5), (float)(rand.NextDouble() - .5), (float)(rand.NextDouble() - .5)))
+                            Position = new Vector3((Fix64)rand.NextDouble() * (box.Max.X - box.Min.X) + box.Min.X,
+                                               (Fix64)rand.NextDouble() * (box.Max.Y - box.Min.Y) + box.Min.Y,
+                                               (Fix64)rand.NextDouble() * (box.Max.Z - box.Min.Z) + box.Min.Z),
+                            Direction = Vector3.Normalize(new Vector3((Fix64)(rand.NextDouble() - .5), (Fix64)(rand.NextDouble() - .5), (Fix64)(rand.NextDouble() - .5)))
                         });
                     }
                     RawList<BroadPhaseEntry> outputIntersections = new RawList<BroadPhaseEntry>();
@@ -300,14 +301,14 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
                 #endregion
                 #region Bounding box query timing
                 case Test.BoundingBoxQuery:
-                    float boundingBoxSize = 10;
+                    Fix64 boundingBoxSize = 10;
                     var boundingBoxes = new RawList<BoundingBox>();
                     Vector3 offset = new Vector3(boundingBoxSize / 2, boundingBoxSize / 2, boundingBoxSize / 2);
                     for (int i = 0; i < numRuns; i++)
                     {
-                        Vector3 center = new Vector3((float)(rand.NextDouble() * (box.Max.X - box.Min.X) + box.Min.X),
-                                                     (float)(rand.NextDouble() * (box.Max.Y - box.Min.Y) + box.Min.Y),
-                                                     (float)(rand.NextDouble() * (box.Max.Z - box.Min.Z) + box.Min.Z));
+                        Vector3 center = new Vector3((Fix64)rand.NextDouble() * (box.Max.X - box.Min.X) + box.Min.X,
+                                                     (Fix64)rand.NextDouble() * (box.Max.Y - box.Min.Y) + box.Min.Y,
+                                                     (Fix64)rand.NextDouble() * (box.Max.Z - box.Min.Z) + box.Min.Z);
                         boundingBoxes.Add(new BoundingBox()
                         {
                             Min = center - offset,
@@ -342,8 +343,8 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
         {
             for (int i = 0; i < entities.Count; i++)
             {
-                float speed = .1f;
-                //entities[i].Position += new Vector3((float)rand.NextDouble() * speed - speed * .5f, (float)rand.NextDouble() * speed - speed * .5f, (float)rand.NextDouble() * speed - speed * .5f);
+                Fix64 speed = .1m;
+                //entities[i].Position += new Vector3((Fix64)rand.NextDouble() * speed - speed * .5m, (Fix64)rand.NextDouble() * speed - speed * .5m, (Fix64)rand.NextDouble() * speed - speed * .5m);
                 entities[i].Position += new Vector3(0, speed, 0);
                 entities[i].CollisionInformation.UpdateBoundingBox(0);
             }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using BEPUutilities;
+using FixMath.NET;
 
 namespace BEPUphysicsDemos.Demos.Extras.SolverTypeTests
 {
@@ -14,15 +15,15 @@ namespace BEPUphysicsDemos.Demos.Extras.SolverTypeTests
 
 
         private Vector3 jacobian;
-        private float effectiveMass;
+        private Fix64 effectiveMass;
 
 
-        private float biasVelocity;
+        private Fix64 biasVelocity;
 
-        private float accumulatedImpulse;
-        private float impulse;
+        private Fix64 accumulatedImpulse;
+        private Fix64 impulse;
 
-        private float distance;
+        private Fix64 distance;
 
         public DistanceConstraint(LinearDynamic a, LinearDynamic b)
         {
@@ -34,13 +35,13 @@ namespace BEPUphysicsDemos.Demos.Extras.SolverTypeTests
             distance = (a.Position - b.Position).Length();
         }
 
-        public override void Preupdate(float inverseDt, bool useConstraintCounts)
+        public override void Preupdate(Fix64 inverseDt, bool useConstraintCounts)
         {
             Vector3.Subtract(ref B.Position, ref A.Position, out jacobian);
-            float currentDistance = jacobian.LengthSquared();
+            Fix64 currentDistance = jacobian.LengthSquared();
             if (currentDistance > Toolbox.Epsilon)
             {
-                currentDistance = (float)Math.Sqrt(currentDistance);
+                currentDistance = Fix64.Sqrt(currentDistance);
                 Vector3.Divide(ref jacobian, currentDistance, out jacobian);
             }
             else
@@ -50,9 +51,9 @@ namespace BEPUphysicsDemos.Demos.Extras.SolverTypeTests
             }
 
             if (useConstraintCounts)
-                effectiveMass = 1f / (A.ConstraintCount * A.InverseMass + B.ConstraintCount * B.InverseMass + Softness);
+                effectiveMass = 1 / (A.ConstraintCount * A.InverseMass + B.ConstraintCount * B.InverseMass + Softness);
             else
-                effectiveMass = 1f / (A.InverseMass + B.InverseMass + Softness);
+                effectiveMass = 1 / (A.InverseMass + B.InverseMass + Softness);
             accumulatedImpulse = 0;
             biasVelocity = (distance - currentDistance) * BiasFactor * inverseDt;
 
@@ -62,11 +63,11 @@ namespace BEPUphysicsDemos.Demos.Extras.SolverTypeTests
         {
             Vector3 relativeVelocity;
             Vector3.Subtract(ref B.Velocity, ref A.Velocity, out relativeVelocity);
-            float relativeVelocityAlongJacobian;
+            Fix64 relativeVelocityAlongJacobian;
             Vector3.Dot(ref relativeVelocity, ref jacobian, out relativeVelocityAlongJacobian);
 
 
-            float changeInVelocity = relativeVelocityAlongJacobian - biasVelocity - Softness * accumulatedImpulse;
+            Fix64 changeInVelocity = relativeVelocityAlongJacobian - biasVelocity - Softness * accumulatedImpulse;
 
             impulse = changeInVelocity * effectiveMass;
 
@@ -84,7 +85,7 @@ namespace BEPUphysicsDemos.Demos.Extras.SolverTypeTests
             ApplyImpulse(dynamic, accumulatedImpulse);
         }
 
-        private void ApplyImpulse(LinearDynamic dynamic, float impulseToApply)
+        private void ApplyImpulse(LinearDynamic dynamic, Fix64 impulseToApply)
         {
             Vector3 worldSpaceImpulse;
             if (A == dynamic)

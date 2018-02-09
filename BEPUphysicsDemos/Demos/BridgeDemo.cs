@@ -26,24 +26,24 @@ namespace BEPUphysicsDemos.Demos
             //The revolute joints control the three linear degrees of freedom and two angular degrees of freedom.
             //The third allowed angular degree of freedom allows the bridge to flex like a rope bridge.
             Vector3 startPosition = new Vector3(0, 0, 0);
-            var startPlatform = new Box(startPosition - new Vector3(0, 0, (Fix64)3.2f), 8, (Fix64).5f, 8);
+            var startPlatform = new Box(startPosition - new Vector3(0, 0, (Fix64)3.2m), 8, (Fix64).5m, 8);
             Space.Add(startPlatform);
-            Vector3 offset = new Vector3(0, 0, (Fix64)1.7f);
+            Vector3 offset = new Vector3(0, 0, (Fix64)1.7m);
             Box previousLink = startPlatform;
             Vector3 position = new Vector3();
             for (int i = 1; i <= 200; i++)
             {
                 position = startPosition + offset * i;
-                Box link = new Box(position, (Fix64)4.5f, (Fix64).3f, (Fix64)1.5f, 50);
+                Box link = new Box(position, (Fix64)4.5m, (Fix64).3m, (Fix64)1.5m, 50);
                 Space.Add(link);
-                Space.Add(new RevoluteJoint(previousLink, link, position - offset * (Fix64).5f, Vector3.Right));
+                Space.Add(new RevoluteJoint(previousLink, link, position - offset * (Fix64).5m, Vector3.Right));
 
                 previousLink = link;
             }
-            var endPlatform = new Box(position - new Vector3(0, 0, (Fix64)(-4.8f)), 8, (Fix64).5f, 8);
+            var endPlatform = new Box(position - new Vector3(0, 0, (Fix64)(-4.8m)), 8, (Fix64).5m, 8);
             Space.Add(endPlatform);
 
-            Space.Add(new RevoluteJoint(previousLink, endPlatform, position + offset * (Fix64).5f, Vector3.Right));
+            Space.Add(new RevoluteJoint(previousLink, endPlatform, position + offset * (Fix64).5m, Vector3.Right));
 
 
             game.Camera.Position = startPosition + new Vector3(0, 1, offset.Z * 200 + 5);

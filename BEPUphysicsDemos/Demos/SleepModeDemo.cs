@@ -2,6 +2,7 @@
 using BEPUphysics.Entities;
 using BEPUphysics.Entities.Prefabs;
 using BEPUutilities;
+using FixMath.NET;
 
 namespace BEPUphysicsDemos.Demos
 {
@@ -23,8 +24,8 @@ namespace BEPUphysicsDemos.Demos
             SpawnRow();
 
             game.Camera.Position = new Vector3(-30, 30, -30);
-            game.Camera.Yaw((float)(-3 * Math.PI / 4));
-            game.Camera.Pitch(-(float)Math.PI / 12);
+            game.Camera.Yaw((Fix64)(-3 * Math.PI / 4));
+            game.Camera.Pitch(-(Fix64)Math.PI / 12);
         }
 
         void SpawnRow()
@@ -34,9 +35,9 @@ namespace BEPUphysicsDemos.Demos
 
             int numColumns = 20;
 
-            float damping = 0.3f;
-            float verticalOffsetPerColumn = 0.5f;
-            float verticalSpacing = 1.5f;
+            Fix64 damping = 0.3m;
+            Fix64 verticalOffsetPerColumn = 0.5m;
+            Fix64 verticalSpacing = 1.5m;
 
             Entity toAdd;
             for (int j = 0; j < numColumns; j++)
@@ -45,13 +46,13 @@ namespace BEPUphysicsDemos.Demos
                 {
                     if (k % 2 == 1)
                     {
-                        toAdd = new Box(new Vector3(j * 10 + -3, -0.5f + j * verticalOffsetPerColumn + verticalSpacing * k, rowIndex * 10 + zOffset), 1, 1, 7, 20);
+                        toAdd = new Box(new Vector3(j * 10 + -3, -0.5m + j * verticalOffsetPerColumn + verticalSpacing * k, rowIndex * 10 + zOffset), 1, 1, 7, 20);
                         toAdd.LinearDamping = damping;
                         toAdd.AngularDamping = damping;
                         Space.Add(toAdd);
                         Game.ModelDrawer.Add(toAdd);
                         toAdd.Tag = "noDisplayObject";
-                        toAdd = new Box(new Vector3(j * 10 + 3, -0.5f + j * verticalOffsetPerColumn + verticalSpacing * k, rowIndex * 10 + zOffset), 1, 1, 7, 20);
+                        toAdd = new Box(new Vector3(j * 10 + 3, -0.5m + j * verticalOffsetPerColumn + verticalSpacing * k, rowIndex * 10 + zOffset), 1, 1, 7, 20);
                         toAdd.LinearDamping = damping;
                         toAdd.AngularDamping = damping;
                         Space.Add(toAdd);
@@ -60,13 +61,13 @@ namespace BEPUphysicsDemos.Demos
                     }
                     else
                     {
-                        toAdd = new Box(new Vector3(j * 10 + 0, -0.5f + j * verticalOffsetPerColumn + verticalSpacing * k, rowIndex * 10 + zOffset - 3), 7, 1, 1, 20);
+                        toAdd = new Box(new Vector3(j * 10 + 0, -0.5m + j * verticalOffsetPerColumn + verticalSpacing * k, rowIndex * 10 + zOffset - 3), 7, 1, 1, 20);
                         toAdd.LinearDamping = damping;
                         toAdd.AngularDamping = damping;
                         Space.Add(toAdd);
                         Game.ModelDrawer.Add(toAdd);
                         toAdd.Tag = "noDisplayObject";
-                        toAdd = new Box(new Vector3(j * 10 + 0, -0.5f + j * verticalOffsetPerColumn + verticalSpacing * k, rowIndex * 10 + zOffset + 3), 7, 1, 1, 20);
+                        toAdd = new Box(new Vector3(j * 10 + 0, -0.5m + j * verticalOffsetPerColumn + verticalSpacing * k, rowIndex * 10 + zOffset + 3), 7, 1, 1, 20);
                         toAdd.LinearDamping = damping;
                         toAdd.AngularDamping = damping;
                         Space.Add(toAdd);
@@ -75,14 +76,14 @@ namespace BEPUphysicsDemos.Demos
                     }
                 }
             }
-            var ground = new Box(new Vector3(10 * numColumns * 0.5f - 5, -.5f, rowIndex * 10 + zOffset), 10 * numColumns, 1f, 10);
+            var ground = new Box(new Vector3(10 * numColumns * 0.5m - 5, -.5m, rowIndex * 10 + zOffset), 10 * numColumns, 1, 10);
             Space.Add(ground);
             Game.ModelDrawer.Add(ground);
             ground.Tag = "noDisplayObject";
             ++rowIndex;
         }
 
-        public override void Update(float dt)
+        public override void Update(Fix64 dt)
         {
             if (rowIndex < 20)
             {

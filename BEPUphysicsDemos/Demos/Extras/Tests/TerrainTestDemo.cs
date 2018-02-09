@@ -22,16 +22,16 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
             //int xLength = 384;
             //int zLength = 384;
 
-            //float xSpacing = .5f;
-            //float zSpacing = .5f;
-            //var heights = new float[xLength, zLength];
+            //Fix64 xSpacing = .5m;
+            //Fix64 zSpacing = .5m;
+            //var heights = new Fix64[xLength, zLength];
             //for (int i = 0; i < xLength; i++)
             //{
             //    for (int j = 0; j < zLength; j++)
             //    {
-            //        float x = i - xLength / 2;
-            //        float z = j - zLength / 2;
-            //        heights[i, j] = (float)(10 * (Math.Sin(x / 8) + Math.Sin(z / 8)));
+            //        Fix64 x = i - xLength / 2;
+            //        Fix64 z = j - zLength / 2;
+            //        heights[i, j] = (Fix64)(10 * (Math.Sin(x / 8) + Math.Sin(z / 8)));
             //    }
             //}
             ////Create the terrain.
@@ -93,7 +93,7 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
                     //cb.Position = new Vector3(i * 15, 20, j * 5);
 
                     cb.ActivityInformation.IsAlwaysActive = true;
-                    cb.AngularVelocity = new Vector3(.01f, 0, 0);
+                    cb.AngularVelocity = new Vector3(.01m, 0, 0);
 
                     Space.Add(cb);
                 }

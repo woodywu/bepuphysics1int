@@ -20,7 +20,7 @@ namespace BEPUphysicsDemos.Demos
         {
             //Make a fatter kapow sphere.
             Space.Remove(kapow);
-            kapow = new Sphere(new Vector3(11000, 0, 0), (Fix64)1.5f, 1000);
+            kapow = new Sphere(new Vector3(11000, 0, 0), (Fix64)1.5m, 1000);
             Space.Add(kapow);
             Space.Solver.IterationLimit = 1; //Essentially no sustained contacts, so don't need to worry about accuracy.
             Space.ForceUpdater.Gravity = Vector3.Zero;

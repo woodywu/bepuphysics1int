@@ -46,16 +46,16 @@ namespace BEPUphysicsDemos
             MotionSettings.UseExtraExpansionForContinuousBoundingBoxes = false;
 
             //Set all the scaling settings back to their defaults.
-            space.DeactivationManager.VelocityLowerLimit = (Fix64)0.26f;
+            space.DeactivationManager.VelocityLowerLimit = (Fix64)0.26m;
             CollisionResponseSettings.MaximumPenetrationRecoverySpeed = 2;
             CollisionResponseSettings.BouncinessVelocityThreshold = 1;
-            CollisionResponseSettings.StaticFrictionVelocityThreshold = (Fix64).2f;
-            CollisionDetectionSettings.ContactInvalidationLength = (Fix64).1f;
-            CollisionDetectionSettings.ContactMinimumSeparationDistance = (Fix64).03f;
-            CollisionDetectionSettings.MaximumContactDistance = (Fix64).1f;
-            CollisionDetectionSettings.DefaultMargin = (Fix64).04f;
-            CollisionDetectionSettings.AllowedPenetration = (Fix64).01f;
-            SolverSettings.DefaultMinimumImpulse = (Fix64)0.001f;
+            CollisionResponseSettings.StaticFrictionVelocityThreshold = (Fix64).2m;
+            CollisionDetectionSettings.ContactInvalidationLength = (Fix64).1m;
+            CollisionDetectionSettings.ContactMinimumSeparationDistance = (Fix64).03m;
+            CollisionDetectionSettings.MaximumContactDistance = (Fix64).1m;
+            CollisionDetectionSettings.DefaultMargin = (Fix64).04m;
+            CollisionDetectionSettings.AllowedPenetration = (Fix64).01m;
+            SolverSettings.DefaultMinimumImpulse = (Fix64)0.001m;
 
             //Adjust epsilons back to defaults.
             Toolbox.Epsilon = (Fix64)1e-7m;
@@ -138,15 +138,15 @@ namespace BEPUphysicsDemos
         public static void ApplyScale(Space space, Fix64 scale)
         {
             //Set all values to default values * scale.
-            space.DeactivationManager.VelocityLowerLimit = (Fix64)0.26f * scale;
+            space.DeactivationManager.VelocityLowerLimit = (Fix64)0.26m * scale;
             CollisionResponseSettings.MaximumPenetrationRecoverySpeed = 2 * scale;
             CollisionResponseSettings.BouncinessVelocityThreshold = 1 * scale;
-            CollisionResponseSettings.StaticFrictionVelocityThreshold = (Fix64).2f * scale;
-            CollisionDetectionSettings.ContactInvalidationLength = (Fix64).1f * scale;
-            CollisionDetectionSettings.ContactMinimumSeparationDistance = (Fix64).03f * scale;
-            CollisionDetectionSettings.MaximumContactDistance = (Fix64).1f * scale;
-            CollisionDetectionSettings.DefaultMargin = (Fix64).04f * scale;
-            CollisionDetectionSettings.AllowedPenetration = (Fix64).01f * scale;
+            CollisionResponseSettings.StaticFrictionVelocityThreshold = (Fix64).2m * scale;
+            CollisionDetectionSettings.ContactInvalidationLength = (Fix64).1m * scale;
+            CollisionDetectionSettings.ContactMinimumSeparationDistance = (Fix64).03m * scale;
+            CollisionDetectionSettings.MaximumContactDistance = (Fix64).1m * scale;
+            CollisionDetectionSettings.DefaultMargin = (Fix64).04m * scale;
+            CollisionDetectionSettings.AllowedPenetration = (Fix64).01m * scale;
 
             //Adjust epsilons, too.
             Toolbox.Epsilon = (Fix64)1e-7m * scale;

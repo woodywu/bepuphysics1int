@@ -1,5 +1,6 @@
 ﻿using BEPUphysics.Entities.Prefabs;
 using BEPUutilities;
+using FixMath.NET;
 
 namespace BEPUphysicsDemos.Demos.Extras.Tests
 {
@@ -91,7 +92,7 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
                     }
                 }
             }
-            alwaysActiveBox = new Box(new Vector3(-6, 12.5f, -8), 10, 1, 10);
+            alwaysActiveBox = new Box(new Vector3(-6, 12.5m, -8), 10, 1, 10);
             Space.Add(alwaysActiveBox);
 
 
@@ -100,17 +101,17 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
         }
 
 
-        public override void Update(float dt)
+        public override void Update(Fix64 dt)
         {
             base.Update(dt);
             //Teleport the box sideways into the sleeping dynamic objects.
             if (Game.KeyboardInput.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.NumPad0))
-                teleportingBox.Position += new Vector3(.1f, 0, 0);
+                teleportingBox.Position += new Vector3(.1m, 0, 0);
             //Moving the object after things relying on it have gone to sleep.
             if (Game.WasKeyPressed(Microsoft.Xna.Framework.Input.Keys.NumPad1))
             {
                 if (movingBox.LinearVelocity.LengthSquared() == 0)
-                    movingBox.LinearVelocity = new Vector3(1f, 0, 0);
+                    movingBox.LinearVelocity = new Vector3(1, 0, 0);
                 else
                     movingBox.LinearVelocity = new Vector3();
             }
@@ -118,7 +119,7 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
             //Adding a new kinematic after the stack of objects goes to sleep.
             if (Game.WasKeyPressed(Microsoft.Xna.Framework.Input.Keys.NumPad2))
             {
-                Box box = new Box(new Vector3(-6, 1, -8), 10, .1f, 10);
+                Box box = new Box(new Vector3(-6, 1, -8), 10, .1m, 10);
                 Space.Add(box);
                 Game.ModelDrawer.Add(box);
             }

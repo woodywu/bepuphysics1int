@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using BEPUphysics;
 using BEPUphysics.Entities.Prefabs;
 using ConversionHelper;
+using FixMath.NET;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -30,14 +31,14 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
         public RayCastTestDemo(DemosGame game)
             : base(game)
         {
-            Space.Add(new Box(new Vector3(0, -0.5f, 0), 50, 1, 50));
+            Space.Add(new Box(new Vector3(0, -0.5m, 0), 50, 1, 50));
 
             //Put whatever you'd like to ray cast here.
-            var capsule = new Capsule(new Vector3(0, 1.2f, 0), 1, 0.6f);
+            var capsule = new Capsule(new Vector3(0, 1.2m, 0), 1, 0.6m);
             capsule.AngularVelocity = new Vector3(1, 1, 1);
             Space.Add(capsule);
 
-            var cylinder = new Cylinder(new Vector3(0, 5, 0), 2, .5f);
+            var cylinder = new Cylinder(new Vector3(0, 5, 0), 2, .5m);
             cylinder.AngularVelocity = new Vector3(1, -1, 1);
             Space.Add(cylinder);
 
@@ -46,7 +47,7 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
             var random = new Random(0);
             for (int k = 0; k < 40; k++)
             {
-                points.Add(new Vector3(1 * (float)random.NextDouble(), 3 * (float)random.NextDouble(), 2 * (float)random.NextDouble()));
+                points.Add(new Vector3(1 * (Fix64)random.NextDouble(), 3 * (Fix64)random.NextDouble(), 2 * (Fix64)random.NextDouble()));
             }
             var convexHull = new ConvexHull(new Vector3(0, 10, 0), points);
             convexHull.AngularVelocity = new Vector3(-1, 1, 1);
@@ -54,8 +55,8 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
 
 
             game.Camera.Position = new Vector3(-10, 5, 10);
-            game.Camera.Yaw((float)Math.PI / -4f);
-            game.Camera.Pitch(-(float)Math.PI / 9f);
+            game.Camera.Yaw((Fix64)MathHelper.Pi / -4);
+            game.Camera.Pitch(-(Fix64)MathHelper.Pi / 9);
 
             //Starter ray.
             origin = new Vector3(10, 5, 0);
@@ -73,7 +74,7 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
             get { return "Ray Cast Test"; }
         }
 
-        public override void Update(float dt)
+        public override void Update(Fix64 dt)
         {
             base.Update(dt);
 

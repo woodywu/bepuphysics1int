@@ -24,16 +24,16 @@ namespace BEPUphysics.EntityStateManagement
         //There are platform requirements on layout that cause issues with the WINDOWS explicit version.
         //TODO: There's probably a better way to handle it on the XBOX/WP7 than the "give up" approach taken below.
 #if WINDOWS
-        [StructLayout(LayoutKind.Explicit)]
+        //[StructLayout(LayoutKind.Explicit)]
         internal struct EntityStateChange
         {
-            [FieldOffset(0)]
+            //[FieldOffset(0)]
             internal Quaternion orientationQuaternion;
-            [FieldOffset(0)]
+            //[FieldOffset(0)]
             internal Vector3 vector;
-            [FieldOffset(16)]
+            //[FieldOffset(16)]
             internal TargetField targetField;
-            [FieldOffset(24)]
+            //[FieldOffset(24)]
             internal Entity target;
         }
 #else

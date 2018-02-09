@@ -1,6 +1,7 @@
 ﻿using System.Threading;
 using BEPUutilities;
 using BEPUutilities.DataStructures;
+using FixMath.NET;
 using SpinLock = BEPUutilities.SpinLock;
 
 namespace BEPUphysicsDemos.Demos.Extras.SolverTypeTests
@@ -17,13 +18,13 @@ namespace BEPUphysicsDemos.Demos.Extras.SolverTypeTests
 
         public RawList<Constraint> Constraints = new RawList<Constraint>();
 
-        private float mass, inverseMass;
-        public float Mass
+        private Fix64 mass, inverseMass;
+        public Fix64 Mass
         {
             get { return mass; }
         }
 
-        public float InverseMass
+        public Fix64 InverseMass
         {
             get { return inverseMass; }
         }
@@ -41,15 +42,15 @@ namespace BEPUphysicsDemos.Demos.Extras.SolverTypeTests
 
         public readonly SpinLock SolverSpinLock = new SpinLock();
 
-        public LinearDynamic(float mass)
+        public LinearDynamic(Fix64 mass)
         {
             this.mass = mass;
-            this.inverseMass = 1f / mass;
+            this.inverseMass = 1 / mass;
 
             Id = GetId();
         }
 
-        public void UpdatePosition(float dt)
+        public void UpdatePosition(Fix64 dt)
         {
             Vector3 displacement;
             Vector3.Multiply(ref Velocity, dt, out displacement);

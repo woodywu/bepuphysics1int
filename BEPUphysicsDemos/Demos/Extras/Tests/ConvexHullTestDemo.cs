@@ -4,6 +4,7 @@ using BEPUphysics.Entities.Prefabs;
 using BEPUutilities;
 using BEPUutilities.DataStructures;
 using BEPUphysics.CollisionShapes;
+using FixMath.NET;
 
 namespace BEPUphysicsDemos.Demos.Extras.Tests
 {
@@ -27,7 +28,7 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
                 List<Vector3> points = new List<Vector3>();
                 for (int k = 0; k < random.Next(8, 60); k++)
                 {
-                    points.Add(new Vector3(-100 + 30 * (float)random.NextDouble(), 100 + 500 * (float)random.NextDouble(), 100 + 30 * (float)random.NextDouble()));
+                    points.Add(new Vector3(-100 + 30 * (Fix64)random.NextDouble(), 100 + 500 * (Fix64)random.NextDouble(), 100 + 30 * (Fix64)random.NextDouble()));
                 }
                 var convexHull = new ConvexHull(new Vector3(0, 7, 0), points, 10);
                 Console.WriteLine(convexHull.CollisionInformation.Shape.Vertices.Count);
@@ -35,11 +36,11 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
             
             var vertices = new[] 
             { 
-                new Vector3(0, -1.750886E-9f, -1.5f),
-                new Vector3(1, 1, 0.5f), 
-                new Vector3(1, -1, 0.5f),
-                new Vector3(-1, 1, 0.5f), 
-                new Vector3(-1, -1, 0.5f), 
+                new Vector3(0, -1.750886E-9m, -1.5m),
+                new Vector3(1, 1, 0.5m), 
+                new Vector3(1, -1, 0.5m),
+                new Vector3(-1, 1, 0.5m), 
+                new Vector3(-1, -1, 0.5m), 
             };
 
             var hullVertices = new RawList<Vector3>();
@@ -48,7 +49,7 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
             ConvexHull hull = new ConvexHull(vertices, 5);
             Space.Add(hull);
 
-            Box ground = new Box(new Vector3(0, -.5f, 0), 50, 1, 50);
+            Box ground = new Box(new Vector3(0, -.5m, 0), 50, 1, 50);
             Space.Add(ground);
             game.Camera.Position = new Vector3(0, 6, 15);
         }

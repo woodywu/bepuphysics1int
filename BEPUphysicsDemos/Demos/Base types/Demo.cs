@@ -98,9 +98,9 @@ namespace BEPUphysicsDemos.Demos
             accumulatedPhysicsTime += (Fix64)(endTime - startTime) / (Fix64)Stopwatch.Frequency;
             accumulatedPhysicsFrames++;
             previousTimeMeasurement += dt;
-            if (previousTimeMeasurement > (Fix64).3f)
+            if (previousTimeMeasurement > (Fix64).3m)
             {
-                previousTimeMeasurement -= (Fix64).3f;
+                previousTimeMeasurement -= (Fix64).3m;
                 PhysicsTime = accumulatedPhysicsTime / accumulatedPhysicsFrames;
                 accumulatedPhysicsTime = 0;
                 accumulatedPhysicsFrames = 0;

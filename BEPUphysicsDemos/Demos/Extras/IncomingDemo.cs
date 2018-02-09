@@ -39,7 +39,7 @@ namespace BEPUphysicsDemos.Demos.Extras
             toAdd = new Sphere(new Vector3(0, 150, 0), 3, 100);
 
             Space.Add(toAdd);
-            Space.Add(new Box(new Vector3(0, 0, 0), 10, 1f, 10));
+            Space.Add(new Box(new Vector3(0, 0, 0), 10, 1m, 10));
             game.Camera.Position = new Vector3(0, 6, 30);
         }
 

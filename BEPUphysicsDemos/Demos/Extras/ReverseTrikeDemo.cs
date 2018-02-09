@@ -127,8 +127,8 @@ namespace BEPUphysicsDemos.Demos.Extras
 
             #region Third Wheel
 
-            wheel = new Cylinder(body.Position + new Vector3(0, -.3f, 1.5f), .2f, .5f, 4);
-            wheel.Material = new Material(1.5f, 1.5f, 0);
+            wheel = new Cylinder(body.Position + new Vector3(0, -.3m, 1.5m), .2m, .5m, 4);
+            wheel.Material = new Material(1.5m, 1.5m, 0);
             wheel.Orientation = Quaternion.CreateFromAxisAngle(Vector3.Forward, MathHelper.PiOver2);
 
             //Preventing the occasional pointless collision pair can speed things up.
@@ -161,9 +161,9 @@ namespace BEPUphysicsDemos.Demos.Extras
                 {
 					Fix64 x = i - xLength / 2;
 					Fix64 z = j - zLength / 2;
-                    //heights[i,j] = (float)(x * y / 1000f);
+                    //heights[i,j] = (Fix64)(x * y / 1000f);
                     heights[i, j] = 10 * (Fix64.Sin(x / 8) + Fix64.Sin(z / 8));
-                    //heights[i,j] = 3 * (float)Math.Sin(x * y / 100f);
+                    //heights[i,j] = 3 * (Fix64)Math.Sin(x * y / 100f);
                     //heights[i,j] = (x * x * x * y - y * y * y * x) / 1000f;
                 }
             }
@@ -185,7 +185,7 @@ namespace BEPUphysicsDemos.Demos.Extras
             get { return "Reverse Trike"; }
         }
 
-        public override void Update(float dt)
+        public override void Update(Fix64 dt)
         {
             if (Game.KeyboardInput.IsKeyDown(Keys.NumPad8))
             {

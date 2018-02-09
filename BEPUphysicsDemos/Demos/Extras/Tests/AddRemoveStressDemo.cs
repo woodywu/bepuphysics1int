@@ -9,6 +9,7 @@ using BEPUphysics.NarrowPhaseSystems;
 using BEPUutilities;
 using BEPUutilities.DataStructures;
 using Microsoft.Xna.Framework.Graphics;
+using FixMath.NET;
 
 namespace BEPUphysicsDemos.Demos.Extras.Tests
 {
@@ -20,14 +21,14 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
         private Vector3 GetRandomPosition(Random random)
         {
             return new Vector3(
-                       (float)(random.NextDouble() - 0.5) * width,
-                       (float)(random.NextDouble() - 0.5) * height,
-                       (float)(random.NextDouble() - 0.5) * length);
+                       (Fix64)(random.NextDouble() - 0.5) * width,
+                       (Fix64)(random.NextDouble() - 0.5) * height,
+                       (Fix64)(random.NextDouble() - 0.5) * length);
         }
 
-        float width = 15f;
-        float height = 15f;
-        float length = 15f;
+        Fix64 width = 15;
+        Fix64 height = 15;
+        Fix64 length = 15;
         /// <summary>
         /// Constructs a new demo.
         /// </summary>
@@ -91,7 +92,7 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
         private RawList<Entity> addedEntities = new RawList<Entity>();
         private RawList<Entity> removedEntities = new RawList<Entity>();
 
-        public override void Update(float dt)
+        public override void Update(Fix64 dt)
         {
             for (int i = removedEntities.Count - 1; i >= 0; --i)
             {
@@ -116,13 +117,13 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
 
             if (Game.MouseInput.MiddleButton != Microsoft.Xna.Framework.Input.ButtonState.Pressed)
             {
-                for (int i = 0; i < Math.Max(1, (int)(addedEntities.Count * 0.02f)); i++)
+                for (int i = 0; i < Math.Max(1, (int)(addedEntities.Count * 0.02m)); i++)
                 {
                     var entity = addedEntities[random.Next(addedEntities.Count)];
                     entity.Position = new Vector3(
-                        (float)(random.NextDouble() - 0.5f) * width,
-                        (float)(random.NextDouble() - 0.5f) * height,
-                        (float)(random.NextDouble() - 0.5f) * length);
+						((Fix64)random.NextDouble() - 0.5m) * width,
+						((Fix64)random.NextDouble() - 0.5m) * height,
+						((Fix64)random.NextDouble() - 0.5m) * length);
                 }
             }
             base.Update(dt);

@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using FixMath.NET;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -79,14 +80,25 @@ namespace BEPUphysicsDrawer.Font
             Draw(value, new Vector2(position.X + Font.MeasureString(text).X, position.Y));
         }
 
-        /// <summary>
-        /// Draws text followed by a double.
-        /// </summary>
-        /// <param name="text">Text to draw.</param>
-        /// <param name="value">Number to draw.</param>
-        /// <param name="numPlaces">Number of digits to include after the decimal.</param>
-        /// <param name="position">Position to draw the text at.</param>
-        public void Draw(string text, double value, int numPlaces, Vector2 position)
+		/// <summary>
+		/// Draws text followed by a Fix64
+		/// </summary>
+		/// <param name="text">Text to draw.</param>
+		/// <param name="value">Number to draw.</param>
+		/// <param name="position">Position to draw the text at.</param>
+		public void Draw(string text, Fix64 value, Vector2 position)
+		{
+			Draw(text, (double)value, position);
+		}
+
+		/// <summary>
+		/// Draws text followed by a double.
+		/// </summary>
+		/// <param name="text">Text to draw.</param>
+		/// <param name="value">Number to draw.</param>
+		/// <param name="numPlaces">Number of digits to include after the decimal.</param>
+		/// <param name="position">Position to draw the text at.</param>
+		public void Draw(string text, double value, int numPlaces, Vector2 position)
         {
             SpriteBatch.DrawString(Font, text, position, Color);
             Draw(value, numPlaces, new Vector2(position.X + Font.MeasureString(text).X, position.Y));

@@ -57,13 +57,13 @@ namespace BEPUphysics.BroadPhaseSystems.SortAndSweep
 				else if (ray.Direction.Y < 0)
 					nextTy = ((cellIndex.Y) * cellWidth - currentPosition.Y) / ray.Direction.Y;
 				else
-					nextTy = Fix64Utils.EEleven;
+					nextTy = Fix64.MaxValue;
                 if (ray.Direction.Z > 0)
                     nextTz = ((cellIndex.Z + 1) * cellWidth - currentPosition.Z) / ray.Direction.Z;
                 else if (ray.Direction.Z < 0)
                     nextTz = ((cellIndex.Z) * cellWidth - currentPosition.Z) / ray.Direction.Z;
                 else
-                    nextTz = Fix64Utils.EEleven;
+                    nextTz = Fix64.MaxValue;
 
                 bool yIsMinimum = nextTy < nextTz;
                 nextT = yIsMinimum ? nextTy : nextTz;

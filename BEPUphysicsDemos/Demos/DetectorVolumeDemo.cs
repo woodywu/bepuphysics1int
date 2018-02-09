@@ -42,16 +42,16 @@ namespace BEPUphysicsDemos.Demos
             //Compounds!
             //var bodies = new List<CompoundShapeEntry>
             //{
-            //    new CompoundShapeEntry(new SphereShape(.5f), new Vector3(0, -8.2f, 0), 1),
-            //    new CompoundShapeEntry(new SphereShape(.5f), new Vector3(0, -9f, 0), 1),
-            //    new CompoundShapeEntry(new SphereShape(.5f), new Vector3(0, -9.8f, 0), 1)
+            //    new CompoundShapeEntry(new SphereShape(.5m), new Vector3(0, -8.2m, 0), 1),
+            //    new CompoundShapeEntry(new SphereShape(.5m), new Vector3(0, -9f, 0), 1),
+            //    new CompoundShapeEntry(new SphereShape(.5m), new Vector3(0, -9.8m, 0), 1)
             //};
             //testEntity = new CompoundBody(bodies);
 
             //Mobile meshes!
             //model = game.Content.Load<Model>("tube");
             //TriangleMesh.GetVerticesAndIndicesFromModel(model, out modelVertices, out modelIndices);
-            //testEntity = new MobileMesh(modelVertices, modelIndices, new AffineTransform(new Vector3(.2f, .2f, .2f), Quaternion.Identity, new Vector3(0, -10, 0)), MobileMeshSolidity.Solid);
+            //testEntity = new MobileMesh(modelVertices, modelIndices, new AffineTransform(new Vector3(.2m, .2m, .2m), Quaternion.Identity, new Vector3(0, -10, 0)), MobileMeshSolidity.Solid);
 
             testEntity.Tag = "noDisplayObject";
             displayBox = game.ModelDrawer.Add(testEntity);

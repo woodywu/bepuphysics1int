@@ -66,7 +66,7 @@ namespace BEPUphysicsDemos.Demos.Extras
             //This graphic is perfectly aligned with the collision shape!  Hooray!
 
 
-            Box ground = new Box(new Vector3(0, -1.5f, 0), 50, 1, 50);
+            Box ground = new Box(new Vector3(0, -1.5m, 0), 50, 1, 50);
             Space.Add(ground);
             game.Camera.Position = new Vector3(0, 6, 15);
         }

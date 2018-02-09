@@ -38,7 +38,7 @@ namespace BEPUphysicsDemos.Demos
 
             //We'll start with such an entity for the kinematic ground.  Notice how it allows the definition of position and shape data all in the constructor.
             //It has other overloads that allow you to specify a mass (for a dynamic object) or a full MotionState instead of just a position.
-            Box ground = new Box(new Vector3(0, -.5f, 0), 50, 1, 50);
+            Box ground = new Box(new Vector3(0, -.5m, 0), 50, 1, 50);
             Space.Add(ground);
 
             //If you examine the ground's CollisionInformation property, you'll find that it is a generic method which returns a ConvexCollidable<BoxShape>.

@@ -1,6 +1,7 @@
 using BEPUphysics;
 using BEPUphysics.Character;
 using BEPUutilities;
+using FixMath.NET;
 using Microsoft.Xna.Framework.Input;
 
 namespace BEPUphysicsDemos.AlternateMovement
@@ -88,7 +89,7 @@ namespace BEPUphysicsDemos.AlternateMovement
         /// <param name="keyboardInput">The current frame's keyboard state.</param>
         /// <param name="previousGamePadInput">The last frame's gamepad state.</param>
         /// <param name="gamePadInput">The current frame's keyboard state.</param>
-        public void Update(float dt, KeyboardState previousKeyboardInput, KeyboardState keyboardInput, GamePadState previousGamePadInput, GamePadState gamePadInput)
+        public void Update(Fix64 dt, KeyboardState previousKeyboardInput, KeyboardState keyboardInput, GamePadState previousGamePadInput, GamePadState gamePadInput)
         {
             if (IsActive)
             {

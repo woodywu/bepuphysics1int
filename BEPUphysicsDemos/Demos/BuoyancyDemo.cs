@@ -4,6 +4,7 @@ using BEPUphysics.Entities;
 using BEPUphysics.Entities.Prefabs;
 using BEPUphysics.UpdateableSystems;
 using BEPUutilities;
+using FixMath.NET;
 
 namespace BEPUphysicsDemos.Demos
 {
@@ -20,10 +21,10 @@ namespace BEPUphysicsDemos.Demos
             : base(game)
         {
             var tris = new List<Vector3[]>();
-            float basinWidth = 100;
-            float basinLength = 100;
-            float basinHeight = 16;
-            float waterHeight = 15;
+            Fix64 basinWidth = 100;
+            Fix64 basinLength = 100;
+            Fix64 basinHeight = 16;
+            Fix64 waterHeight = 15;
 
             //Remember, the triangles composing the surface need to be coplanar with the surface.  In this case, this means they have the same height.
             tris.Add(new[]
@@ -36,8 +37,8 @@ namespace BEPUphysicsDemos.Demos
                              new Vector3(-basinWidth / 2, waterHeight, basinLength / 2), new Vector3(basinWidth / 2, waterHeight, -basinLength / 2),
                              new Vector3(basinWidth / 2, waterHeight, basinLength / 2)
                          });
-            var fluid = new FluidVolume(Vector3.Up, -9.81f, tris, waterHeight, .8f, .8f, .7f);
-            Space.ForceUpdater.Gravity = new Vector3(0, -9.81f, 0);
+            var fluid = new FluidVolume(Vector3.Up, -9.81m, tris, waterHeight, .8m, .8m, .7m);
+            Space.ForceUpdater.Gravity = new Vector3(0, -9.81m, 0);
 
 
             //fluid.FlowDirection = Vector3.Right;
@@ -47,24 +48,24 @@ namespace BEPUphysicsDemos.Demos
             game.ModelDrawer.Add(fluid);
             //Create the container.
             Space.Add(new Box(new Vector3(0, 0, 0), basinWidth, 1, basinLength));
-            Space.Add(new Box(new Vector3(-basinWidth / 2 - .5f, basinHeight / 2 - .5f, 0), 1, basinHeight, basinLength));
-            Space.Add(new Box(new Vector3(basinWidth / 2 + .5f, basinHeight / 2 - .5f, 0), 1, basinHeight, basinLength));
-            Space.Add(new Box(new Vector3(0, basinHeight / 2 - .5f, -basinLength / 2 - .5f), basinWidth + 2, basinHeight, 1));
-            Space.Add(new Box(new Vector3(0, basinHeight / 2 - .5f, basinLength / 2 + .5f), basinWidth + 2, basinHeight, 1));
+            Space.Add(new Box(new Vector3(-basinWidth / 2 - .5m, basinHeight / 2 - .5m, 0), 1, basinHeight, basinLength));
+            Space.Add(new Box(new Vector3(basinWidth / 2 + .5m, basinHeight / 2 - .5m, 0), 1, basinHeight, basinLength));
+            Space.Add(new Box(new Vector3(0, basinHeight / 2 - .5m, -basinLength / 2 - .5m), basinWidth + 2, basinHeight, 1));
+            Space.Add(new Box(new Vector3(0, basinHeight / 2 - .5m, basinLength / 2 + .5m), basinWidth + 2, basinHeight, 1));
 
 
             //Create a tiled floor.
             Entity toAdd;
-            float boxWidth = 10;
+            Fix64 boxWidth = 10;
             int numBoxesWide = 8;
             for (int i = 0; i < numBoxesWide; i++)
             {
                 for (int k = 0; k < numBoxesWide; k++)
                 {
                     toAdd = new Box(new Vector3(
-                        -boxWidth * numBoxesWide / 2f + (boxWidth + .1f) * i,
+                        -boxWidth * numBoxesWide / 2 + (boxWidth + .1m) * i,
                         15,
-                        -boxWidth * numBoxesWide / 2f + (boxWidth + .1f) * k),
+                        -boxWidth * numBoxesWide / 2 + (boxWidth + .1m) * k),
                         boxWidth, 5, boxWidth, 300);
 
                     Space.Add(toAdd);

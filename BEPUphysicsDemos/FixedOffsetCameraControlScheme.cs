@@ -49,7 +49,7 @@ namespace BEPUphysicsDemos
             //    var support = data.Value.SupportObject as EntityCollidable;
             //    if (support != null && !support.Entity.IsDynamic) //Having the view turned by dynamic entities is extremely confusing for the most part.
             //    {
-            //        float dot = Vector3.Dot(support.Entity.AngularVelocity, Character.Body.OrientationMatrix.Up);
+            //        Fix64 dot = Vector3.Dot(support.Entity.AngularVelocity, Character.Body.OrientationMatrix.Up);
             //        Camera.Yaw(dot * dt);
             //    }
             //}

@@ -55,7 +55,6 @@ namespace BEPUutilities
 		public static readonly Fix64 EMinusFive = (Fix64)1e-5m;
 		public static readonly Fix64 EMinusFour = (Fix64)1e-4m;
 		public static readonly Fix64 EMinusTen = (Fix64)1e-10m;
-		public static readonly Fix64 EEleven = (Fix64)1e11m;
 		public static readonly Fix64 MinusPointTwoFive = (Fix64)(-0.25m);
 		public static readonly Fix64 MinusEMinusNine = (Fix64)(-1e-9m);
 		public static readonly Fix64 MinusPointNineNineNineNine = (Fix64)(-0.9999m);
@@ -96,6 +95,9 @@ namespace BEPUutilities
 
 		public static Fix64 Acos(Fix64 x)
 		{
+			if (x == Fix64.Zero)
+				return Fix64.PiOver2;
+
 			return Fix64.Atan2(Fix64.Sqrt(1 - x * x) / x, 1);
 		}				
 

@@ -2,6 +2,7 @@
 using System;
 using BEPUphysics.Entities.Prefabs;
 using BEPUutilities;
+using FixMath.NET;
 
 namespace BEPUphysicsDemos.Demos
 {
@@ -17,10 +18,10 @@ namespace BEPUphysicsDemos.Demos
         public PyramidDemo(DemosGame game)
             : base(game)
         {
-            float boxSize = 2f;
+            Fix64 boxSize = 2;
             int boxCount = 20;
-            float platformLength = Math.Min(50, boxCount * boxSize + 10);
-            Space.Add(new Box(new Vector3(0, -.5f, 0), boxCount * boxSize + 20, 1,
+            Fix64 platformLength = MathHelper.Min(50, boxCount * boxSize + 10);
+            Space.Add(new Box(new Vector3(0, -.5m, 0), boxCount * boxSize + 20, 1,
                               platformLength));
 
             for (int i = 0; i < boxCount; i++)
@@ -75,8 +76,8 @@ namespace BEPUphysicsDemos.Demos
 
 
             game.Camera.Position = new Vector3(-boxCount * boxSize, 2, boxCount * boxSize);
-            game.Camera.Yaw((float)Math.PI / -4f);
-            game.Camera.Pitch((float)Math.PI / 9f);
+            game.Camera.Yaw(MathHelper.Pi / -4);
+            game.Camera.Pitch(MathHelper.Pi / 9);
         }
 
         /// <summary>

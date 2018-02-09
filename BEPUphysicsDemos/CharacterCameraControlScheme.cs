@@ -46,9 +46,9 @@ namespace BEPUphysicsDemos
         {
             Character = character;
             UseCameraSmoothing = true;
-            StandingCameraOffset = (Fix64)0.7f;
-            CrouchingCameraOffset = (Fix64)0.4f;
-            ProneCameraOffset = (Fix64)0.1f;
+            StandingCameraOffset = (Fix64)0.7m;
+            CrouchingCameraOffset = (Fix64)0.4m;
+            ProneCameraOffset = (Fix64)0.1m;
         }
 
         public override void Update(Fix64 dt)
@@ -66,7 +66,7 @@ namespace BEPUphysicsDemos
             //    var support = data.Value.SupportObject as EntityCollidable;
             //    if (support != null && !support.Entity.IsDynamic) //Having the view turned by dynamic entities is extremely confusing for the most part.
             //    {
-            //        float dot = Vector3.Dot(support.Entity.AngularVelocity, Character.Body.OrientationMatrix.Up);
+            //        Fix64 dot = Vector3.Dot(support.Entity.AngularVelocity, Character.Body.OrientationMatrix.Up);
             //        Camera.Yaw(dot * dt);
             //    }
             //}
@@ -138,7 +138,7 @@ namespace BEPUphysicsDemos
 				//This removes a portion of the error each frame.
 				//Note that this is not framerate independent.  If fixed time step is not enabled,
 				//a different smoothing method should be applied to the final error values.
-				//float errorCorrectionFactor = .3f;
+				//Fix64 errorCorrectionFactor = .3m;
 
 				//This version is framerate independent, although it is more expensive.
 				Fix64 errorCorrectionFactor = 1 - Fix64Utils.Pow((Fix64).000000001m, dt);

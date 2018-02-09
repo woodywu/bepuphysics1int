@@ -2,6 +2,7 @@
 using BEPUphysics.Entities;
 using BEPUphysics.Entities.Prefabs;
 using BEPUutilities;
+using FixMath.NET;
 
 namespace BEPUphysicsDemos.Demos
 {
@@ -17,15 +18,15 @@ namespace BEPUphysicsDemos.Demos
         public ColosseumDemo(DemosGame game)
             : base(game)
         {
-            double angle;
+            Fix64 angle;
             int numBoxesPerRing = 12;
-            float blockWidth = 2;
-            float blockHeight = 2;
-            float blockLength = 6f;
-            float radius = 15;
+            Fix64 blockWidth = 2;
+            Fix64 blockHeight = 2;
+            Fix64 blockLength = 6;
+            Fix64 radius = 15;
             Entity toAdd;
-            Space.Add(new Box(new Vector3(0, -blockHeight / 2 - 1, 0), 100, 2f, 100));
-            double increment = MathHelper.TwoPi / numBoxesPerRing;
+            Space.Add(new Box(new Vector3(0, -blockHeight / 2 - 1, 0), 100, 2, 100));
+            Fix64 increment = MathHelper.TwoPi / numBoxesPerRing;
             for (int i = 0; i < 8; i++)
             {
                 for (int k = 0; k < numBoxesPerRing; k++)
@@ -33,15 +34,15 @@ namespace BEPUphysicsDemos.Demos
                     if (i % 2 == 0)
                     {
                         angle = k * increment;
-                        toAdd = new Box(new Vector3(-(float) Math.Cos(angle) * radius, i * blockHeight, (float) Math.Sin(angle) * radius), blockWidth, blockHeight, blockLength, 20);
-                        toAdd.Orientation = Quaternion.CreateFromAxisAngle(Vector3.Up, (float) angle);
+                        toAdd = new Box(new Vector3(-Fix64.Cos(angle) * radius, i * blockHeight, Fix64.Sin(angle) * radius), blockWidth, blockHeight, blockLength, 20);
+                        toAdd.Orientation = Quaternion.CreateFromAxisAngle(Vector3.Up, (Fix64) angle);
                         Space.Add(toAdd);
                     }
                     else
                     {
-                        angle = (k + .5f) * increment;
-                        toAdd = new Box(new Vector3(-(float)Math.Cos(angle) * radius, i * blockHeight, (float)Math.Sin(angle) * radius), blockWidth, blockHeight, blockLength, 20);
-                        toAdd.Orientation = Quaternion.CreateFromAxisAngle(Vector3.Up, (float) angle);
+                        angle = (k + .5m) * increment;
+                        toAdd = new Box(new Vector3(-Fix64.Cos(angle) * radius, i * blockHeight, Fix64.Sin(angle) * radius), blockWidth, blockHeight, blockLength, 20);
+                        toAdd.Orientation = Quaternion.CreateFromAxisAngle(Vector3.Up, (Fix64) angle);
                         Space.Add(toAdd);
                     }
                 }

@@ -64,11 +64,11 @@ namespace BEPUphysicsDemos.Demos
                 {
 					Fix64 x = i - xLength / 2;
 					Fix64 z = j - zLength / 2;
-                    //heights[i,j] = (float)Math.Pow(1.2 * Math.Sqrt(x * x + y * y), 2);
+                    //heights[i,j] = (Fix64)Math.Pow(1.2 * Math.Sqrt(x * x + y * y), 2);
                     //heights[i,j] = -1f / (x * x + y * y);
-                    //heights[i,j] = (float)(x * y / 100f);
+                    //heights[i,j] = (Fix64)(x * y / 100f);
                     heights[i,j] = 5 * (Fix64.Sin(x / 8) + Fix64.Sin(z / 8));
-                    //heights[i,j] = 3 * (float)Math.Sin(x * y / 100f);
+                    //heights[i,j] = 3 * (Fix64)Math.Sin(x * y / 100f);
                     //heights[i,j] = (x * x * x * y - y * y * y * x) / 1000f;
                 }
             }

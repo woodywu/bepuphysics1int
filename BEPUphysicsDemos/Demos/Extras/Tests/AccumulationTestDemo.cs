@@ -6,6 +6,7 @@ using BEPUphysics.CollisionRuleManagement;
 using BEPUphysics.BroadPhaseEntries.Events;
 using BEPUphysics.BroadPhaseEntries.MobileCollidables;
 using ConversionHelper;
+using FixMath.NET;
 
 namespace BEPUphysicsDemos.Demos.Extras.Tests
 {
@@ -26,16 +27,16 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
             int xLength = 256;
             int zLength = 256;
 
-            float xSpacing = .5f;
-            float zSpacing = .5f;
-            var heights = new float[xLength, zLength];
+            Fix64 xSpacing = .5m;
+            Fix64 zSpacing = .5m;
+            var heights = new Fix64[xLength, zLength];
             for (int i = 0; i < xLength; i++)
             {
                 for (int j = 0; j < zLength; j++)
                 {
-                    float x = i - xLength / 2;
-                    float z = j - zLength / 2;
-                    heights[i, j] = (float)(10 * (Math.Sin(x / 8) + Math.Sin(z / 8)));
+                    Fix64 x = i - xLength / 2;
+                    Fix64 z = j - zLength / 2;
+                    heights[i, j] = (Fix64)(10 * (Fix64.Sin(x / 8) + Fix64.Sin(z / 8)));
                 }
             }
             //Create the terrain.
@@ -80,10 +81,10 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
         }
 
 
-        public override void Update(float dt)
+        public override void Update(Fix64 dt)
         {
 #if XBOX360
-            if(Game.GamePadInput.Triggers.Left > .5f)
+            if(Game.GamePadInput.Triggers.Left > .5m)
 #else
             if (Game.MouseInput.RightButton == Microsoft.Xna.Framework.Input.ButtonState.Pressed)
 #endif

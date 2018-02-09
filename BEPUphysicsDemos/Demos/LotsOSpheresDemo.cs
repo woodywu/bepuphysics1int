@@ -1,5 +1,6 @@
 ﻿using BEPUphysics.Entities.Prefabs;
 using BEPUutilities;
+using FixMath.NET;
 
 namespace BEPUphysicsDemos.Demos
 {
@@ -21,17 +22,17 @@ namespace BEPUphysicsDemos.Demos
             int numColumns = 5;
             int numRows = 5;
             int numHigh = 5;
-            float xSpacing = 2.09f;
-            float ySpacing = 2.08f;
-            float zSpacing = 2.09f;
+            Fix64 xSpacing = 2.09m;
+            Fix64 ySpacing = 2.08m;
+            Fix64 zSpacing = 2.09m;
             for (int i = 0; i < numRows; i++)
                 for (int j = 0; j < numColumns; j++)
                     for (int k = 0; k < numHigh; k++)
                     {
                         Space.Add(new Sphere(new Vector3(
-                                                 xSpacing * i - (numRows - 1) * xSpacing / 2f,
-                                                 1.58f + k * (ySpacing),
-                                                 2 + zSpacing * j - (numColumns - 1) * zSpacing / 2f),
+                                                 xSpacing * i - (numRows - 1) * xSpacing / 2,
+                                                 1.58m + k * (ySpacing),
+                                                 2 + zSpacing * j - (numColumns - 1) * zSpacing / 2),
                                              1, 1));
                     }
         }

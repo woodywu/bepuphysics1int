@@ -141,7 +141,7 @@ namespace BEPUphysicsDemos
 				//Fix64 errorCorrectionFactor = .3m;
 
 				//This version is framerate independent, although it is more expensive.
-				Fix64 errorCorrectionFactor = 1 - Fix64Utils.Pow((Fix64).000000001m, dt);
+				Fix64 errorCorrectionFactor = 1 - Fix64.Pow((Fix64).000000001m, dt);
                 Camera.Position += up * (verticalError * errorCorrectionFactor);
                 Camera.Position += horizontalError * errorCorrectionFactor;
 

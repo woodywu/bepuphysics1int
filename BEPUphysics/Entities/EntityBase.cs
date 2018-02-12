@@ -929,16 +929,16 @@ namespace BEPUphysics.Entities
             Fix64 linear = LinearDamping + linearDampingBoost;
             if (linear > 0)
             {
-                Vector3.Multiply(ref linearVelocity, Fix64Utils.Pow(MathHelper.Clamp(1 - linear, 0, 1), dt), out linearVelocity);
+                Vector3.Multiply(ref linearVelocity, Fix64.Pow(MathHelper.Clamp(1 - linear, 0, 1), dt), out linearVelocity);
             }
             //When applying angular damping, the momentum or velocity is damped depending on the conservation setting.
             Fix64 angular = AngularDamping + angularDampingBoost;
             if (angular > 0)
             {
 #if CONSERVE
-                Vector3.Multiply(ref angularMomentum, Fix64Utils.Pow(MathHelper.Clamp(1 - angular, 0, 1), dt), out angularMomentum);
+                Vector3.Multiply(ref angularMomentum, Fix64.Pow(MathHelper.Clamp(1 - angular, 0, 1), dt), out angularMomentum);
 #else
-				Vector3.Multiply(ref angularVelocity, Fix64Utils.Pow(MathHelper.Clamp(1 - angular, 0, 1), dt), out angularVelocity);
+				Vector3.Multiply(ref angularVelocity, Fix64.Pow(MathHelper.Clamp(1 - angular, 0, 1), dt), out angularVelocity);
 #endif
             }
 

@@ -159,6 +159,7 @@
   <ItemGroup>
     <Reference Include="FixMath.NET">
       <HintPath>..\..\FixedMath.Net\src\bin\Release\FixMath.NET.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="System" />
   </ItemGroup>

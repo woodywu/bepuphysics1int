@@ -113,11 +113,5 @@ namespace BEPUutilities
 				raw > 0 ? 1 :
 				0;
 		}
-
-		// Broken placeholder for first tests - this is not deterministic
-		public static Fix64 Pow(Fix64 b, Fix64 exp)
-		{
-			return (Fix64)Math.Pow((double)b, (double)exp);
-		}
 	}
 }

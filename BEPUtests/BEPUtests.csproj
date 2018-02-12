@@ -34,9 +34,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FixMath.NET">
-      <HintPath>..\..\FixedMath.Net\src\bin\Release\FixMath.NET.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Security" />
     <Reference Include="xunit.abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
@@ -67,6 +64,10 @@
     <ProjectReference Include="..\BEPUutilities\BEPUutilities.csproj">
       <Project>{34853dea-43a6-4f2f-a379-d1ee04d256d2}</Project>
       <Name>BEPUutilities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FixedMath.Net\src\FixedMath.NET.csproj">
+      <Project>{d46c606e-5826-465f-9983-251e3d3b2f1c}</Project>
+      <Name>FixedMath.NET</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

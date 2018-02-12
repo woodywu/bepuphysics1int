@@ -12,6 +12,7 @@ namespace BEPUtests
 {
 	public class CrossPlatformDeterminism
     {
+		private const bool OUTPUT_HASHES = false;
 		private readonly ITestOutputHelper output;
 
 		public CrossPlatformDeterminism(ITestOutputHelper output)
@@ -24,7 +25,7 @@ namespace BEPUtests
 		{
 			Space space = new Space();
 			space.ForceUpdater.Gravity = new Vector3(0, (Fix64)(-9.81m), 0); //If left unset, the default value is (0,0,0).
-			// Ensure test is robust against changes of the default value
+			// Ensure test is robust against changes of the default timestep value
 			space.TimeStepSettings.TimeStepDuration = 1 / 60m;
 
 			Fix64 boxSize = 2;
@@ -70,7 +71,14 @@ namespace BEPUtests
 			{
 				space.Update();
 				if (i % 20 == 0)
-					Assert.Equal(expectedHashes[i / 20], HashSpace(space));
+				{
+					string hash = HashSpace(space);
+					if (OUTPUT_HASHES)
+						output.WriteLine("\"" + hash + "\",");
+					else
+						Assert.Equal(expectedHashes[i / 20], HashSpace(space));						
+				}
+
 			}
 		}
 		
@@ -115,56 +123,56 @@ namespace BEPUtests
 		}
 
 		private readonly string[] expectedHashes = {
-			"76f05a961f08670e31c855731ff2f0a9",
-			"e630ee102bfa6bb297b9ec3b771bdf6a",
-			"9e493b2f429329ea953271ea02217ba9",
-			"6e51d99d274326de70f5954efe8ac467",
-			"fb2762c4ec1ad16e4e965555ee994978",
-			"40dfd25d501cb779c725462efcacd80e",
-			"65186b03561102594c06196b0310d68d",
-			"14facef79ee2982ec9770f1df0bad583",
-			"2a96c83a19245388e7a4986b7ca10a8a",
-			"3652a67ce7fa54a55d4a5a4be2d88976",
-			"aaabc6a21c2f417f0a9c4fba8189a85f",
-			"514861cc4e17c05e6d5359add6f4ee93",
-			"321323123bdcc6fee6f551407691087f",
-			"70dcb2be67927d101142947619db7dbb",
-			"68b94aa2bed4534b946ef5d03d1ab9f6",
-			"467ff9f3fcb61c561226248019d89e4b",
-			"9974ff4b5eec37fa2b0ac586be914c15",
-			"7790c317c3d507f46d12bba1a622914b",
-			"673326b7ac5367e57ae7b8dc256fcece",
-			"d9b3fc25d1aac9f361b2cfe9af5b7e81",
-			"7d666d4c8492a5012c4ba9c95665ea48",
-			"c3220fea99590cf5e16a2c64d7208e31",
-			"76f010d89f0c99d5f6c0ad16501e6d26",
-			"0c490b6756f3dfd5ef3383fb81e7f6f4",
-			"4b75179d5b9041919c2d95c28983f0c7",
-			"fc419cbb7180ecad67a23be88a7fa759",
-			"f5cfe9928489d43c3cf2d3c733dd44ad",
-			"b80713a15a4d1f9f457be3ea28434699",
-			"c1968564b83627db03218dba84841f97",
-			"3ac845033ffd256df960ff09fc9a5ea5",
-			"a1bbae3ecef8850c3364719d58c5c1dc",
-			"63e65ecf3904825a50149d8a6b836b73",
-			"0a69050b6fe7146bac6bbec204387d19",
-			"bec4d782ec7c85cc9f7829f60a49c94b",
-			"7d2b2957e39c32efde90ff0f6b81d3cc",
-			"d1d22a943385068fa7bc4bc4b93f33db",
-			"17ab068cbf28da9468193ac4fc379760",
-			"5b925bf85ff0072777c1541ea1c1cdd3",
-			"46b10dd8fd57c529e843f56e34ff8b61",
-			"81d79b0a15a084a4a04a5020a3c5f547",
-			"30d0290a68ea0282777ea0e18c6e7ab2",
-			"f7564fed1edc3a8c64c96d503673624a",
-			"4280e4315c2c64c5efc074433f5839fa",
-			"807de4a222043984ec41551abceb887b",
-			"5df4baba4dedfad8ac2b281e68ac1083",
-			"8808eabcb0ea042eff25e4cb50af0d8b",
-			"28e8cf4844b468441b328c142b15b645",
-			"58404d2d4be623843a6536ce5b1eb08e",
-			"f74fb1b743e38886c81f673e399e91c9",
-			"885204aa7570f75c3fafefb5024a7cb0"
+			"b3998c7a4eea21660aca459eadd0a22a",
+			"bd7a1eecbf9f11c2679ea2d7dc889969",
+			"38a7e6fbc12c92d2bbad3bd575fb1504",
+			"bf549648ebfe304c7fd56af12969bbfb",
+			"dd6c6c887774a714497244afb58d4126",
+			"ddb8c9949781b88c6deed8190bd2c5a2",
+			"747a72651aaa567a999a241d96d149c4",
+			"db129a997dc5c706cd3992356d2b9038",
+			"8f517b4a1ce5c18727e0a12e4fa66979",
+			"bd6ed6a237c7b7dd387dd8a0995fad38",
+			"f8c12daf65c75d41b7b3843d350784da",
+			"1dcdb810d9467237ea632187fcfa5bbe",
+			"3fd4f75bb4943066aedf810343059950",
+			"1f771bea492f3faee0de2a9725170872",
+			"fc3cbf7256a88c770134f32fcd3da208",
+			"321d460d2981681f3cc63950d5d7155f",
+			"04cbb804200a378d28073bc793a732b7",
+			"368ac7bd2c3075d3460b02b9f4ee4b5c",
+			"ccea1e9860491229bd2803c1b0db264e",
+			"b4f838237706bd368009f08f7dbc06d4",
+			"72197469fa5e68cf09eb8512f7bf047a",
+			"f287a0552730e2a2638498efdf34f22f",
+			"4416fa2afe1288bf4b9b988880f0c2a7",
+			"76fc306360d256df0460fe4e13a30a4d",
+			"9859173caeff6464f0bc6f3e65afe067",
+			"efa345168cac32b0eefbb5dce0cc766a",
+			"16ce76ba7a20da0af6d8b85d516430b0",
+			"79640067c275743a12c1c258560966a1",
+			"99f3f5f70c01e46a77bf44f7b393a039",
+			"48912303d48988fa38adadf3a45b74b2",
+			"bd400e7ffe5c9b08a972be7455369046",
+			"2bc3d72ed4f35ce06a2656384809c885",
+			"48bacf2fe5e1d92eebecb907cf00c0bf",
+			"7e86f7e1be86bab2d18aff1f46451b5b",
+			"b730a5cdc773309af7c66d2355c6de22",
+			"2e7486cc8a9085bb067d4cc0e6f24dac",
+			"d914214b847b94ba447ce860e10d0e37",
+			"10cbfe51b869fc4784ef4e5ad908163d",
+			"ab3455824a05ebc65ea12abeb6d0e82f",
+			"f451909d6d07ec142aa5905b5379e4bd",
+			"47a908dfea8c5f735683433b3343f411",
+			"b1db056dcb723b6265fea4b522369d65",
+			"857f40d52dcbf904c9b327480f6cdbae",
+			"77bcd427d92551dab010c6d707359a6f",
+			"eb8b92350015e03020ea4b70c583d50d",
+			"2954c4cb54df0fa1e81993113dc8aee1",
+			"28193442e34037426881445f31fe9bac",
+			"19e0d97e358e3177aaa8505786375200",
+			"8cdf87064d4ab8335c0e1703756d5040",
+			"4cfd551668dfc91f35d317a10e54bc39"
 		};
 	}
 }

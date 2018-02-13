@@ -142,9 +142,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="FixMath.NET">
-      <HintPath>..\..\FixedMath.Net\src\bin\Release\FixMath.NET.dll</HintPath>
-    </Reference>
     <Reference Include="MonoGame.Framework, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Dependencies\MonoGame\Tools\MonoGame.Framework.dll</HintPath>
@@ -176,6 +173,10 @@
     <ProjectReference Include="..\ConversionHelper\ConversionHelper.csproj">
       <Project>{aa264458-f33c-4b6b-90c1-b3209470893b}</Project>
       <Name>ConversionHelper</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FixedMath.Net\src\FixedMath.NET.csproj">
+      <Project>{d46c606e-5826-465f-9983-251e3d3b2f1c}</Project>
+      <Name>FixedMath.NET</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

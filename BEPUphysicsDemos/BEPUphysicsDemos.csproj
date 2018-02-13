@@ -240,6 +240,10 @@
       <Project>{aa264458-f33c-4b6b-90c1-b3209470893b}</Project>
       <Name>ConversionHelper</Name>
     </ProjectReference>
+    <ProjectReference Include="..\FixedMath.Net\src\FixedMath.NET.csproj">
+      <Project>{d46c606e-5826-465f-9983-251e3d3b2f1c}</Project>
+      <Name>FixedMath.NET</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

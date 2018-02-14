@@ -62,49 +62,7 @@ namespace BEPUutilities
 		public static readonly Fix64 GoldenRatio = 1 + Fix64.Sqrt((Fix64)5) / 2;
 		public static readonly Fix64 OneOverTwelve = 1 / (Fix64)12;
 		public static readonly Fix64 PointZeroEightThrees = (Fix64).0833333333m;
-
-		public static Fix64 Atan2(Fix64 z)
-		{
-			Fix64 atan;
-
-			// Deal with overflow
-			if (1 + (Fix64)0.28M * z * z == Fix64.MaxValue)
-			{
-				return z < 0 ? -Fix64.PiOver2 : Fix64.PiOver2;
-			}
-
-			if (Fix64.Abs(z) < 1)
-			{
-				atan = z / (1 + (Fix64)0.28M * z * z);
-				if (z < 0)
-				{
-					return atan - Fix64.Pi;
-				}
-				return atan + Fix64.Pi;
-			}
-			else
-			{
-				atan = Fix64.PiOver2 - z / (z * z + (Fix64)0.28M);
-				if (z < 0)
-				{
-					return atan - Fix64.Pi;
-				}
-			}
-			return atan;
-		}
-
-		public static Fix64 Acos(Fix64 x)
-		{
-			if (x == Fix64.Zero)
-				return Fix64.PiOver2;
-
-			Fix64 result = Fix64.Atan2(Fix64.Sqrt(1 - x * x) / x, 1);
-			if (x < 0)
-				return result + Fix64.Pi;
-			else
-				return result;
-		}				
-
+		
 		public static Fix64 Sign(Fix64 v)
 		{
 			long raw = v.RawValue;

@@ -59,6 +59,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConsoleTestOutputHelper.cs" />
     <Compile Include="Experimental\Fix16.cs" />
     <Compile Include="Experimental\Fix16SinLut.cs" />
     <Compile Include="Experimental\Fix16Test.cs" />

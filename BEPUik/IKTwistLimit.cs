@@ -162,7 +162,7 @@ namespace BEPUik
             //We can now compare the angle between the twist axes.
             Fix64 angle;
             Vector3.Dot(ref twistMeasureAxisA, ref twistMeasureAxisB, out angle);
-            angle = Fix64Utils.Acos(MathHelper.Clamp(angle, -1, 1));
+            angle = Fix64.Acos(MathHelper.Clamp(angle, -1, 1));
 
             //Compute the bias based upon the error.
             if (angle > maximumAngle)

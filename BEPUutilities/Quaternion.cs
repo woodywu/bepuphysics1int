@@ -318,7 +318,7 @@ namespace BEPUutilities
                 return;
             }
             // Calculate temporary values.
-            Fix64 halfTheta = Fix64Utils.Acos(cosHalfTheta);
+            Fix64 halfTheta = Fix64.Acos(cosHalfTheta);
 			Fix64 sinHalfTheta = Fix64.Sqrt(1 - cosHalfTheta * cosHalfTheta);
 
 			Fix64 aFraction = Fix64.Sin((1 - interpolationAmount) * halfTheta) / sinHalfTheta;
@@ -745,7 +745,7 @@ namespace BEPUutilities
             Fix64 qw = Fix64.Abs(q.W);
             if (qw > 1)
                 return 0;
-            return 2 * Fix64Utils.Acos(qw);
+            return 2 * Fix64.Acos(qw);
         }
 
         /// <summary>
@@ -778,7 +778,7 @@ namespace BEPUutilities
             if (lengthSquared > Fix64Utils.EMinusFourteen)
             {
                 Vector3.Divide(ref axis, Fix64.Sqrt(lengthSquared), out axis);
-                angle = 2 * Fix64Utils.Acos(MathHelper.Clamp(qw, -1, 1));
+                angle = 2 * Fix64.Acos(MathHelper.Clamp(qw, -1, 1));
             }
             else
             {

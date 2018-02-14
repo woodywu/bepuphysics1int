@@ -73,7 +73,7 @@ namespace BEPUphysics.Character
         /// </summary>
         public Fix64 MaximumTractionSlope
         {
-            get { return Fix64Utils.Acos(TractionThreshold); }
+            get { return Fix64.Acos(TractionThreshold); }
             set { TractionThreshold = Fix64.Cos(value); }
         }
         /// <summary>
@@ -81,7 +81,7 @@ namespace BEPUphysics.Character
         /// </summary>
         public Fix64 MaximumSupportSlope
         {
-            get { return Fix64Utils.Acos(SupportThreshold); }
+            get { return Fix64.Acos(SupportThreshold); }
             set { SupportThreshold = Fix64.Cos(value); }
         }
 

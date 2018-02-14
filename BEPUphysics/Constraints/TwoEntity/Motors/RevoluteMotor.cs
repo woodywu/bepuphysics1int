@@ -224,7 +224,7 @@ namespace BEPUphysics.Constraints.TwoEntity.Motors
                 Vector3.Cross(ref basis.primaryAxis, ref basis.xAxis, out yAxis);
                 Vector3.Dot(ref worldTestAxis, ref yAxis, out y);
                 Vector3.Dot(ref worldTestAxis, ref basis.xAxis, out x);
-                var angle = Fix64.Atan2(y, x);
+                var angle = Fix64.FastAtan2(y, x);
 
                 //****** VELOCITY BIAS ******//
                 //Compute the correction velocity.

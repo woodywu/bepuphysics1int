@@ -179,7 +179,7 @@ namespace BEPUphysicsDemos
 
             //While this could be rephrased in terms of dot products alone, converting to actual angles can be more intuitive.
             //Consider +Pi/2 to be up, and -Pi/2 to be down.
-            Fix64 currentPitch = Fix64Utils.Acos(MathHelper.Clamp(-dot, -1, 1)) - MathHelper.PiOver2;
+            Fix64 currentPitch = Fix64.Acos(MathHelper.Clamp(-dot, -1, 1)) - MathHelper.PiOver2;
             //Compute our new pitch by clamping the current + change.
             Fix64 newPitch = MathHelper.Clamp(currentPitch + radians, -maximumPitch, maximumPitch);
             Fix64 allowedChange = newPitch - currentPitch;

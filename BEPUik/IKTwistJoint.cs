@@ -150,7 +150,7 @@ namespace BEPUik
             //We can now compare the angle between the twist axes.
             Fix64 error;
             Vector3.Dot(ref twistMeasureAxisA, ref twistMeasureAxisB, out error);
-            error = Fix64Utils.Acos(MathHelper.Clamp(error, -1, 1));
+            error = Fix64.Acos(MathHelper.Clamp(error, -1, 1));
             Vector3 cross;
             Vector3.Cross(ref twistMeasureAxisA, ref twistMeasureAxisB, out cross);
             Fix64 dot;

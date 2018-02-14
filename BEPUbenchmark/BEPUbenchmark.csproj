@@ -8,9 +8,10 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>BEPUbenchmark</RootNamespace>
     <AssemblyName>BEPUbenchmark</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -30,6 +31,8 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -43,6 +46,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Benchmark.cs" />
+    <Compile Include="Benchmarks\SelfCollidingClothBenchmark.cs" />
+    <Compile Include="Benchmarks\PathFollowingBenchmark.cs" />
     <Compile Include="Benchmarks\PyramidBenchmark.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -62,6 +67,10 @@
     <ProjectReference Include="..\FixedMath.Net\src\FixedMath.NET.csproj">
       <Project>{d46c606e-5826-465f-9983-251e3d3b2f1c}</Project>
       <Name>FixedMath.NET</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FixedMath.Net\tests\Fix64tests.csproj">
+      <Project>{123f94b1-65a5-4bcd-8e1e-7f8b95337444}</Project>
+      <Name>Fix64tests</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace BEPUbenchmark.Benchmarks
 {
-	class BurlapBenchmark : Benchmark
+	class SelfCollidingClothBenchmark : Benchmark
 	{
 		protected override void InitializeSpace()
 		{

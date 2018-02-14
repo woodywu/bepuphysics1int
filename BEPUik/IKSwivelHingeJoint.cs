@@ -93,7 +93,7 @@ namespace BEPUik
 
             Fix64 error;
             Vector3.Dot(ref worldHingeAxis, ref worldTwistAxis, out error);
-            error = Fix64Utils.Acos(MathHelper.Clamp(error, -1, 1)) - MathHelper.PiOver2;
+            error = Fix64.Acos(MathHelper.Clamp(error, -1, 1)) - MathHelper.PiOver2;
 
             velocityBias = new Vector3(errorCorrectionFactor * error, 0, 0);
 

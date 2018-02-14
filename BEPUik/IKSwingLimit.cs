@@ -78,7 +78,8 @@ namespace BEPUik
             Vector3.Dot(ref axisA, ref axisB, out dot);
 
             //Yes, we could avoid this acos here. Performance is not the highest goal of this system; the less tricks used, the easier it is to understand.
-            Fix64 angle = Fix64Utils.Acos(MathHelper.Clamp(dot, -1, 1));
+			// TODO investigate performance
+            Fix64 angle = Fix64.Acos(MathHelper.Clamp(dot, -1, 1));
 
             //One angular DOF is constrained by this limit.
             Vector3 hingeAxis;

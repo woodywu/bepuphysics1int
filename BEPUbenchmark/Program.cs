@@ -5,7 +5,7 @@ namespace BEPUbenchmark
 {
 	class Program
 	{
-		static Benchmark[] benchmarks = { new PyramidBenchmark() };
+		static Benchmark[] benchmarks = { new PathFollowingBenchmark(), new SelfCollidingClothBenchmark(), new PyramidBenchmark() };
 
 		static void Main(string[] args)
 		{
@@ -22,8 +22,6 @@ namespace BEPUbenchmark
 			}
 
 			Console.WriteLine("\nCumulative runtime: "+Math.Round(runtime, 2));
-			Console.WriteLine("\nPress enter exit");
-			Console.Read();
 		}
 	}
 }

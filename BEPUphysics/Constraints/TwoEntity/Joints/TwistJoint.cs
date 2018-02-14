@@ -252,7 +252,7 @@ namespace BEPUphysics.Constraints.TwoEntity.Joints
             Fix64 y, x;
             Vector3.Dot(ref twistMeasureAxis, ref aAxisZ, out y);
             Vector3.Dot(ref twistMeasureAxis, ref aAxisY, out x);
-            error = Fix64.Atan2(y, x);
+            error = Fix64.FastAtan2(y, x);
 
             //Debug.WriteLine("Angle: " + angle);
 

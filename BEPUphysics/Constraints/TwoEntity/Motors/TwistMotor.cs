@@ -267,7 +267,7 @@ namespace BEPUphysics.Constraints.TwoEntity.Motors
                 Fix64 y, x;
                 Vector3.Dot(ref twistMeasureAxis, ref basisA.yAxis, out y);
                 Vector3.Dot(ref twistMeasureAxis, ref basisA.xAxis, out x);
-                var angle = Fix64.Atan2(y, x);
+                var angle = Fix64.FastAtan2(y, x);
 
                 //Compute goal velocity.
                 error = GetDistanceFromGoal(angle);

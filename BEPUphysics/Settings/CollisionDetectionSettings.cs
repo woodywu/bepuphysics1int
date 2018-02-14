@@ -61,7 +61,7 @@ namespace BEPUphysics.Settings
         {
             get
             {
-                return Fix64Utils.Acos(nonconvexNormalDotMinimum);
+                return Fix64.Acos(nonconvexNormalDotMinimum);
             }
             set
             {

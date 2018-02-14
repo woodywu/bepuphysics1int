@@ -24,7 +24,8 @@ namespace FixMath.NET
         /// </summary>
         public static readonly Fix64 Pi = new Fix64(PI);
         public static readonly Fix64 PiOver2 = new Fix64(PI_OVER_2);
-        public static readonly Fix64 PiTimes2 = new Fix64(PI_TIMES_2);
+		public static readonly Fix64 PiOver4 = new Fix64(PI_OVER_4);
+		public static readonly Fix64 PiTimes2 = new Fix64(PI_TIMES_2);
         public static readonly Fix64 PiInv = (Fix64)0.3183098861837906715377675267M;
         public static readonly Fix64 PiOver2Inv = (Fix64)0.6366197723675813430755350535M;
 		public static readonly Fix64 E = new Fix64(E_RAW);
@@ -42,6 +43,7 @@ namespace FixMath.NET
         const long PI_TIMES_2 = 0x6487ED511;
         const long PI = 0x3243F6A88;
         const long PI_OVER_2 = 0x1921FB544;
+		const long PI_OVER_4 = 0xC90FDAA2;
 		const long E_RAW = 0x2B7E15162;
 		const long EPOW4 = 0x3699205C4E;
 		const long LN2 = 0xB17217F7;
@@ -205,7 +207,22 @@ namespace FixMath.NET
 			Fix64 ln = Ln(b);
 			return Exp(exp * ln);			
 		}
-		
+
+		/// <summary>
+		/// Returns the arccos of of the specified number, calculated using Atan and Sqrt
+		/// </summary>
+		public static Fix64 Acos(Fix64 x)
+		{
+			if (x == Fix64.Zero)
+				return Fix64.PiOver2;
+
+			Fix64 result = Fix64.Atan(Fix64.Sqrt(1 - x * x) / x);
+			if (x < 0)
+				return result + Fix64.Pi;
+			else
+				return result;
+		}
+
 		/// <summary>
 		/// Returns the smallest integral value that is greater than or equal to the specified number.
 		/// </summary>
@@ -684,7 +701,7 @@ namespace FixMath.NET
             return new Fix64(finalValue);
         }
 
-        public static Fix64 Atan2(Fix64 y, Fix64 x) {
+        public static Fix64 FastAtan2(Fix64 y, Fix64 x) {
             var yl = y.m_rawValue;
             var xl = x.m_rawValue;
             if (xl == 0) {
@@ -722,6 +739,91 @@ namespace FixMath.NET
             return atan;
         }
 
+		/// <summary>
+		/// Returns the arctan of of the specified number, calculated using Euler series
+		/// </summary>
+		public static Fix64 Atan(Fix64 z)
+		{
+			if (z == Zero)
+				return Zero;
+
+			// Force positive values for argument
+			// Atan(-z) = -Atan(z).
+			bool neg = (z < Zero);
+			if (neg) z = -z;
+
+			Fix64 result;
+
+			if (z == One)
+				result = PiOver4;
+			else
+			{
+				bool invert = z > One;
+				if (invert) z = 1 / z;
+				
+				result = 1;
+				Fix64 term = 1;
+				
+				Fix64 zSq = z * z;
+				Fix64 zSq2 = zSq * 2;
+				Fix64 zSqPlusOne = zSq + One;
+				Fix64 zSq12 = zSqPlusOne * 2;
+				Fix64 dividend = zSq2;
+				Fix64 divisor = zSqPlusOne * 3;
+
+				for (int i = 2; i < 30; i++)
+				{
+					term *= dividend / divisor;
+					result += term;
+
+					dividend += zSq2;
+					divisor += zSq12;
+
+					if (term == 0)
+						break;
+				}
+
+				result = result * z / zSqPlusOne;
+
+				if (invert)
+					result = PiOver2 - result;
+			}
+
+			if (neg) result = -result;
+			return result;
+		}
+
+		public static Fix64 Atan2(Fix64 y, Fix64 x)
+		{
+			var yl = y.m_rawValue;
+			var xl = x.m_rawValue;
+			if (xl == 0)
+			{
+				if (yl > 0)
+					return PiOver2;
+				if (yl == 0)
+					return Zero;
+				return -PiOver2;
+			}
+
+			var z = y / x;
+
+			// Deal with overflow
+			if (One + (Fix64)0.28M * z * z == MaxValue)
+			{
+				return y < Zero ? -PiOver2 : PiOver2;
+			}
+			Fix64 atan = Atan(z);
+
+			if (xl < 0)
+			{
+				if (yl < 0)
+					return atan - Pi;
+				return atan + Pi;
+			}
+
+			return atan;
+		}
 
 		public static implicit operator Fix64(int value)
 		{

@@ -19,7 +19,7 @@ namespace BEPUutilities
 			// Fixed-point library does not have NaN or Infinity representation.
 			// We keep this dummy function around for completeness sake
 			// return float.IsNaN(f) || float.IsInfinity(f);
-			return false;
+			return f == Fix64.MaxValue || f == Fix64.MinValue;
         }
 
         /// <summary>

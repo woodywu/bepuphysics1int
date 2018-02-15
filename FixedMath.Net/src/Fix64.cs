@@ -266,10 +266,23 @@ namespace FixMath.NET
             return new Fix64(sum);
         }
 
-        /// <summary>
-        /// Adds x and y witout performing overflow checking. Should be inlined by the CLR.
-        /// </summary>
-        public static Fix64 FastAdd(Fix64 x, Fix64 y) {
+		public static Fix64 SafeAdd(Fix64 x, Fix64 y)
+		{
+			var xl = x.m_rawValue;
+			var yl = y.m_rawValue;
+			var sum = xl + yl;
+			// if signs of operands are equal and signs of sum and x are different
+			if (((~(xl ^ yl) & (xl ^ sum)) & MIN_VALUE) != 0)
+			{
+				sum = xl > 0 ? MAX_VALUE : MIN_VALUE;
+			}
+			return new Fix64(sum);
+		}
+
+		/// <summary>
+		/// Adds x and y witout performing overflow checking. Should be inlined by the CLR.
+		/// </summary>
+		public static Fix64 FastAdd(Fix64 x, Fix64 y) {
             return new Fix64(x.m_rawValue + y.m_rawValue);
         }
 
@@ -288,10 +301,23 @@ namespace FixMath.NET
             return new Fix64(diff);
         }
 
-        /// <summary>
-        /// Subtracts y from x witout performing overflow checking. Should be inlined by the CLR.
-        /// </summary>
-        public static Fix64 FastSub(Fix64 x, Fix64 y) {
+		public static Fix64 SafeSub(Fix64 x, Fix64 y)
+		{
+			var xl = x.m_rawValue;
+			var yl = y.m_rawValue;
+			var diff = xl - yl;
+			// if signs of operands are different and signs of sum and x are different
+			if ((((xl ^ yl) & (xl ^ diff)) & MIN_VALUE) != 0)
+			{
+				diff = xl < 0 ? MIN_VALUE : MAX_VALUE;
+			}
+			return new Fix64(diff);
+		}
+
+		/// <summary>
+		/// Subtracts y from x witout performing overflow checking. Should be inlined by the CLR.
+		/// </summary>
+		public static Fix64 FastSub(Fix64 x, Fix64 y) {
             return new Fix64(x.m_rawValue - y.m_rawValue);
         }
 
@@ -334,12 +360,14 @@ namespace FixMath.NET
             // the reverse is also true
             if (opSignsEqual) {
                 if (sum < 0 || (overflow && xl > 0)) {
+					throw new OverflowException();
                     return MaxValue;
                 }
             }
             else {
                 if (sum > 0) {
-                    return MinValue;
+					throw new OverflowException();
+					return MinValue;
                 }
             }
 
@@ -347,7 +375,8 @@ namespace FixMath.NET
             // then this means the result overflowed.
             var topCarry = hihi >> FRACTIONAL_PLACES;
             if (topCarry != 0 && topCarry != -1 /*&& xl != -17 && yl != -17*/) {
-                return opSignsEqual ? MaxValue : MinValue; 
+				throw new OverflowException();
+				return opSignsEqual ? MaxValue : MinValue; 
             }
 
             // If signs differ, both operands' magnitudes are greater than 1,
@@ -363,18 +392,96 @@ namespace FixMath.NET
                     negOp = xl;
                 }
                 if (sum > negOp && negOp < -ONE && posOp > ONE) {
-                    return MinValue;
+					throw new OverflowException();
+					return MinValue;
                 }
             }
 
             return new Fix64(sum);
         }
 
-        /// <summary>
-        /// Performs multiplication without checking for overflow.
-        /// Useful for performance-critical code where the values are guaranteed not to cause overflow
-        /// </summary>
-        public static Fix64 FastMul(Fix64 x, Fix64 y) {
+		public static Fix64 SafeMul(Fix64 x, Fix64 y)
+		{
+			var xl = x.m_rawValue;
+			var yl = y.m_rawValue;
+
+			var xlo = (ulong)(xl & 0x00000000FFFFFFFF);
+			var xhi = xl >> FRACTIONAL_PLACES;
+			var ylo = (ulong)(yl & 0x00000000FFFFFFFF);
+			var yhi = yl >> FRACTIONAL_PLACES;
+
+			var lolo = xlo * ylo;
+			var lohi = (long)xlo * yhi;
+			var hilo = xhi * (long)ylo;
+			var hihi = xhi * yhi;
+
+			var loResult = lolo >> FRACTIONAL_PLACES;
+			var midResult1 = lohi;
+			var midResult2 = hilo;
+			var hiResult = hihi << FRACTIONAL_PLACES;
+
+			bool overflow = false;
+			var sum = AddOverflowHelper((long)loResult, midResult1, ref overflow);
+			sum = AddOverflowHelper(sum, midResult2, ref overflow);
+			sum = AddOverflowHelper(sum, hiResult, ref overflow);
+
+			bool opSignsEqual = ((xl ^ yl) & MIN_VALUE) == 0;
+
+			// if signs of operands are equal and sign of result is negative,
+			// then multiplication overflowed positively
+			// the reverse is also true
+			if (opSignsEqual)
+			{
+				if (sum < 0 || (overflow && xl > 0))
+				{
+					return MaxValue;
+				}
+			}
+			else
+			{
+				if (sum > 0)
+				{
+					return MinValue;
+				}
+			}
+
+			// if the top 32 bits of hihi (unused in the result) are neither all 0s or 1s,
+			// then this means the result overflowed.
+			var topCarry = hihi >> FRACTIONAL_PLACES;
+			if (topCarry != 0 && topCarry != -1 /*&& xl != -17 && yl != -17*/)
+			{
+				return opSignsEqual ? MaxValue : MinValue;
+			}
+
+			// If signs differ, both operands' magnitudes are greater than 1,
+			// and the result is greater than the negative operand, then there was negative overflow.
+			if (!opSignsEqual)
+			{
+				long posOp, negOp;
+				if (xl > yl)
+				{
+					posOp = xl;
+					negOp = yl;
+				}
+				else
+				{
+					posOp = yl;
+					negOp = xl;
+				}
+				if (sum > negOp && negOp < -ONE && posOp > ONE)
+				{
+					return MinValue;
+				}
+			}
+
+			return new Fix64(sum);
+		}
+
+		/// <summary>
+		/// Performs multiplication without checking for overflow.
+		/// Useful for performance-critical code where the values are guaranteed not to cause overflow
+		/// </summary>
+		public static Fix64 FastMul(Fix64 x, Fix64 y) {
 
             var xl = x.m_rawValue;
             var yl = y.m_rawValue;

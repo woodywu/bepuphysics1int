@@ -498,37 +498,15 @@ namespace BEPUutilities
             return matrix;
         }
 
-        /// <summary>
-        /// Inverts the given matix.
-        /// </summary>
-        /// <param name="matrix">Matrix to be inverted.</param>
-        /// <param name="result">Inverted matrix.</param>
-        public static void Invert(ref Matrix3x3 matrix, out Matrix3x3 result)
+		/// <summary>
+		/// Inverts the given matix.
+		/// </summary>
+		/// <param name="matrix">Matrix to be inverted.</param>
+		/// <param name="result">Inverted matrix.</param>
+		public static void Invert(ref Matrix3x3 matrix, out Matrix3x3 result)
         {
-            Fix64 determinantInverse = 1 / matrix.Determinant();
-            Fix64 m11 = (matrix.M22 * matrix.M33 - matrix.M23 * matrix.M32) * determinantInverse;
-            Fix64 m12 = (matrix.M13 * matrix.M32 - matrix.M33 * matrix.M12) * determinantInverse;
-            Fix64 m13 = (matrix.M12 * matrix.M23 - matrix.M22 * matrix.M13) * determinantInverse;
-
-            Fix64 m21 = (matrix.M23 * matrix.M31 - matrix.M21 * matrix.M33) * determinantInverse;
-            Fix64 m22 = (matrix.M11 * matrix.M33 - matrix.M13 * matrix.M31) * determinantInverse;
-            Fix64 m23 = (matrix.M13 * matrix.M21 - matrix.M11 * matrix.M23) * determinantInverse;
-
-            Fix64 m31 = (matrix.M21 * matrix.M32 - matrix.M22 * matrix.M31) * determinantInverse;
-            Fix64 m32 = (matrix.M12 * matrix.M31 - matrix.M11 * matrix.M32) * determinantInverse;
-            Fix64 m33 = (matrix.M11 * matrix.M22 - matrix.M12 * matrix.M21) * determinantInverse;
-
-            result.M11 = m11;
-            result.M12 = m12;
-            result.M13 = m13;
-
-            result.M21 = m21;
-            result.M22 = m22;
-            result.M23 = m23;
-
-            result.M31 = m31;
-            result.M32 = m32;
-            result.M33 = m33;
+			Matrix3x6 temp = new Matrix3x6(matrix);
+			temp.Invert(out result);
         }
 
         /// <summary>
@@ -556,18 +534,9 @@ namespace BEPUutilities
             switch (submatrix)
             {
                 case 0: //Full matrix.
-                    m11 = (matrix.M22 * matrix.M33 - matrix.M23 * matrix.M32) * determinantInverse;
-                    m12 = (matrix.M13 * matrix.M32 - matrix.M33 * matrix.M12) * determinantInverse;
-                    m13 = (matrix.M12 * matrix.M23 - matrix.M22 * matrix.M13) * determinantInverse;
-
-                    m21 = (matrix.M23 * matrix.M31 - matrix.M21 * matrix.M33) * determinantInverse;
-                    m22 = (matrix.M11 * matrix.M33 - matrix.M13 * matrix.M31) * determinantInverse;
-                    m23 = (matrix.M13 * matrix.M21 - matrix.M11 * matrix.M23) * determinantInverse;
-
-                    m31 = (matrix.M21 * matrix.M32 - matrix.M22 * matrix.M31) * determinantInverse;
-                    m32 = (matrix.M12 * matrix.M31 - matrix.M11 * matrix.M32) * determinantInverse;
-                    m33 = (matrix.M11 * matrix.M22 - matrix.M12 * matrix.M21) * determinantInverse;
-                    break;
+					// Perform full Gauss-invert
+					Invert(ref matrix, out result);
+					return;
                 case 1: //Upper left matrix, m11, m12, m21, m22.
                     m11 = matrix.M22 * determinantInverse;
                     m12 = -matrix.M12 * determinantInverse;
@@ -1223,17 +1192,7 @@ namespace BEPUutilities
             return "{" + M11 + ", " + M12 + ", " + M13 + "} " +
                    "{" + M21 + ", " + M22 + ", " + M23 + "} " +
                    "{" + M31 + ", " + M32 + ", " + M33 + "}";
-        }
-
-        /// <summary>
-        /// Calculates the determinant of the matrix.
-        /// </summary>
-        /// <returns>The matrix's determinant.</returns>
-        public Fix64 Determinant()
-        {
-            return M11 * M22 * M33 + M12 * M23 * M31 + M13 * M21 * M32 -
-                   M31 * M22 * M13 - M32 * M23 * M11 - M33 * M21 * M12;
-        }
+        }		
 
         /// <summary>
         /// Calculates the determinant of largest nonsingular submatrix, excluding 2x2's that involve M13 or M31, and excluding all 1x1's that involve nondiagonal elements.
@@ -1245,13 +1204,16 @@ namespace BEPUutilities
         internal Fix64 AdaptiveDeterminant(out int subMatrixCode)
         {
             //Try the full matrix first.
-            Fix64 determinant = M11 * M22 * M33 + M12 * M23 * M31 + M13 * M21 * M32 -
-                                M31 * M22 * M13 - M32 * M23 * M11 - M33 * M21 * M12;
+			// Determinant is likely to overflow, use overflow-checking add and mul
+            Fix64 determinant = Fix64.SafeSub(Fix64.SafeSub(Fix64.SafeSub(Fix64.SafeAdd(Fix64.SafeAdd(Fix64.SafeMul(Fix64.SafeMul(M11, M22), M33),  Fix64.SafeMul(Fix64.SafeMul(M12, M23), M31)), Fix64.SafeMul(Fix64.SafeMul(M13, M21), M32)),
+                                Fix64.SafeMul(Fix64.SafeMul(M31, M22), M13)), Fix64.SafeMul(Fix64.SafeMul(M32, M23), M11)), Fix64.SafeMul(Fix64.SafeMul(M33, M21), M12));
             if (determinant != 0) //This could be a little numerically flimsy.  Fortunately, the way this method is used, that doesn't matter!
             {
                 subMatrixCode = 0;
                 return determinant;
             }
+
+			// We'll play it fast and loose here and assume the following won't overflow
             //Try m11, m12, m21, m22.
             determinant = M11 * M22 - M12 * M21;
             if (determinant != 0)

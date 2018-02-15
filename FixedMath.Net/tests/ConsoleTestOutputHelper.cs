@@ -3,7 +3,7 @@ using Xunit.Abstractions;
 
 namespace FixMath.NET
 {
-	class ConsoleTestOutputHelper : ITestOutputHelper
+	public class ConsoleTestOutputHelper : ITestOutputHelper
 	{
 		public void WriteLine(string message)
 		{

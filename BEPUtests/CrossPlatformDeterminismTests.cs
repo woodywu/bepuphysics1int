@@ -10,12 +10,12 @@ using Xunit.Abstractions;
 
 namespace BEPUtests
 {
-	public class CrossPlatformDeterminism
+	public class CrossPlatformDeterminismTests
     {
 		private const bool OUTPUT_HASHES = false;
 		private readonly ITestOutputHelper output;
 
-		public CrossPlatformDeterminism(ITestOutputHelper output)
+		public CrossPlatformDeterminismTests(ITestOutputHelper output)
 		{
 			this.output = output;
 		}

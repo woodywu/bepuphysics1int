@@ -54,6 +54,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MatrixTests.cs" />
     <Compile Include="Matrix3x3Tests.cs" />
     <Compile Include="CrossPlatformDeterminismTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

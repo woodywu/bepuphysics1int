@@ -844,55 +844,8 @@ namespace BEPUutilities
         /// <param name="inverted">Inverted version of the matrix.</param>
         public static void Invert(ref Matrix m, out Matrix inverted)
         {
-            Fix64 s0 = m.M11 * m.M22 - m.M21 * m.M12;
-            Fix64 s1 = m.M11 * m.M23 - m.M21 * m.M13;
-            Fix64 s2 = m.M11 * m.M24 - m.M21 * m.M14;
-            Fix64 s3 = m.M12 * m.M23 - m.M22 * m.M13;
-            Fix64 s4 = m.M12 * m.M24 - m.M22 * m.M14;
-            Fix64 s5 = m.M13 * m.M24 - m.M23 * m.M14;
-
-            Fix64 c5 = m.M33 * m.M44 - m.M43 * m.M34;
-            Fix64 c4 = m.M32 * m.M44 - m.M42 * m.M34;
-            Fix64 c3 = m.M32 * m.M43 - m.M42 * m.M33;
-            Fix64 c2 = m.M31 * m.M44 - m.M41 * m.M34;
-            Fix64 c1 = m.M31 * m.M43 - m.M41 * m.M33;
-            Fix64 c0 = m.M31 * m.M42 - m.M41 * m.M32;
-
-            Fix64 inverseDeterminant = 1 / (s0 * c5 - s1 * c4 + s2 * c3 + s3 * c2 - s4 * c1 + s5 * c0);
-
-            Fix64 m11 = m.M11;
-            Fix64 m12 = m.M12;
-            Fix64 m13 = m.M13;
-            Fix64 m14 = m.M14;
-            Fix64 m21 = m.M21;
-            Fix64 m22 = m.M22;
-            Fix64 m23 = m.M23;
-            Fix64 m31 = m.M31;
-            Fix64 m32 = m.M32;
-            Fix64 m33 = m.M33;
-
-            Fix64 m41 = m.M41;
-            Fix64 m42 = m.M42;
-
-            inverted.M11 = (m.M22 * c5 - m.M23 * c4 + m.M24 * c3) * inverseDeterminant;
-            inverted.M12 = (-m.M12 * c5 + m.M13 * c4 - m.M14 * c3) * inverseDeterminant;
-            inverted.M13 = (m.M42 * s5 - m.M43 * s4 + m.M44 * s3) * inverseDeterminant;
-            inverted.M14 = (-m.M32 * s5 + m.M33 * s4 - m.M34 * s3) * inverseDeterminant;
-
-            inverted.M21 = (-m.M21 * c5 + m.M23 * c2 - m.M24 * c1) * inverseDeterminant;
-            inverted.M22 = (m11 * c5 - m13 * c2 + m14 * c1) * inverseDeterminant;
-            inverted.M23 = (-m.M41 * s5 + m.M43 * s2 - m.M44 * s1) * inverseDeterminant;
-            inverted.M24 = (m.M31 * s5 - m.M33 * s2 + m.M34 * s1) * inverseDeterminant;
-
-            inverted.M31 = (m21 * c4 - m22 * c2 + m.M24 * c0) * inverseDeterminant;
-            inverted.M32 = (-m11 * c4 + m12 * c2 - m14 * c0) * inverseDeterminant;
-            inverted.M33 = (m.M41 * s4 - m.M42 * s2 + m.M44 * s0) * inverseDeterminant;
-            inverted.M34 = (-m31 * s4 + m32 * s2 - m.M34 * s0) * inverseDeterminant;
-
-            inverted.M41 = (-m21 * c3 + m22 * c1 - m23 * c0) * inverseDeterminant;
-            inverted.M42 = (m11 * c3 - m12 * c1 + m13 * c0) * inverseDeterminant;
-            inverted.M43 = (-m41 * s3 + m42 * s1 - m.M43 * s0) * inverseDeterminant;
-            inverted.M44 = (m31 * s3 - m32 * s1 + m33 * s0) * inverseDeterminant;
+			Matrix4x8 temp = new Matrix4x8(m);
+			temp.Invert(out inverted);			
         }
 
         /// <summary>
@@ -906,74 +859,7 @@ namespace BEPUutilities
             Invert(ref m, out inverted);
             return inverted;
         }
-
-        /// <summary>
-        /// Inverts the matrix using a process that only works for affine transforms (3x3 linear transform and translation).
-        /// Ignores the M14, M24, M34, and M44 elements of the input matrix.
-        /// </summary>
-        /// <param name="m">Matrix to invert.</param>
-        /// <param name="inverted">Inverted version of the matrix.</param>
-        public static void InvertAffine(ref Matrix m, out Matrix inverted)
-        {
-            //Invert the upper left 3x3 linear transform.
-
-            //Compute the upper left 3x3 determinant. Some potential for microoptimization here.
-            Fix64 determinantInverse = 1 /
-                (m.M11 * m.M22 * m.M33 + m.M12 * m.M23 * m.M31 + m.M13 * m.M21 * m.M32 -
-                 m.M31 * m.M22 * m.M13 - m.M32 * m.M23 * m.M11 - m.M33 * m.M21 * m.M12);
-
-            Fix64 m11 = (m.M22 * m.M33 - m.M23 * m.M32) * determinantInverse;
-            Fix64 m12 = (m.M13 * m.M32 - m.M33 * m.M12) * determinantInverse;
-            Fix64 m13 = (m.M12 * m.M23 - m.M22 * m.M13) * determinantInverse;
-
-            Fix64 m21 = (m.M23 * m.M31 - m.M21 * m.M33) * determinantInverse;
-            Fix64 m22 = (m.M11 * m.M33 - m.M13 * m.M31) * determinantInverse;
-            Fix64 m23 = (m.M13 * m.M21 - m.M11 * m.M23) * determinantInverse;
-
-            Fix64 m31 = (m.M21 * m.M32 - m.M22 * m.M31) * determinantInverse;
-            Fix64 m32 = (m.M12 * m.M31 - m.M11 * m.M32) * determinantInverse;
-            Fix64 m33 = (m.M11 * m.M22 - m.M12 * m.M21) * determinantInverse;
-
-            inverted.M11 = m11;
-            inverted.M12 = m12;
-            inverted.M13 = m13;
-
-            inverted.M21 = m21;
-            inverted.M22 = m22;
-            inverted.M23 = m23;
-
-            inverted.M31 = m31;
-            inverted.M32 = m32;
-            inverted.M33 = m33;
-
-            //Translation component
-            var vX = m.M41;
-            var vY = m.M42;
-            var vZ = m.M43;
-            inverted.M41 = -(vX * inverted.M11 + vY * inverted.M21 + vZ * inverted.M31);
-            inverted.M42 = -(vX * inverted.M12 + vY * inverted.M22 + vZ * inverted.M32);
-            inverted.M43 = -(vX * inverted.M13 + vY * inverted.M23 + vZ * inverted.M33);
-
-            //Last chunk.
-            inverted.M14 = 0;
-            inverted.M24 = 0;
-            inverted.M34 = 0;
-            inverted.M44 = 1;
-        }
-
-        /// <summary>
-        /// Inverts the matrix using a process that only works for affine transforms (3x3 linear transform and translation).
-        /// Ignores the M14, M24, M34, and M44 elements of the input matrix.
-        /// </summary>
-        /// <param name="m">Matrix to invert.</param>
-        /// <returns>Inverted version of the matrix.</returns>
-        public static Matrix InvertAffine(Matrix m)
-        {
-            Matrix inverted;
-            InvertAffine(ref m, out inverted);
-            return inverted;
-        }
-
+		
         /// <summary>
         /// Inverts the matrix using a process that only works for rigid transforms.
         /// </summary>

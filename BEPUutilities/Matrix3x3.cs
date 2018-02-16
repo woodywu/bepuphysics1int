@@ -528,15 +528,19 @@ namespace BEPUutilities
         /// <param name="result">Inverted matrix.</param>
         public static void AdaptiveInvert(ref Matrix3x3 matrix, out Matrix3x3 result)
         {
-            int submatrix;
+			try
+			{
+				// Perform full Gauss-invert
+				Invert(ref matrix, out result);
+				return;
+			}
+			catch (ArgumentException) { } //Matrix is singular
+
+			int submatrix;
             Fix64 determinantInverse = 1 / matrix.AdaptiveDeterminant(out submatrix);
             Fix64 m11, m12, m13, m21, m22, m23, m31, m32, m33;
             switch (submatrix)
             {
-                case 0: //Full matrix.
-					// Perform full Gauss-invert
-					Invert(ref matrix, out result);
-					return;
                 case 1: //Upper left matrix, m11, m12, m21, m22.
                     m11 = matrix.M22 * determinantInverse;
                     m12 = -matrix.M12 * determinantInverse;
@@ -1203,19 +1207,11 @@ namespace BEPUutilities
         /// <returns>The matrix's determinant.</returns>
         internal Fix64 AdaptiveDeterminant(out int subMatrixCode)
         {
-            //Try the full matrix first.
-			// Determinant is likely to overflow, use overflow-checking add and mul
-            Fix64 determinant = Fix64.SafeSub(Fix64.SafeSub(Fix64.SafeSub(Fix64.SafeAdd(Fix64.SafeAdd(Fix64.SafeMul(Fix64.SafeMul(M11, M22), M33),  Fix64.SafeMul(Fix64.SafeMul(M12, M23), M31)), Fix64.SafeMul(Fix64.SafeMul(M13, M21), M32)),
-                                Fix64.SafeMul(Fix64.SafeMul(M31, M22), M13)), Fix64.SafeMul(Fix64.SafeMul(M32, M23), M11)), Fix64.SafeMul(Fix64.SafeMul(M33, M21), M12));
-            if (determinant != 0) //This could be a little numerically flimsy.  Fortunately, the way this method is used, that doesn't matter!
-            {
-                subMatrixCode = 0;
-                return determinant;
-            }
+            // We do not try the full matrix. This is handled by the AdaptiveInverse.
 
 			// We'll play it fast and loose here and assume the following won't overflow
             //Try m11, m12, m21, m22.
-            determinant = M11 * M22 - M12 * M21;
+            Fix64 determinant = M11 * M22 - M12 * M21;
             if (determinant != 0)
             {
                 subMatrixCode = 1;

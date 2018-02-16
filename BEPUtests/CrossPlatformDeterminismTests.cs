@@ -52,6 +52,33 @@ public static readonly Dictionary<string, string[]> Hashes = new Dictionary<stri
 		}
 
 		[Fact]
+		public void OutputExpectedHashesForBenchmark()
+		{
+			Benchmark b = new DiscreteVsContinuousBenchmark();
+
+			StringBuilder result = new StringBuilder();
+
+			result.AppendFormat("{{\"{0}\", new string[] {{", b.GetName());
+
+			b.Initialize();
+			for (int i = 0; i < 50; i++)
+			{
+				string expectedHash = b.RunToNextHash();
+				if (i != 0)
+					result.Append(",\n");
+				result.AppendFormat("\"{0}\"", expectedHash);
+			}
+			result.AppendLine("}}");
+			output.WriteLine(result.ToString());
+		}
+
+		[Fact]
+		public void DiscreteVsContinuous()
+		{
+			TestDeterminism(new DiscreteVsContinuousBenchmark());
+		}
+
+		[Fact]
 		public void Pyramid()
 		{
 			TestDeterminism(new PyramidBenchmark());

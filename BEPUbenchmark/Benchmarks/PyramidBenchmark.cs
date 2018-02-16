@@ -11,14 +11,14 @@ namespace BEPUbenchmark.Benchmarks
 			Fix64 boxSize = 2;
 			int boxCount = 20;
 			Fix64 platformLength = MathHelper.Min(50, boxCount * boxSize + 10);
-			space.Add(new Box(new Vector3(0, -.5m, 0), boxCount * boxSize + 20, 1,
+			Space.Add(new Box(new Vector3(0, -.5m, 0), boxCount * boxSize + 20, 1,
 							  platformLength));
 
 			for (int i = 0; i < boxCount; i++)
 			{
 				for (int j = 0; j < boxCount - i; j++)
 				{
-					space.Add(new Box(
+					Space.Add(new Box(
 								  new Vector3(
 									  -boxCount * boxSize / 2 + boxSize / 2 * i + j * (boxSize),
 									  (boxSize / 2) + i * boxSize,
@@ -30,22 +30,22 @@ namespace BEPUbenchmark.Benchmarks
 
 			Sphere pow = new Sphere(new Vector3(-25, 5, 70), 2, 40);
 			pow.LinearVelocity = new Vector3(0, 10, -100);
-			space.Add(pow);
+			Space.Add(pow);
 			pow = new Sphere(new Vector3(-15, 10, 70), 2, 40);
 			pow.LinearVelocity = new Vector3(0, 10, -100);
-			space.Add(pow);
+			Space.Add(pow);
 			pow = new Sphere(new Vector3(-5, 15, 70), 2, 40);
 			pow.LinearVelocity = new Vector3(0, 10, -100);
-			space.Add(pow);
+			Space.Add(pow);
 			pow = new Sphere(new Vector3(5, 15, 70), 2, 40);
 			pow.LinearVelocity = new Vector3(0, 10, -100);
-			space.Add(pow);
+			Space.Add(pow);
 			pow = new Sphere(new Vector3(15, 10, 70), 2, 40);
 			pow.LinearVelocity = new Vector3(0, 10, -100);
-			space.Add(pow);
+			Space.Add(pow);
 			pow = new Sphere(new Vector3(25, 5, 70), 2, 40);
 			pow.LinearVelocity = new Vector3(0, 10, -100);
-			space.Add(pow);
+			Space.Add(pow);
 		}
 	}
 }

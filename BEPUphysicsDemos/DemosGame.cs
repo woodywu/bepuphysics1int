@@ -220,7 +220,7 @@ namespace BEPUphysicsDemos
             Mouse.SetPosition(200, 200); //This helps the camera stay on track even if the mouse is offset during startup.
 #endif
 
-            SwitchSimulation(1);
+            SwitchSimulation(37);
 
         }
 

@@ -11,7 +11,7 @@ namespace BEPUbenchmark
 {
 	public abstract class Benchmark
 	{
-		protected Space space;
+		protected Space Space;
 		
 		protected abstract void InitializeSpace();
 		protected virtual void Step()
@@ -20,16 +20,16 @@ namespace BEPUbenchmark
 
 		public void Initialize()
 		{
-			space = new Space();
-			space.ForceUpdater.Gravity = new Vector3(0, (Fix64)(-9.81m), 0);
-			space.TimeStepSettings.TimeStepDuration = 1 / 60m;
+			Space = new Space();
+			Space.ForceUpdater.Gravity = new Vector3(0, (Fix64)(-9.81m), 0);
+			Space.TimeStepSettings.TimeStepDuration = 1 / 60m;
 
 			InitializeSpace();
 		}
 
 		public void Dispose()
 		{
-			space = null;
+			Space = null;
 		}
 
 		public string RunToNextHash()
@@ -37,7 +37,7 @@ namespace BEPUbenchmark
 			for (int i = 0; i < 20; i++)
 			{
 				Step();
-				space.Update();
+				Space.Update();
 			}
 
 			return HashSpace();
@@ -52,7 +52,7 @@ namespace BEPUbenchmark
 			for (int i = 0; i < 1000; i++)
 			{
 				Step();
-				space.Update();
+				Space.Update();
 				opCount++;
 				long time = DateTime.Now.Ticks - opStartTime;
 				if (time > TimeSpan.TicksPerSecond)
@@ -77,9 +77,9 @@ namespace BEPUbenchmark
 		private string HashSpace()
 		{
 			const int valuesPerEntity = 3 + 4 + 3;
-			byte[] state = new byte[space.Entities.Count * valuesPerEntity * sizeof(long)];
+			byte[] state = new byte[Space.Entities.Count * valuesPerEntity * sizeof(long)];
 			int offset = 0;
-			foreach (Entity e in space.Entities)
+			foreach (Entity e in Space.Entities)
 			{
 				Fix64IntoByteArray(e.Position.X, offset++, state);
 				Fix64IntoByteArray(e.Position.Y, offset++, state);

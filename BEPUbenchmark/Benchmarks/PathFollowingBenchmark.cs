@@ -79,12 +79,12 @@ namespace BEPUbenchmark.Benchmarks
 			rotator = new EntityRotator(movingEntity);
 
 			//Add the entity and movers to the space.
-			space.Add(movingEntity);
-			space.Add(mover);
-			space.Add(rotator);
+			Space.Add(movingEntity);
+			Space.Add(mover);
+			Space.Add(rotator);
 
 			//Add some extra stuff to the space.
-			space.Add(new Box(new Vector3(0, -5, 0), 25, 10, 25));
+			Space.Add(new Box(new Vector3(0, -5, 0), 25, 10, 25));
 
 			int numColumns = 7;
 			int numRows = 7;
@@ -96,7 +96,7 @@ namespace BEPUbenchmark.Benchmarks
 				for (int j = 0; j < numColumns; j++)
 					for (int k = 0; k < numHigh; k++)
 					{
-						space.Add(new Box(new Vector3(
+						Space.Add(new Box(new Vector3(
 											  xSpacing * i - (numRows - 1) * xSpacing / 2,
 											  1.58m + k * (ySpacing),
 											  2 + zSpacing * j - (numColumns - 1) * zSpacing / 2),
@@ -106,7 +106,7 @@ namespace BEPUbenchmark.Benchmarks
 
 		protected override void Step()
 		{
-			pathTime += space.TimeStepSettings.TimeStepDuration;
+			pathTime += Space.TimeStepSettings.TimeStepDuration;
 			mover.TargetPosition = positionPath.Evaluate(pathTime);
 			rotator.TargetOrientation = orientationPath.Evaluate(pathTime);
 		}

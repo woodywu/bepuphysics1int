@@ -54,6 +54,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CrossPlatformDeterminismExpectedHashes.cs" />
     <Compile Include="MatrixTests.cs" />
     <Compile Include="Matrix3x3Tests.cs" />
     <Compile Include="CrossPlatformDeterminismTests.cs" />
@@ -64,6 +65,10 @@
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BEPUbenchmark\BEPUbenchmark.csproj">
+      <Project>{97b92266-b7ee-468a-ba8b-edcc6ec27c9b}</Project>
+      <Name>BEPUbenchmark</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BEPUphysics\BEPUphysics.csproj">
       <Project>{c0d52c9f-14b8-4008-8ddc-109c27561a5c}</Project>
       <Name>BEPUphysics</Name>

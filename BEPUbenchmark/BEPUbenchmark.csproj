@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AllBenchmarks.cs" />
     <Compile Include="Benchmark.cs" />
     <Compile Include="Benchmarks\SelfCollidingClothBenchmark.cs" />
     <Compile Include="Benchmarks\PathFollowingBenchmark.cs" />

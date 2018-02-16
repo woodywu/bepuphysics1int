@@ -4,7 +4,7 @@ using FixMath.NET;
 
 namespace BEPUbenchmark.Benchmarks
 {
-	class PyramidBenchmark : Benchmark
+	public class PyramidBenchmark : Benchmark
 	{
 		protected override void InitializeSpace()
 		{

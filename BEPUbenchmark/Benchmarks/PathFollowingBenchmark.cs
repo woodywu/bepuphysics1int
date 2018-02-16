@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace BEPUbenchmark.Benchmarks
 {
-	class PathFollowingBenchmark : Benchmark
+	public class PathFollowingBenchmark : Benchmark
 	{
 		private EntityMover mover;
 		private Path<Quaternion> orientationPath;

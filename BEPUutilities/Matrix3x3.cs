@@ -503,10 +503,11 @@ namespace BEPUutilities
 		/// </summary>
 		/// <param name="matrix">Matrix to be inverted.</param>
 		/// <param name="result">Inverted matrix.</param>
-		public static void Invert(ref Matrix3x3 matrix, out Matrix3x3 result)
+		/// <returns>false if matrix is singular, true otherwise</returns>
+		public static bool Invert(ref Matrix3x3 matrix, out Matrix3x3 result)
         {
 			Matrix3x6 temp = new Matrix3x6(matrix);
-			temp.Invert(out result);
+			return temp.Invert(out result);
         }
 
         /// <summary>
@@ -528,13 +529,9 @@ namespace BEPUutilities
         /// <param name="result">Inverted matrix.</param>
         public static void AdaptiveInvert(ref Matrix3x3 matrix, out Matrix3x3 result)
         {
-			try
-			{
-				// Perform full Gauss-invert
-				Invert(ref matrix, out result);
+			// Perform full Gauss-invert and return if successful
+			if (Invert(ref matrix, out result))
 				return;
-			}
-			catch (ArgumentException) { } //Matrix is singular
 
 			int submatrix;
             Fix64 determinantInverse = 1 / matrix.AdaptiveDeterminant(out submatrix);

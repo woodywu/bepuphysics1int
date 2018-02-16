@@ -48,21 +48,17 @@ namespace BEPUtests
 
 				Matrix3x3 actual;
 				if (float.IsInfinity(expected.M11) || float.IsNaN(expected.M11))
-				{
-					Assert.Throws<ArgumentException>(() => Matrix3x3.Invert(ref testCase, out actual));
-				}
-				else
-				{
-					Matrix3x3.Invert(ref testCase, out actual);
-					bool success = true;
-					foreach (decimal delta in GetDeltas(expected, actual))
-					{
-						deltas.Add(delta);
-						success &= delta <= maxDelta;
+					expected = new FloatMatrix3x3();
 
-					}
-					Assert.True(success, string.Format("Precision: Matrix3x3Invert({0}): Expected {1} Actual {2}", testCase, expected, actual));
+				Matrix3x3.Invert(ref testCase, out actual);
+				bool success = true;
+				foreach (decimal delta in GetDeltas(expected, actual))
+				{
+					deltas.Add(delta);
+					success &= delta <= maxDelta;
+
 				}
+				Assert.True(success, string.Format("Precision: Matrix3x3Invert({0}): Expected {1} Actual {2}", testCase, expected, actual));
 			}
 			output.WriteLine("Max error: {0} ({1} times precision)", deltas.Max(), deltas.Max() / Fix64.Precision);
 			output.WriteLine("Average precision: {0} ({1} times precision)", deltas.Average(), deltas.Average() / Fix64.Precision);
@@ -90,14 +86,7 @@ namespace BEPUtests
 
 					Matrix3x3 actual;
 					swd.Start();
-					if (float.IsInfinity(expected.M11) || float.IsNaN(expected.M11))
-					{
-						Assert.Throws<ArgumentException>(() => Matrix3x3.Invert(ref testCase, out actual));
-						swd.Stop();
-						continue;
-					}
-					else
-						Matrix3x3.Invert(ref testCase, out actual);
+					Matrix3x3.Invert(ref testCase, out actual);
 					swd.Stop();
 
 					foreach (decimal delta in GetDeltas(expected, actual))

@@ -85,9 +85,13 @@ namespace BEPUutilities
 			}
 		}
 
-		public void Invert(out Matrix r)
+		public bool Invert(out Matrix r)
 		{
-			Matrix3x6.Gauss(M, 4, 8);
+			if (!Matrix3x6.Gauss(M, 4, 8))
+			{
+				r = new Matrix();
+				return false;
+			}
 			r = new Matrix(
 				// m11...m14
 				M[0, 4],
@@ -113,6 +117,7 @@ namespace BEPUutilities
 				M[3, 6],
 				M[3, 7]
 				);
+			return true;
 		}
 	}
 }

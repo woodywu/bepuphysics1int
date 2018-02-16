@@ -26,7 +26,7 @@ namespace BEPUutilities
 			M[2, 5] = Fix64.One;
 		}
 
-		public static void Gauss(Fix64[,] M, int m, int n)
+		public static bool Gauss(Fix64[,] M, int m, int n)
 		{
 			// Perform Gauss-Jordan elimination
 			for (int k = 0; k < m; k++)
@@ -43,7 +43,7 @@ namespace BEPUutilities
 					}
 				}
 				if (M[iMax, k] == 0)
-					throw new ArgumentException("Matrix is singular");
+					return false;
 				// Swap rows k, iMax
 				if (k != iMax)
 				{
@@ -75,11 +75,16 @@ namespace BEPUutilities
 					M[i, k] = 0;
 				}
 			}
+			return true;
 		}
 		
-		public void Invert(out Matrix3x3 r)
+		public bool Invert(out Matrix3x3 r)
 		{
-			Gauss(M, 3, 6);
+			if (!Gauss(M, 3, 6))
+			{
+				r = new Matrix3x3();
+				return false;
+			}
 			r = new Matrix3x3(
 				// m11...m13
 				M[0, 3],
@@ -96,6 +101,7 @@ namespace BEPUutilities
 				M[2, 4],
 				M[2, 5]
 				);
+			return true;
 		}
 	}
 }

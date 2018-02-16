@@ -16,6 +16,7 @@ namespace BEPUbenchmark
 		protected abstract void InitializeSpace();
 		protected virtual void Step()
 		{
+			Space.Update();
 		}
 
 		public void Initialize()
@@ -35,10 +36,7 @@ namespace BEPUbenchmark
 		public string RunToNextHash()
 		{
 			for (int i = 0; i < 20; i++)
-			{
 				Step();
-				Space.Update();
-			}
 
 			return HashSpace();
 		}
@@ -52,7 +50,6 @@ namespace BEPUbenchmark
 			for (int i = 0; i < 1000; i++)
 			{
 				Step();
-				Space.Update();
 				opCount++;
 				long time = DateTime.Now.Ticks - opStartTime;
 				if (time > TimeSpan.TicksPerSecond)

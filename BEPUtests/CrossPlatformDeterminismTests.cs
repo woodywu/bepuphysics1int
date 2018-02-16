@@ -51,7 +51,7 @@ public static readonly Dictionary<string, string[]> Hashes = new Dictionary<stri
 			output.WriteLine(result.ToString());
 		}
 
-		[Fact]
+		//[Fact]
 		public void OutputExpectedHashesForBenchmark()
 		{
 			Benchmark b = new DiscreteVsContinuousBenchmark();
@@ -76,6 +76,12 @@ public static readonly Dictionary<string, string[]> Hashes = new Dictionary<stri
 		public void DiscreteVsContinuous()
 		{
 			TestDeterminism(new DiscreteVsContinuousBenchmark());
+		}
+
+		[Fact]
+		public void InverseKinematic()
+		{
+			TestDeterminism(new InverseKinematicsBenchmark());
 		}
 
 		[Fact]

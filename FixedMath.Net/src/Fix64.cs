@@ -133,7 +133,7 @@ namespace FixMath.NET
 						
 			for (int i = 2; i < 40; i++)
 			{
-				term = (term / i ) * x;
+				term = x * term / i;
 				result += term;
 
 				if (term == 0)

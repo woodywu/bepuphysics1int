@@ -159,9 +159,9 @@ namespace FixMath.NET
             var terms2 = new[] { Fix64.One, (Fix64)(-2), (Fix64)(1.5m), (Fix64)(2), (Fix64)(-1) };
 			var expecteds = new[] { Fix64.MinValue, Fix64.One, (Fix64)(-1.5m), (Fix64)(-1), Fix64.MaxValue };
 #else
-			var terms1 = new[] { (Fix64)(-1), Fix64.Zero, Fix64.One, Fix64.MaxValue };
-			var terms2 = new[] { (Fix64)(-2), (Fix64)(1.5m), (Fix64)(2), (Fix64)(-1) };
-			var expecteds = new[] { Fix64.One, (Fix64)(-1.5m), (Fix64)(-1), Fix64.MaxValue };
+			var terms1 = new[] { (Fix64)(-1), Fix64.Zero, Fix64.One };
+			var terms2 = new[] { (Fix64)(-2), (Fix64)(1.5m), (Fix64)(2) };
+			var expecteds = new[] { Fix64.One, (Fix64)(-1.5m), (Fix64)(-1) };
 #endif
             for (int i = 0; i < terms1.Length; ++i)
             {

@@ -213,8 +213,9 @@ namespace BEPUphysics.CollisionShapes.ConvexShapes
             if (Fix64.Abs(localDirection.X) < Toolbox.Epsilon && (localOrigin.X < -halfWidth || localOrigin.X > halfWidth))
                 return false;
             Fix64 inverseDirection = 1 / localDirection.X;
-            Fix64 t1 = (-halfWidth - localOrigin.X) * inverseDirection;
-            Fix64 t2 = (halfWidth - localOrigin.X) * inverseDirection;
+			// inverseDirection might be Infinity (Fix64.MaxValue), so use SafeMul here to handle overflow
+            Fix64 t1 = Fix64.SafeMul((-halfWidth - localOrigin.X), inverseDirection);
+            Fix64 t2 = Fix64.SafeMul((halfWidth - localOrigin.X), inverseDirection);
             var tempNormal = new Vector3(-1, 0, 0);
             if (t1 > t2)
             {
@@ -233,8 +234,8 @@ namespace BEPUphysics.CollisionShapes.ConvexShapes
             if (Fix64.Abs(localDirection.Y) < Toolbox.Epsilon && (localOrigin.Y < -halfHeight || localOrigin.Y > halfHeight))
                 return false;
             inverseDirection = 1 / localDirection.Y;
-            t1 = (-halfHeight - localOrigin.Y) * inverseDirection;
-            t2 = (halfHeight - localOrigin.Y) * inverseDirection;
+            t1 = Fix64.SafeMul((-halfHeight - localOrigin.Y), inverseDirection);
+            t2 = Fix64.SafeMul((halfHeight - localOrigin.Y), inverseDirection);
             tempNormal = new Vector3(0, -1, 0);
             if (t1 > t2)
             {
@@ -253,8 +254,8 @@ namespace BEPUphysics.CollisionShapes.ConvexShapes
             if (Fix64.Abs(localDirection.Z) < Toolbox.Epsilon && (localOrigin.Z < -halfLength || localOrigin.Z > halfLength))
                 return false;
             inverseDirection = 1 / localDirection.Z;
-            t1 = (-halfLength - localOrigin.Z) * inverseDirection;
-            t2 = (halfLength - localOrigin.Z) * inverseDirection;
+            t1 = Fix64.SafeMul((-halfLength - localOrigin.Z), inverseDirection);
+            t2 = Fix64.SafeMul((halfLength - localOrigin.Z), inverseDirection);
             tempNormal = new Vector3(0, 0, -1);
             if (t1 > t2)
             {

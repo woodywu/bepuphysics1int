@@ -11,6 +11,7 @@ using BEPUphysics.Settings;
  
 using BEPUphysics.CollisionShapes.ConvexShapes;
 using BEPUutilities;
+using FixMath.NET;
 
 namespace BEPUphysics.NarrowPhaseSystems.Pairs
 {
@@ -99,7 +100,7 @@ namespace BEPUphysics.NarrowPhaseSystems.Pairs
         ///</summary>
         ///<param name="requester">Collidable requesting the update.</param>
         ///<param name="dt">Timestep duration.</param>
-        public override void UpdateTimeOfImpact(Collidable requester, float dt)
+        public override void UpdateTimeOfImpact(Collidable requester, Fix64 dt)
         {
             var overlap = BroadPhaseOverlap;
             var triangleMode = triangle.entity == null ? PositionUpdateMode.Discrete : triangle.entity.PositionUpdateMode;
@@ -139,7 +140,7 @@ namespace BEPUphysics.NarrowPhaseSystems.Pairs
                     Vector3.Subtract(ref triangle.entity.linearVelocity, ref convex.entity.linearVelocity, out velocity);
                 }
                 Vector3.Multiply(ref velocity, dt, out velocity);
-                float velocitySquared = velocity.LengthSquared();
+                Fix64 velocitySquared = velocity.LengthSquared();
 
                 var minimumRadiusA = convex.Shape.MinimumRadius * MotionSettings.CoreShapeScaling;
                 timeOfImpact = 1;
@@ -159,7 +160,7 @@ namespace BEPUphysics.NarrowPhaseSystems.Pairs
                             Vector3 normal;
                             Vector3.Cross(ref AB, ref AC, out normal);
 
-                            float dot;
+                            Fix64 dot;
                             Vector3.Dot(ref rayHit.Normal, ref normal, out dot);
                             if (triangle.Shape.sidedness == TriangleSidedness.Counterclockwise && dot < 0 ||
                                 triangle.Shape.sidedness == TriangleSidedness.Clockwise && dot > 0)
@@ -185,7 +186,7 @@ namespace BEPUphysics.NarrowPhaseSystems.Pairs
                 //    {
                 //        if (triangle.Shape.sidedness != TriangleSidedness.DoubleSided)
                 //        {
-                //            float dot;
+                //            Fix64 dot;
                 //            Vector3.Dot(ref rayHit.Normal, ref normal, out dot);
                 //            if (dot > 0)
                 //            {

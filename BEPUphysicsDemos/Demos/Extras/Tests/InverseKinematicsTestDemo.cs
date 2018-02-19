@@ -22,6 +22,7 @@ using Quaternion = BEPUutilities.Quaternion;
 using Ray = BEPUutilities.Ray;
 using Vector2 = BEPUutilities.Vector2;
 using Vector3 = BEPUutilities.Vector3;
+using FixMath.NET;
 
 namespace BEPUphysicsDemos.Demos.Extras.Tests
 {
@@ -33,7 +34,7 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
             internal StateControl Control;
         }
 
-        private float distanceToTarget;
+        private Fix64 distanceToTarget;
         private Camera camera;
         public List<Control> Controls { get; set; }
 
@@ -117,7 +118,7 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
         private FreeCameraControlScheme cameraControl;
 
         private DragControl dragControl = new DragControl();
-        private float distanceToGrabbedBone;
+        private Fix64 distanceToGrabbedBone;
         private StateControlGroup stateControlGroup;
 
 
@@ -151,14 +152,14 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
         {
             //Set up a bone chain.
             int linkCount = 100;
-            var previousBoneEntity = new Cylinder(position, 1, .2f, 10);
+            var previousBoneEntity = new Cylinder(position, 1, .2m, 10);
             var previousBone = new Bone(previousBoneEntity.Position, previousBoneEntity.Orientation, previousBoneEntity.Radius, previousBoneEntity.Height);
             bones.Add(new BoneRelationship(previousBone, previousBoneEntity));
             Space.Add(previousBoneEntity);
 
             for (int i = 1; i < linkCount; i++)
             {
-                var boneEntity = new Cylinder(previousBone.Position + new Vector3(0, 1, 0), 1, .2f, 10);
+                var boneEntity = new Cylinder(previousBone.Position + new Vector3(0, 1, 0), 1, .2m, 10);
                 var bone = new Bone(boneEntity.Position, boneEntity.Orientation, boneEntity.Radius, boneEntity.Height);
                 bones.Add(new BoneRelationship(bone, boneEntity));
                 Space.Add(boneEntity);
@@ -184,10 +185,10 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
         void BuildStick(Vector3 position)
         {
             //Set up a bone chain.
-            float fullLength = 20;
+            Fix64 fullLength = 20;
             int linkCount = 20;
-            float linkLength = fullLength / linkCount;
-            float linkRadius = linkLength * 0.2f;
+            Fix64 linkLength = fullLength / linkCount;
+            Fix64 linkRadius = linkLength * 0.2m;
             var previousBoneEntity = new Cylinder(position, linkLength, linkRadius, 100);
             var previousBone = new Bone(previousBoneEntity.Position, previousBoneEntity.Orientation, previousBoneEntity.Radius, previousBoneEntity.Height);
             bones.Add(new BoneRelationship(previousBone, previousBoneEntity));
@@ -220,14 +221,14 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
         void BuildActionFigure(Vector3 position)
         {
             //Make a simple, poseable action figure, like the ActionFigureDemo.
-            Entity body = new Box(position, 1.5f, 2, 1, 10);
+            Entity body = new Box(position, 1.5m, 2, 1, 10);
             Space.Add(body);
 
-            Entity head = new Sphere(body.Position + new Vector3(0, 2, 0), .5f, 5);
+            Entity head = new Sphere(body.Position + new Vector3(0, 2, 0), .5m, 5);
             Space.Add(head);
 
             //Connect the head to the body.
-            var headBodyBallSocketAnchor = head.Position + new Vector3(0, -.75f, 0);
+            var headBodyBallSocketAnchor = head.Position + new Vector3(0, -.75m, 0);
             Space.Add(new BallSocketJoint(body, head, headBodyBallSocketAnchor));
             //Angular motors can be used to simulate friction when their goal velocity is 0.
             var angularMotor = new AngularMotor(body, head);
@@ -235,48 +236,48 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
             Space.Add(angularMotor);
 
             //Make the first arm.
-            var upperLeftArm = new Box(body.Position + new Vector3(-1.6f, .8f, 0), 1, .5f, .5f, 5);
+            var upperLeftArm = new Box(body.Position + new Vector3(-1.6m, .8m, 0), 1, .5m, .5m, 5);
             Space.Add(upperLeftArm);
 
-            var lowerLeftArm = new Box(upperLeftArm.Position + new Vector3(-1.4f, 0, 0), 1, .5f, .5f, 5);
+            var lowerLeftArm = new Box(upperLeftArm.Position + new Vector3(-1.4m, 0, 0), 1, .5m, .5m, 5);
             Space.Add(lowerLeftArm);
 
-            var leftHand = new Box(lowerLeftArm.Position + new Vector3(-.8f, 0, 0), 0.5f, 0.3f, 0.5f, 4);
+            var leftHand = new Box(lowerLeftArm.Position + new Vector3(-.8m, 0, 0), 0.5m, 0.3m, 0.5m, 4);
             Space.Add(leftHand);
 
             //Connect the body to the upper arm.
-            var bodyUpperLeftArmBallSocketAnchor = upperLeftArm.Position + new Vector3(.7f, 0, 0);
+            var bodyUpperLeftArmBallSocketAnchor = upperLeftArm.Position + new Vector3(.7m, 0, 0);
             Space.Add(new BallSocketJoint(body, upperLeftArm, bodyUpperLeftArmBallSocketAnchor));
             angularMotor = new AngularMotor(body, upperLeftArm);
             angularMotor.Settings.MaximumForce = 250;
             Space.Add(angularMotor);
 
             //Connect the upper arm to the lower arm.
-            var upperLeftArmLowerLeftArmBallSocketAnchor = upperLeftArm.Position + new Vector3(-.7f, 0, 0);
+            var upperLeftArmLowerLeftArmBallSocketAnchor = upperLeftArm.Position + new Vector3(-.7m, 0, 0);
             Space.Add(new BallSocketJoint(upperLeftArm, lowerLeftArm, upperLeftArmLowerLeftArmBallSocketAnchor));
             angularMotor = new AngularMotor(upperLeftArm, lowerLeftArm);
             angularMotor.Settings.MaximumForce = 150;
             Space.Add(angularMotor);
 
             //Connect the lower arm to the hand.
-            var lowerLeftArmLeftHandBallSocketAnchor = lowerLeftArm.Position + new Vector3(-.5f, 0, 0);
+            var lowerLeftArmLeftHandBallSocketAnchor = lowerLeftArm.Position + new Vector3(-.5m, 0, 0);
             Space.Add(new BallSocketJoint(lowerLeftArm, leftHand, lowerLeftArmLeftHandBallSocketAnchor));
             angularMotor = new AngularMotor(lowerLeftArm, leftHand);
             angularMotor.Settings.MaximumForce = 150;
             Space.Add(angularMotor);
 
             //Make the second arm.
-            var upperRightArm = new Box(body.Position + new Vector3(1.6f, .8f, 0), 1, .5f, .5f, 5);
+            var upperRightArm = new Box(body.Position + new Vector3(1.6m, .8m, 0), 1, .5m, .5m, 5);
             Space.Add(upperRightArm);
 
-            var lowerRightArm = new Box(upperRightArm.Position + new Vector3(1.4f, 0, 0), 1, .5f, .5f, 5);
+            var lowerRightArm = new Box(upperRightArm.Position + new Vector3(1.4m, 0, 0), 1, .5m, .5m, 5);
             Space.Add(lowerRightArm);
 
-            var rightHand = new Box(lowerRightArm.Position + new Vector3(.8f, 0, 0), 0.5f, 0.3f, 0.5f, 4);
+            var rightHand = new Box(lowerRightArm.Position + new Vector3(.8m, 0, 0), 0.5m, 0.3m, 0.5m, 4);
             Space.Add(rightHand);
 
             //Connect the body to the upper arm.
-            var bodyUpperRightArmBallSocketAnchor = upperRightArm.Position + new Vector3(-.7f, 0, 0);
+            var bodyUpperRightArmBallSocketAnchor = upperRightArm.Position + new Vector3(-.7m, 0, 0);
             Space.Add(new BallSocketJoint(body, upperRightArm, bodyUpperRightArmBallSocketAnchor));
             //Angular motors can be used to simulate friction when their goal velocity is 0.
             angularMotor = new AngularMotor(body, upperRightArm);
@@ -284,31 +285,31 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
             Space.Add(angularMotor);
 
             //Connect the upper arm to the lower arm.
-            var upperRightArmLowerRightArmBallSocketAnchor = upperRightArm.Position + new Vector3(.7f, 0, 0);
+            var upperRightArmLowerRightArmBallSocketAnchor = upperRightArm.Position + new Vector3(.7m, 0, 0);
             Space.Add(new BallSocketJoint(upperRightArm, lowerRightArm, upperRightArmLowerRightArmBallSocketAnchor));
             angularMotor = new AngularMotor(upperRightArm, lowerRightArm);
             angularMotor.Settings.MaximumForce = 150;
             Space.Add(angularMotor);
 
             //Connect the lower arm to the hand.
-            var lowerRightArmRightHandBallSocketAnchor = lowerRightArm.Position + new Vector3(.5f, 0, 0);
+            var lowerRightArmRightHandBallSocketAnchor = lowerRightArm.Position + new Vector3(.5m, 0, 0);
             Space.Add(new BallSocketJoint(lowerRightArm, rightHand, lowerRightArmRightHandBallSocketAnchor));
             angularMotor = new AngularMotor(lowerRightArm, rightHand);
             angularMotor.Settings.MaximumForce = 150;
             Space.Add(angularMotor);
 
             //Make the first leg.
-            var upperLeftLeg = new Box(body.Position + new Vector3(-.6f, -2.1f, 0), .5f, 1.3f, .5f, 8);
+            var upperLeftLeg = new Box(body.Position + new Vector3(-.6m, -2.1m, 0), .5m, 1.3m, .5m, 8);
             Space.Add(upperLeftLeg);
 
-            var lowerLeftLeg = new Box(upperLeftLeg.Position + new Vector3(0, -1.7f, 0), .5f, 1.3f, .5f, 8);
+            var lowerLeftLeg = new Box(upperLeftLeg.Position + new Vector3(0, -1.7m, 0), .5m, 1.3m, .5m, 8);
             Space.Add(lowerLeftLeg);
 
-            var leftFoot = new Box(lowerLeftLeg.Position + new Vector3(0, -.25f - 0.65f, 0.25f), .5f, .4f, 1, 8);
+            var leftFoot = new Box(lowerLeftLeg.Position + new Vector3(0, -.25m - 0.65m, 0.25m), .5m, .4m, 1, 8);
             Space.Add(leftFoot);
 
             //Connect the body to the upper leg.
-            var bodyUpperLeftLegBallSocketAnchor = upperLeftLeg.Position + new Vector3(0, .9f, 0);
+            var bodyUpperLeftLegBallSocketAnchor = upperLeftLeg.Position + new Vector3(0, .9m, 0);
             Space.Add(new BallSocketJoint(body, upperLeftLeg, bodyUpperLeftLegBallSocketAnchor));
             //Angular motors can be used to simulate friction when their goal velocity is 0.
             angularMotor = new AngularMotor(body, upperLeftLeg);
@@ -316,31 +317,31 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
             Space.Add(angularMotor);
 
             //Connect the upper leg to the lower leg.
-            var upperLeftLegLowerLeftLegBallSocketAnchor = upperLeftLeg.Position + new Vector3(0, -.9f, 0);
+            var upperLeftLegLowerLeftLegBallSocketAnchor = upperLeftLeg.Position + new Vector3(0, -.9m, 0);
             Space.Add(new BallSocketJoint(upperLeftLeg, lowerLeftLeg, upperLeftLegLowerLeftLegBallSocketAnchor));
             angularMotor = new AngularMotor(upperLeftLeg, lowerLeftLeg);
             angularMotor.Settings.MaximumForce = 250;
             Space.Add(angularMotor);
 
             //Connect the lower leg to the foot.
-            var lowerLeftLegLeftFootBallSocketAnchor = lowerLeftLeg.Position + new Vector3(0, -.65f, 0);
+            var lowerLeftLegLeftFootBallSocketAnchor = lowerLeftLeg.Position + new Vector3(0, -.65m, 0);
             Space.Add(new BallSocketJoint(lowerLeftLeg, leftFoot, lowerLeftLegLeftFootBallSocketAnchor));
             angularMotor = new AngularMotor(lowerLeftLeg, leftFoot);
             angularMotor.Settings.MaximumForce = 250;
             Space.Add(angularMotor);
 
             //Make the second leg.
-            var upperRightLeg = new Box(body.Position + new Vector3(.6f, -2.1f, 0), .5f, 1.3f, .5f, 8);
+            var upperRightLeg = new Box(body.Position + new Vector3(.6m, -2.1m, 0), .5m, 1.3m, .5m, 8);
             Space.Add(upperRightLeg);
 
-            var lowerRightLeg = new Box(upperRightLeg.Position + new Vector3(0, -1.7f, 0), .5f, 1.3f, .5f, 8);
+            var lowerRightLeg = new Box(upperRightLeg.Position + new Vector3(0, -1.7m, 0), .5m, 1.3m, .5m, 8);
             Space.Add(lowerRightLeg);
 
-            var rightFoot = new Box(lowerRightLeg.Position + new Vector3(0, -.25f - 0.65f, 0.25f), .5f, .4f, 1, 8);
+            var rightFoot = new Box(lowerRightLeg.Position + new Vector3(0, -.25m - 0.65m, 0.25m), .5m, .4m, 1, 8);
             Space.Add(rightFoot);
 
             //Connect the body to the upper leg.
-            var bodyUpperRightLegBallSocketAnchor = upperRightLeg.Position + new Vector3(0, .9f, 0);
+            var bodyUpperRightLegBallSocketAnchor = upperRightLeg.Position + new Vector3(0, .9m, 0);
             Space.Add(new BallSocketJoint(body, upperRightLeg, bodyUpperRightLegBallSocketAnchor));
             //Angular motors can be used to simulate friction when their goal velocity is 0.
             angularMotor = new AngularMotor(body, upperRightLeg);
@@ -348,14 +349,14 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
             Space.Add(angularMotor);
 
             //Connect the upper leg to the lower leg.
-            var upperRightLegLowerRightLegBallSocketAnchor = upperRightLeg.Position + new Vector3(0, -.9f, 0);
+            var upperRightLegLowerRightLegBallSocketAnchor = upperRightLeg.Position + new Vector3(0, -.9m, 0);
             Space.Add(new BallSocketJoint(upperRightLeg, lowerRightLeg, upperRightLegLowerRightLegBallSocketAnchor));
             angularMotor = new AngularMotor(upperRightLeg, lowerRightLeg);
             angularMotor.Settings.MaximumForce = 250;
             Space.Add(angularMotor);
 
             //Connect the lower leg to the foot.
-            var lowerRightLegRightFootBallSocketAnchor = lowerRightLeg.Position + new Vector3(0, -.65f, 0);
+            var lowerRightLegRightFootBallSocketAnchor = lowerRightLeg.Position + new Vector3(0, -.65m, 0);
             Space.Add(new BallSocketJoint(lowerRightLeg, rightFoot, lowerRightLegRightFootBallSocketAnchor));
             angularMotor = new AngularMotor(lowerRightLeg, rightFoot);
             angularMotor.Settings.MaximumForce = 250;
@@ -379,20 +380,20 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
 
 
             //IK version!
-            Bone bodyBone = new Bone(body.Position, Quaternion.Identity, .75f, 2);
-            Bone headBone = new Bone(head.Position, Quaternion.Identity, .4f, .8f);
-            Bone upperLeftArmBone = new Bone(upperLeftArm.Position, Quaternion.CreateFromAxisAngle(new Vector3(0, 0, 1), MathHelper.PiOver2), .25f, 1);
-            Bone lowerLeftArmBone = new Bone(lowerLeftArm.Position, Quaternion.CreateFromAxisAngle(new Vector3(0, 0, 1), MathHelper.PiOver2), .25f, 1);
-            Bone upperRightArmBone = new Bone(upperRightArm.Position, Quaternion.CreateFromAxisAngle(new Vector3(0, 0, 1), MathHelper.PiOver2), .25f, 1);
-            Bone lowerRightArmBone = new Bone(lowerRightArm.Position, Quaternion.CreateFromAxisAngle(new Vector3(0, 0, 1), MathHelper.PiOver2), .25f, 1);
-            Bone leftHandBone = new Bone(leftHand.Position, Quaternion.CreateFromAxisAngle(new Vector3(0, 0, 1), MathHelper.PiOver2), .2f, .5f);
-            Bone rightHandBone = new Bone(rightHand.Position, Quaternion.CreateFromAxisAngle(new Vector3(0, 0, 1), MathHelper.PiOver2), .2f, .5f);
-            Bone upperLeftLegBone = new Bone(upperLeftLeg.Position, Quaternion.Identity, .25f, 1.3f);
-            Bone lowerLeftLegBone = new Bone(lowerLeftLeg.Position, Quaternion.Identity, .25f, 1.3f);
-            Bone leftFootBone = new Bone(leftFoot.Position, Quaternion.CreateFromAxisAngle(new Vector3(1, 0, 0), MathHelper.PiOver2), .25f, 1);
-            Bone upperRightLegBone = new Bone(upperRightLeg.Position, Quaternion.Identity, .25f, 1.3f);
-            Bone lowerRightLegBone = new Bone(lowerRightLeg.Position, Quaternion.Identity, .25f, 1.3f);
-            Bone rightFootBone = new Bone(rightFoot.Position, Quaternion.CreateFromAxisAngle(new Vector3(1, 0, 0), MathHelper.PiOver2), .25f, 1);
+            Bone bodyBone = new Bone(body.Position, Quaternion.Identity, .75m, 2);
+            Bone headBone = new Bone(head.Position, Quaternion.Identity, .4m, .8m);
+            Bone upperLeftArmBone = new Bone(upperLeftArm.Position, Quaternion.CreateFromAxisAngle(new Vector3(0, 0, 1), MathHelper.PiOver2), .25m, 1);
+            Bone lowerLeftArmBone = new Bone(lowerLeftArm.Position, Quaternion.CreateFromAxisAngle(new Vector3(0, 0, 1), MathHelper.PiOver2), .25m, 1);
+            Bone upperRightArmBone = new Bone(upperRightArm.Position, Quaternion.CreateFromAxisAngle(new Vector3(0, 0, 1), MathHelper.PiOver2), .25m, 1);
+            Bone lowerRightArmBone = new Bone(lowerRightArm.Position, Quaternion.CreateFromAxisAngle(new Vector3(0, 0, 1), MathHelper.PiOver2), .25m, 1);
+            Bone leftHandBone = new Bone(leftHand.Position, Quaternion.CreateFromAxisAngle(new Vector3(0, 0, 1), MathHelper.PiOver2), .2m, .5m);
+            Bone rightHandBone = new Bone(rightHand.Position, Quaternion.CreateFromAxisAngle(new Vector3(0, 0, 1), MathHelper.PiOver2), .2m, .5m);
+            Bone upperLeftLegBone = new Bone(upperLeftLeg.Position, Quaternion.Identity, .25m, 1.3m);
+            Bone lowerLeftLegBone = new Bone(lowerLeftLeg.Position, Quaternion.Identity, .25m, 1.3m);
+            Bone leftFootBone = new Bone(leftFoot.Position, Quaternion.CreateFromAxisAngle(new Vector3(1, 0, 0), MathHelper.PiOver2), .25m, 1);
+            Bone upperRightLegBone = new Bone(upperRightLeg.Position, Quaternion.Identity, .25m, 1.3m);
+            Bone lowerRightLegBone = new Bone(lowerRightLeg.Position, Quaternion.Identity, .25m, 1.3m);
+            Bone rightFootBone = new Bone(rightFoot.Position, Quaternion.CreateFromAxisAngle(new Vector3(1, 0, 0), MathHelper.PiOver2), .25m, 1);
 
             bones.Add(new BoneRelationship(bodyBone, body));
             bones.Add(new BoneRelationship(headBone, head));
@@ -416,51 +417,51 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
 
             //Left arm
             joints.Add(new IKBallSocketJoint(bodyBone, upperLeftArmBone, bodyUpperLeftArmBallSocketAnchor));
-            joints.Add(new IKSwingLimit(bodyBone, upperLeftArmBone, Vector3.Normalize(new Vector3(-1, 0, .3f)), Vector3.Left, MathHelper.Pi * .65f));
-            joints.Add(new IKTwistLimit(bodyBone, upperLeftArmBone, Vector3.Left, Vector3.Left, MathHelper.PiOver2) { Rigidity = 0.08f });
+            joints.Add(new IKSwingLimit(bodyBone, upperLeftArmBone, Vector3.Normalize(new Vector3(-1, 0, .3m)), Vector3.Left, MathHelper.Pi * .65m));
+            joints.Add(new IKTwistLimit(bodyBone, upperLeftArmBone, Vector3.Left, Vector3.Left, MathHelper.PiOver2) { Rigidity = 0.08m });
             joints.Add(new IKBallSocketJoint(upperLeftArmBone, lowerLeftArmBone, upperLeftArmLowerLeftArmBallSocketAnchor));
             joints.Add(new IKSwivelHingeJoint(upperLeftArmBone, lowerLeftArmBone, Vector3.Up, Vector3.Left));
-            joints.Add(new IKSwingLimit(upperLeftArmBone, lowerLeftArmBone, Vector3.Normalize(new Vector3(-0.23f, 0, .97f)), Vector3.Left, MathHelper.Pi * 0.435f));
-            joints.Add(new IKTwistLimit(upperLeftArmBone, lowerLeftArmBone, Vector3.Left, Vector3.Left, MathHelper.PiOver4) { Rigidity = 0.08f });
+            joints.Add(new IKSwingLimit(upperLeftArmBone, lowerLeftArmBone, Vector3.Normalize(new Vector3(-0.23m, 0, .97m)), Vector3.Left, MathHelper.Pi * 0.435m));
+            joints.Add(new IKTwistLimit(upperLeftArmBone, lowerLeftArmBone, Vector3.Left, Vector3.Left, MathHelper.PiOver4) { Rigidity = 0.08m });
             joints.Add(new IKBallSocketJoint(lowerLeftArmBone, leftHandBone, lowerLeftArmLeftHandBallSocketAnchor));
             joints.Add(new IKSwingLimit(lowerLeftArmBone, leftHandBone, Vector3.Left, Vector3.Left, MathHelper.PiOver2));
-            joints.Add(new IKTwistLimit(lowerLeftArmBone, leftHandBone, Vector3.Left, Vector3.Left, MathHelper.PiOver4) { Rigidity = 0.08f });
+            joints.Add(new IKTwistLimit(lowerLeftArmBone, leftHandBone, Vector3.Left, Vector3.Left, MathHelper.PiOver4) { Rigidity = 0.08m });
 
             //Right arm
             joints.Add(new IKBallSocketJoint(bodyBone, upperRightArmBone, bodyUpperRightArmBallSocketAnchor));
-            joints.Add(new IKSwingLimit(bodyBone, upperRightArmBone, Vector3.Normalize(new Vector3(1, 0, .3f)), Vector3.Right, MathHelper.Pi * .65f));
-            joints.Add(new IKTwistLimit(bodyBone, upperRightArmBone, Vector3.Right, Vector3.Right, MathHelper.PiOver2) { Rigidity = 0.08f });
+            joints.Add(new IKSwingLimit(bodyBone, upperRightArmBone, Vector3.Normalize(new Vector3(1, 0, .3m)), Vector3.Right, MathHelper.Pi * .65m));
+            joints.Add(new IKTwistLimit(bodyBone, upperRightArmBone, Vector3.Right, Vector3.Right, MathHelper.PiOver2) { Rigidity = 0.08m });
             joints.Add(new IKBallSocketJoint(upperRightArmBone, lowerRightArmBone, upperRightArmLowerRightArmBallSocketAnchor));
             joints.Add(new IKSwivelHingeJoint(upperRightArmBone, lowerRightArmBone, Vector3.Up, Vector3.Right));
-            joints.Add(new IKSwingLimit(upperRightArmBone, lowerRightArmBone, Vector3.Normalize(new Vector3(0.23f, 0, .97f)), Vector3.Right, MathHelper.Pi * 0.435f));
-            joints.Add(new IKTwistLimit(upperRightArmBone, lowerRightArmBone, Vector3.Right, Vector3.Right, MathHelper.PiOver4) { Rigidity = 0.08f });
+            joints.Add(new IKSwingLimit(upperRightArmBone, lowerRightArmBone, Vector3.Normalize(new Vector3(0.23m, 0, .97m)), Vector3.Right, MathHelper.Pi * 0.435m));
+            joints.Add(new IKTwistLimit(upperRightArmBone, lowerRightArmBone, Vector3.Right, Vector3.Right, MathHelper.PiOver4) { Rigidity = 0.08m });
             joints.Add(new IKBallSocketJoint(lowerRightArmBone, rightHandBone, lowerRightArmRightHandBallSocketAnchor));
             joints.Add(new IKSwingLimit(lowerRightArmBone, rightHandBone, Vector3.Right, Vector3.Right, MathHelper.PiOver2));
-            joints.Add(new IKTwistLimit(lowerRightArmBone, rightHandBone, Vector3.Right, Vector3.Right, MathHelper.PiOver4) { Rigidity = 0.08f });
+            joints.Add(new IKTwistLimit(lowerRightArmBone, rightHandBone, Vector3.Right, Vector3.Right, MathHelper.PiOver4) { Rigidity = 0.08m });
 
             //Left Leg
             joints.Add(new IKBallSocketJoint(bodyBone, upperLeftLegBone, bodyUpperLeftLegBallSocketAnchor));
-            joints.Add(new IKSwingLimit(bodyBone, upperLeftLegBone, Vector3.Normalize(new Vector3(-.3f, -1, .6f)), Vector3.Down, MathHelper.Pi * 0.6f));
-            joints.Add(new IKTwistLimit(bodyBone, upperLeftLegBone, Vector3.Up, Vector3.Up, MathHelper.PiOver4) { MeasurementAxisA = Vector3.Normalize(new Vector3(-1, 0, 1)), Rigidity = 0.08f });
+            joints.Add(new IKSwingLimit(bodyBone, upperLeftLegBone, Vector3.Normalize(new Vector3(-.3m, -1, .6m)), Vector3.Down, MathHelper.Pi * 0.6m));
+            joints.Add(new IKTwistLimit(bodyBone, upperLeftLegBone, Vector3.Up, Vector3.Up, MathHelper.PiOver4) { MeasurementAxisA = Vector3.Normalize(new Vector3(-1, 0, 1)), Rigidity = 0.08m });
             joints.Add(new IKBallSocketJoint(upperLeftLegBone, lowerLeftLegBone, upperLeftLegLowerLeftLegBallSocketAnchor));
             joints.Add(new IKSwivelHingeJoint(upperLeftLegBone, lowerLeftLegBone, Vector3.Left, Vector3.Down));
-            joints.Add(new IKTwistLimit(upperLeftLegBone, lowerLeftLegBone, Vector3.Up, Vector3.Up, MathHelper.Pi * .1f) { Rigidity = 0.08f });
-            joints.Add(new IKSwingLimit(upperLeftLegBone, lowerLeftLegBone, Vector3.Normalize(new Vector3(0, -.23f, -.97f)), Vector3.Down, MathHelper.Pi * 0.435f));
+            joints.Add(new IKTwistLimit(upperLeftLegBone, lowerLeftLegBone, Vector3.Up, Vector3.Up, MathHelper.Pi * .1m) { Rigidity = 0.08m });
+            joints.Add(new IKSwingLimit(upperLeftLegBone, lowerLeftLegBone, Vector3.Normalize(new Vector3(0, -.23m, -.97m)), Vector3.Down, MathHelper.Pi * 0.435m));
             joints.Add(new IKBallSocketJoint(lowerLeftLegBone, leftFootBone, lowerLeftLegLeftFootBallSocketAnchor));
-            joints.Add(new IKTwistJoint(lowerLeftLegBone, leftFootBone, Vector3.Down, Vector3.Down) { Rigidity = 0.08f });
-            joints.Add(new IKSwingLimit(lowerLeftLegBone, leftFootBone, Vector3.Normalize(new Vector3(0, -1, -.3f)), Vector3.Down, MathHelper.Pi * 0.22f));
+            joints.Add(new IKTwistJoint(lowerLeftLegBone, leftFootBone, Vector3.Down, Vector3.Down) { Rigidity = 0.08m });
+            joints.Add(new IKSwingLimit(lowerLeftLegBone, leftFootBone, Vector3.Normalize(new Vector3(0, -1, -.3m)), Vector3.Down, MathHelper.Pi * 0.22m));
 
             //Right leg
             joints.Add(new IKBallSocketJoint(bodyBone, upperRightLegBone, bodyUpperRightLegBallSocketAnchor));
-            joints.Add(new IKSwingLimit(bodyBone, upperRightLegBone, Vector3.Normalize(new Vector3(.3f, -1, .6f)), Vector3.Down, MathHelper.Pi * 0.6f));
-            joints.Add(new IKTwistLimit(bodyBone, upperRightLegBone, Vector3.Up, Vector3.Up, MathHelper.PiOver4) { MeasurementAxisA = Vector3.Normalize(new Vector3(1, 0, 1)), Rigidity = 0.08f });
+            joints.Add(new IKSwingLimit(bodyBone, upperRightLegBone, Vector3.Normalize(new Vector3(.3m, -1, .6m)), Vector3.Down, MathHelper.Pi * 0.6m));
+            joints.Add(new IKTwistLimit(bodyBone, upperRightLegBone, Vector3.Up, Vector3.Up, MathHelper.PiOver4) { MeasurementAxisA = Vector3.Normalize(new Vector3(1, 0, 1)), Rigidity = 0.08m });
             joints.Add(new IKBallSocketJoint(upperRightLegBone, lowerRightLegBone, upperRightLegLowerRightLegBallSocketAnchor));
             joints.Add(new IKSwivelHingeJoint(upperRightLegBone, lowerRightLegBone, Vector3.Right, Vector3.Down));
-            joints.Add(new IKTwistLimit(upperRightLegBone, lowerRightLegBone, Vector3.Up, Vector3.Up, MathHelper.Pi * .1f) { Rigidity = 0.08f });
-            joints.Add(new IKSwingLimit(upperRightLegBone, lowerRightLegBone, Vector3.Normalize(new Vector3(0, -.23f, -.97f)), Vector3.Down, MathHelper.Pi * 0.435f));
+            joints.Add(new IKTwistLimit(upperRightLegBone, lowerRightLegBone, Vector3.Up, Vector3.Up, MathHelper.Pi * .1m) { Rigidity = 0.08m });
+            joints.Add(new IKSwingLimit(upperRightLegBone, lowerRightLegBone, Vector3.Normalize(new Vector3(0, -.23m, -.97m)), Vector3.Down, MathHelper.Pi * 0.435m));
             joints.Add(new IKBallSocketJoint(lowerRightLegBone, rightFootBone, lowerRightLegRightFootBallSocketAnchor));
-            joints.Add(new IKTwistJoint(lowerRightLegBone, rightFootBone, Vector3.Down, Vector3.Down) { Rigidity = 0.08f });
-            joints.Add(new IKSwingLimit(lowerRightLegBone, rightFootBone, Vector3.Normalize(new Vector3(0, -1, -.3f)), Vector3.Down, MathHelper.Pi * 0.22f));
+            joints.Add(new IKTwistJoint(lowerRightLegBone, rightFootBone, Vector3.Down, Vector3.Down) { Rigidity = 0.08m });
+            joints.Add(new IKSwingLimit(lowerRightLegBone, rightFootBone, Vector3.Normalize(new Vector3(0, -1, -.3m)), Vector3.Down, MathHelper.Pi * 0.22m));
 
 
 
@@ -480,8 +481,8 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
                 {
                     var bonePosition = position + new Vector3(i, j, 0);
                     boneMesh[i, j] = new BoneRelationship(
-                        new Bone(bonePosition, Quaternion.Identity, .4f, .8f),
-                        new Box(bonePosition, .8f, .8f, .8f, 10));
+                        new Bone(bonePosition, Quaternion.Identity, .4m, .8m),
+                        new Box(bonePosition, .8m, .8m, .8m, 10));
                     Space.Add(boneMesh[i, j].Entity);
                     bones.Add(boneMesh[i, j]);
                 }
@@ -541,8 +542,8 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
 
             for (int i = 0; i < limbCount; i++)
             {
-                Bone bone = new Bone(previous.Bone.Position + new Vector3(0, -0.8f, 0), Quaternion.Identity, .2f, .4f);
-                Entity entity = new Box(bone.Position, .4f, .4f, .4f, 10);
+                Bone bone = new Bone(previous.Bone.Position + new Vector3(0, -0.8m, 0), Quaternion.Identity, .2m, .4m);
+                Entity entity = new Box(bone.Position, .4m, .4m, .4m, 10);
                 Space.Add(entity);
                 var anchor = (entity.Position + previous.Entity.Position) / 2;
                 Space.Add(new BallSocketJoint(entity, previous.Entity, anchor));
@@ -556,8 +557,8 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
 
             for (int i = 0; i < limbCount; i++)
             {
-                Bone bone = new Bone(previous.Bone.Position + new Vector3(0, 0.8f, 0), Quaternion.Identity, .2f, .4f);
-                Entity entity = new Box(bone.Position, .4f, .4f, .4f, 10);
+                Bone bone = new Bone(previous.Bone.Position + new Vector3(0, 0.8m, 0), Quaternion.Identity, .2m, .4m);
+                Entity entity = new Box(bone.Position, .4m, .4m, .4m, 10);
                 Space.Add(entity);
                 var anchor = (entity.Position + previous.Entity.Position) / 2;
                 Space.Add(new BallSocketJoint(entity, previous.Entity, anchor));
@@ -571,8 +572,8 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
 
             for (int i = 0; i < limbCount; i++)
             {
-                Bone bone = new Bone(previous.Bone.Position + new Vector3(-.8f, 0, 0), Quaternion.Identity, .2f, .4f);
-                Entity entity = new Box(bone.Position, .4f, .4f, .4f, 10);
+                Bone bone = new Bone(previous.Bone.Position + new Vector3(-.8m, 0, 0), Quaternion.Identity, .2m, .4m);
+                Entity entity = new Box(bone.Position, .4m, .4m, .4m, 10);
                 Space.Add(entity);
                 var anchor = (entity.Position + previous.Entity.Position) / 2;
                 Space.Add(new BallSocketJoint(entity, previous.Entity, anchor));
@@ -587,8 +588,8 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
 
             for (int i = 0; i < limbCount; i++)
             {
-                Bone bone = new Bone(previous.Bone.Position + new Vector3(0.8f, 0, 0), Quaternion.Identity, .2f, .4f);
-                Entity entity = new Box(bone.Position, .4f, .4f, .4f, 10);
+                Bone bone = new Bone(previous.Bone.Position + new Vector3(0.8m, 0, 0), Quaternion.Identity, .2m, .4m);
+                Entity entity = new Box(bone.Position, .4m, .4m, .4m, 10);
                 Space.Add(entity);
                 var anchor = (entity.Position + previous.Entity.Position) / 2;
                 Space.Add(new BallSocketJoint(entity, previous.Entity, anchor));
@@ -604,28 +605,28 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
         {
 
             Bone a, b;
-            a = new Bone(position + new Vector3(0, 5, 0), Quaternion.Identity, .5f, 1);
-            b = new Bone(position + new Vector3(0, 7, 0), Quaternion.Identity, .5f, 1);
-            //var ikJoint = new IKBallSocketJoint(a, b, (a.Position + b.Position) * 0.5f);
+            a = new Bone(position + new Vector3(0, 5, 0), Quaternion.Identity, .5m, 1);
+            b = new Bone(position + new Vector3(0, 7, 0), Quaternion.Identity, .5m, 1);
+            //var ikJoint = new IKBallSocketJoint(a, b, (a.Position + b.Position) * 0.5m);
             //var ikLimit = new IKSwingLimit(a, b, Vector3.Up, Vector3.Up, MathHelper.PiOver2);
             //var ikRevolute = new IKRevoluteJoint(a, b, Vector3.Right);
             //var ikSwivelHingeJoint = new IKSwivelHingeJoint(a, b, Vector3.Right, Vector3.Up);
             //var ikAngularJoint = new IKAngularJoint(a, b);
             //var ikTwistLimit = new IKTwistLimit(a, b, Vector3.Up, Vector3.Up, MathHelper.PiOver2);
-            //var ikDistanceLimit = new IKDistanceLimit(a, b, a.Position + new Vector3(0, 0.5f, 0), b.Position + new Vector3(0, -0.5f, 0), 1f, 4);
-            //var ikLinearAxisLimit = new IKLinearAxisLimit(a, b, a.Position + new Vector3(0, 0.5f, 0), Vector3.Up, b.Position + new Vector3(0, -0.5f, 0), 0, 4);
+            //var ikDistanceLimit = new IKDistanceLimit(a, b, a.Position + new Vector3(0, 0.5m, 0), b.Position + new Vector3(0, -0.5m, 0), 1f, 4);
+            //var ikLinearAxisLimit = new IKLinearAxisLimit(a, b, a.Position + new Vector3(0, 0.5m, 0), Vector3.Up, b.Position + new Vector3(0, -0.5m, 0), 0, 4);
             //var ikTwistJoint = new IKTwistJoint(a, b, Vector3.Up, Vector3.Up);
-            //var ikPointOnLineJoint = new IKPointOnLineJoint(a, b, a.Position + new Vector3(0, 0.5f, 0), Vector3.Up, b.Position - new Vector3(0, 0.5f, 0));
-            var ikPointOnPlaneJoint = new IKPointOnPlaneJoint(a, b, a.Position + new Vector3(0, 1f, 0), Vector3.Up, b.Position - new Vector3(0, 1f, 0));
+            //var ikPointOnLineJoint = new IKPointOnLineJoint(a, b, a.Position + new Vector3(0, 0.5m, 0), Vector3.Up, b.Position - new Vector3(0, 0.5m, 0));
+            var ikPointOnPlaneJoint = new IKPointOnPlaneJoint(a, b, a.Position + new Vector3(0, 1, 0), Vector3.Up, b.Position - new Vector3(0, 1, 0));
 
             //ikPointOnLineJoint.Softness = 0;
             //ikPointOnLineJoint.ErrorCorrectionFactor = 0;
             //solver.VelocitySubiterationCount = 10;
 
-            var entityA = new Cylinder(a.Position, 1, 0.5f, 10);
-            var entityB = new Cylinder(b.Position, 1, 0.5f, 10);
+            var entityA = new Cylinder(a.Position, 1, 0.5m, 10);
+            var entityB = new Cylinder(b.Position, 1, 0.5m, 10);
             entityB.Orientation = b.Orientation;
-            //var joint = new BallSocketJoint(entityA, entityB, (a.Position + b.Position) * 0.5f);
+            //var joint = new BallSocketJoint(entityA, entityB, (a.Position + b.Position) * 0.5m);
             //var limit = new SwingLimit(entityA, entityB, Vector3.Up, Vector3.Up, MathHelper.PiOver2);
             //var revolute = new RevoluteAngularJoint(entityA, entityB, Vector3.Right);
             //var swivelHingeJoint = new SwivelHingeAngularJoint(entityA, entityB, Vector3.Right, Vector3.Up);
@@ -658,18 +659,18 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
         {
             //Make the IK representation
             Bone baseBone = new Bone(position, Quaternion.Identity, 1, 3);
-            Bone upperArm = new Bone(baseBone.Position + new Vector3(0, 1.5f + 2, 0), Quaternion.Identity, .4f, 4);
-            Bone lowerArm = new Bone(upperArm.Position + new Vector3(0, 2 + 1, 0), Quaternion.Identity, .7f, 2);
-            Bone bonkDevice = new Bone(lowerArm.Position + new Vector3(0, 5, 0), Quaternion.Identity, .6f, 1.2f);
+            Bone upperArm = new Bone(baseBone.Position + new Vector3(0, 1.5m + 2, 0), Quaternion.Identity, .4m, 4);
+            Bone lowerArm = new Bone(upperArm.Position + new Vector3(0, 2 + 1, 0), Quaternion.Identity, .7m, 2);
+            Bone bonkDevice = new Bone(lowerArm.Position + new Vector3(0, 5, 0), Quaternion.Identity, .6m, 1.2m);
 
-            joints.Add(new IKBallSocketJoint(baseBone, upperArm, baseBone.Position + new Vector3(0, 1.5f, 0)));
+            joints.Add(new IKBallSocketJoint(baseBone, upperArm, baseBone.Position + new Vector3(0, 1.5m, 0)));
             joints.Add(new IKSwingLimit(baseBone, upperArm, Vector3.Up, Vector3.Up, MathHelper.PiOver4));
-            joints.Add(new IKBallSocketJoint(upperArm, lowerArm, upperArm.Position + new Vector3(0, 2f, 0)));
+            joints.Add(new IKBallSocketJoint(upperArm, lowerArm, upperArm.Position + new Vector3(0, 2, 0)));
             joints.Add(new IKRevoluteJoint(upperArm, lowerArm, Vector3.Forward));
             joints.Add(new IKSwingLimit(upperArm, lowerArm, Vector3.Up, Vector3.Up, MathHelper.PiOver4));
             joints.Add(new IKPointOnLineJoint(lowerArm, bonkDevice, lowerArm.Position, Vector3.Up, bonkDevice.Position));
             joints.Add(new IKAngularJoint(lowerArm, bonkDevice));
-            joints.Add(new IKLinearAxisLimit(lowerArm, bonkDevice, lowerArm.Position, Vector3.Up, bonkDevice.Position, 1.6f, 5));
+            joints.Add(new IKLinearAxisLimit(lowerArm, bonkDevice, lowerArm.Position, Vector3.Up, bonkDevice.Position, 1.6m, 5));
 
             //Make the dynamics representation
             Entity baseEntity = new Cylinder(baseBone.Position, baseBone.Height, baseBone.Radius, 10);
@@ -683,16 +684,16 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
             Space.Add(lowerArmEntity);
             Space.Add(bonkDeviceEntity);
 
-            Space.Add(new BallSocketJoint(baseEntity, upperArmEntity, baseBone.Position + new Vector3(0, 1.5f, 0)));
+            Space.Add(new BallSocketJoint(baseEntity, upperArmEntity, baseBone.Position + new Vector3(0, 1.5m, 0)));
             Space.Add(new SwingLimit(baseEntity, upperArmEntity, Vector3.Up, Vector3.Up, MathHelper.PiOver4));
-            Space.Add(new BallSocketJoint(upperArmEntity, lowerArmEntity, upperArm.Position + new Vector3(0, 2f, 0)));
+            Space.Add(new BallSocketJoint(upperArmEntity, lowerArmEntity, upperArm.Position + new Vector3(0, 2, 0)));
             Space.Add(new RevoluteAngularJoint(upperArmEntity, lowerArmEntity, Vector3.Forward));
             Space.Add(new SwingLimit(upperArmEntity, lowerArmEntity, Vector3.Up, Vector3.Up, MathHelper.PiOver4));
             Space.Add(new PointOnLineJoint(lowerArmEntity, bonkDeviceEntity, lowerArm.Position, Vector3.Up, bonkDevice.Position));
             var motor = new AngularMotor(lowerArmEntity, bonkDeviceEntity);
             motor.Settings.Mode = MotorMode.Servomechanism;
             Space.Add(motor);
-            Space.Add(new LinearAxisLimit(lowerArmEntity, bonkDeviceEntity, lowerArm.Position, bonkDevice.Position, Vector3.Up, 1.6f, 5));
+            Space.Add(new LinearAxisLimit(lowerArmEntity, bonkDeviceEntity, lowerArm.Position, bonkDevice.Position, Vector3.Up, 1.6m, 5));
 
             CollisionRules.AddRule(baseEntity, upperArmEntity, CollisionRule.NoBroadPhase);
             CollisionRules.AddRule(upperArmEntity, lowerArmEntity, CollisionRule.NoBroadPhase);
@@ -710,8 +711,8 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
         void BuildRing(Vector3 position)
         {
             int incrementCount = 20;
-            float radius = 5;
-            float anglePerIncrement = MathHelper.TwoPi / incrementCount;
+            Fix64 radius = 5;
+            Fix64 anglePerIncrement = MathHelper.TwoPi / incrementCount;
             Bone[] bonesList = new Bone[incrementCount];
             for (int i = 0; i < incrementCount; i++)
             {
@@ -719,13 +720,13 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
 #if !WINDOWS
                 bonePosition = new Vector3();
 #endif
-                bonePosition.X = (float)Math.Cos(anglePerIncrement * i);
+                bonePosition.X = Fix64.Cos(anglePerIncrement * i);
                 bonePosition.Y = 0;
-                bonePosition.Z = (float)Math.Sin(anglePerIncrement * i);
+                bonePosition.Z = Fix64.Sin(anglePerIncrement * i);
                 bonePosition = bonePosition * radius + position;
                 bonesList[i] = new Bone(bonePosition,
                                      Quaternion.Concatenate(Quaternion.CreateFromAxisAngle(Vector3.Right, MathHelper.PiOver2), Quaternion.CreateFromAxisAngle(Vector3.Up, -anglePerIncrement * i)),
-                                     0.5f,
+                                     0.5m,
                                      MathHelper.Pi * radius * 2 / incrementCount);
             }
 
@@ -735,8 +736,8 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
                 var boneB = bonesList[(i + 1) % incrementCount];
                 var upA = Quaternion.Transform(Vector3.Up, boneA.Orientation);
                 var upB = Quaternion.Transform(Vector3.Up, boneB.Orientation);
-                joints.Add(new IKBallSocketJoint(boneA, boneB, (boneA.Position + upA * boneB.HalfHeight + boneB.Position - upB * boneB.HalfHeight) * .5f));
-                joints.Add(new IKSwingLimit(boneA, boneB, upA, upB, MathHelper.Pi * .5f));
+                joints.Add(new IKBallSocketJoint(boneA, boneB, (boneA.Position + upA * boneB.HalfHeight + boneB.Position - upB * boneB.HalfHeight) * .5m));
+                joints.Add(new IKSwingLimit(boneA, boneB, upA, upB, MathHelper.Pi * .5m));
             }
             Cylinder[] boneEntitiesList = new Cylinder[incrementCount];
             for (int i = 0; i < incrementCount; i++)
@@ -753,8 +754,8 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
                 var boneB = boneEntitiesList[(i + 1) % incrementCount];
                 var upA = Quaternion.Transform(Vector3.Up, boneA.Orientation);
                 var upB = Quaternion.Transform(Vector3.Up, boneB.Orientation);
-                var joint = new BallSocketJoint(boneA, boneB, (boneA.Position + upA * boneB.Height * 0.5f + boneB.Position - upB * boneB.Height * 0.5f) * .5f);
-                var swingLimit = new SwingLimit(boneA, boneB, upA, upB, MathHelper.Pi * .5f);
+                var joint = new BallSocketJoint(boneA, boneB, (boneA.Position + upA * boneB.Height * 0.5m + boneB.Position - upB * boneB.Height * 0.5m) * .5m);
+                var swingLimit = new SwingLimit(boneA, boneB, upA, upB, MathHelper.Pi * .5m);
                 Space.Add(swingLimit);
                 Space.Add(joint);
                 CollisionRules.AddRule(boneA, boneB, CollisionRule.NoBroadPhase);
@@ -770,13 +771,13 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
 
             bonesList[0] = new Bone(position + new Vector3(0, 10, 0),
                      Quaternion.Identity,
-                     0.05f,
-                     0.2f);
+                     0.05m,
+                     0.2m);
 
             bonesList[1] = new Bone(position + new Vector3(0, 12, 0),
                      Quaternion.Identity,
-                     0.05f * 100,
-                     0.2f * 100);
+                     0.05m * 100,
+                     0.2m * 100);
 
 
             Cylinder[] boneEntitiesList = new Cylinder[2];
@@ -803,7 +804,7 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
             game.Camera.Position = new Vector3(0, 3, 5);
             Box ground = new Box(new Vector3(0, 0, 0), 30, 1, 30);
             Space.Add(ground);
-            Space.ForceUpdater.Gravity = new Vector3(0, -9.81f, 0);
+            Space.ForceUpdater.Gravity = new Vector3(0, -9.81m, 0);
 
             stateControlGroup = new StateControlGroup(game.Camera, controls);
 
@@ -812,8 +813,8 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
 
             solver.ActiveSet.UseAutomass = true;
             solver.AutoscaleControlImpulses = true;
-            solver.AutoscaleControlMaximumForce = float.MaxValue;
-            solver.TimeStepDuration = .1f;
+            solver.AutoscaleControlMaximumForce = Fix64.MaxValue;
+            solver.TimeStepDuration = .1m;
             solver.ControlIterationCount = 100;
             solver.FixerIterationCount = 10;
             solver.VelocitySubiterationCount = 3;
@@ -852,7 +853,7 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
             }
         }
 
-        public override void Update(float dt)
+        public override void Update(Fix64 dt)
         {
             cameraControl.Update(dt);
 
@@ -978,7 +979,7 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
                         bones[i].DisplayBone.Color = new Microsoft.Xna.Framework.Vector3(0, 0, 1);
                     else
                     {
-                        bones[i].DisplayBone.Color = new Microsoft.Xna.Framework.Vector3(bones[i].Bone.Mass / 2, 0, 0);
+                        bones[i].DisplayBone.Color = new Microsoft.Xna.Framework.Vector3((float)bones[i].Bone.Mass / 2, 0, 0);
                     }
                 }
 
@@ -1030,7 +1031,7 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
 
         private bool RayCastBones(Ray ray, out BoneRelationship hitBone, out Vector3 hitPosition)
         {
-            float t = float.MaxValue;
+            Fix64 t = Fix64.MaxValue;
             hitBone = new BoneRelationship();
             hitPosition = new Vector3();
             for (int i = 0; i < bones.Count; i++)
@@ -1044,7 +1045,7 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
                     hitBone = bones[i];
                 }
             }
-            return t < float.MaxValue;
+            return t < Fix64.MaxValue;
         }
         public bool RayCast(Bone bone, Ray ray, out RayHit hit)
         {
@@ -1066,9 +1067,9 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
                 hit.T = 0;
                 hit.Location = localRay.Position;
                 hit.Normal = new Vector3(hit.Location.X, 0, hit.Location.Z);
-                float normalLengthSquared = hit.Normal.LengthSquared();
-                if (normalLengthSquared > 1e-9f)
-                    Vector3.Divide(ref hit.Normal, (float)Math.Sqrt(normalLengthSquared), out hit.Normal);
+                Fix64 normalLengthSquared = hit.Normal.LengthSquared();
+                if (normalLengthSquared > (Fix64)1e-9m)
+                    Vector3.Divide(ref hit.Normal, Fix64.Sqrt(normalLengthSquared), out hit.Normal);
                 else
                     hit.Normal = new Vector3();
                 //Pull the hit into world space.
@@ -1081,7 +1082,7 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
             //The projected ray is then tested against the circle to compute the time of impact.
             //That time of impact is used to compute the 3d hit location.
             Vector2 planeDirection = new Vector2(localRay.Direction.X, localRay.Direction.Z);
-            float planeDirectionLengthSquared = planeDirection.LengthSquared();
+            Fix64 planeDirectionLengthSquared = planeDirection.LengthSquared();
 
             if (planeDirectionLengthSquared < Toolbox.Epsilon)
             {
@@ -1099,15 +1100,15 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
 
             }
             Vector2 planeOrigin = new Vector2(localRay.Position.X, localRay.Position.Z);
-            float dot;
+            Fix64 dot;
             Vector2.Dot(ref planeDirection, ref planeOrigin, out dot);
-            float closestToCenterT = -dot / planeDirectionLengthSquared;
+            Fix64 closestToCenterT = -dot / planeDirectionLengthSquared;
 
             Vector2 closestPoint;
             Vector2.Multiply(ref planeDirection, closestToCenterT, out closestPoint);
             Vector2.Add(ref planeOrigin, ref closestPoint, out closestPoint);
             //How close does the ray come to the circle?
-            float squaredDistance = closestPoint.LengthSquared();
+            Fix64 squaredDistance = closestPoint.LengthSquared();
             if (squaredDistance > radius * radius)
             {
                 //It's too far!  The ray cannot possibly hit the capsule.
@@ -1118,8 +1119,8 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
 
 
             //With the squared distance, compute the distance backward along the ray from the closest point on the ray to the axis.
-            float backwardsDistance = radius * (float)Math.Sqrt(1 - squaredDistance / (radius * radius));
-            float tOffset = backwardsDistance / (float)Math.Sqrt(planeDirectionLengthSquared);
+            Fix64 backwardsDistance = radius * Fix64.Sqrt(1 - squaredDistance / (radius * radius));
+            Fix64 tOffset = backwardsDistance / Fix64.Sqrt(planeDirectionLengthSquared);
 
             hit.T = closestToCenterT - tOffset;
 
@@ -1132,9 +1133,9 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
             {
                 //Yup!
                 hit.Normal = new Vector3(hit.Location.X, 0, hit.Location.Z);
-                float normalLengthSquared = hit.Normal.LengthSquared();
-                if (normalLengthSquared > 1e-9f)
-                    Vector3.Divide(ref hit.Normal, (float)Math.Sqrt(normalLengthSquared), out hit.Normal);
+                Fix64 normalLengthSquared = hit.Normal.LengthSquared();
+                if (normalLengthSquared > (Fix64)1e-9m)
+                    Vector3.Divide(ref hit.Normal, Fix64.Sqrt(normalLengthSquared), out hit.Normal);
                 else
                     hit.Normal = new Vector3();
                 //Pull the hit into world space.
@@ -1148,17 +1149,17 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
         upperTest:
             //Nope! It may be intersecting the ends of the cylinder though.
             //We're above the cylinder, so cast a ray against the upper cap.
-            if (localRay.Direction.Y > -1e-9)
+            if (localRay.Direction.Y > (Fix64)(-1e-9m))
             {
                 //Can't hit the upper cap if the ray isn't pointing down.
                 hit = new RayHit();
                 return false;
             }
-            float t = (halfHeight - localRay.Position.Y) / localRay.Direction.Y;
+            Fix64 t = (halfHeight - localRay.Position.Y) / localRay.Direction.Y;
             Vector3 planeIntersection;
             Vector3.Multiply(ref localRay.Direction, t, out planeIntersection);
             Vector3.Add(ref localRay.Position, ref planeIntersection, out planeIntersection);
-            if (planeIntersection.X * planeIntersection.X + planeIntersection.Z * planeIntersection.Z < radius * radius + 1e-9)
+            if (planeIntersection.X * planeIntersection.X + planeIntersection.Z * planeIntersection.Z < radius * radius + (Fix64)1e-9m)
             {
                 //Pull the hit into world space.
                 Quaternion.Transform(ref Toolbox.UpVector, ref transform.Orientation, out hit.Normal);
@@ -1172,7 +1173,7 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
 
         lowerTest:
             //Is it intersecting the bottom cap?
-            if (localRay.Direction.Y < 1e-9)
+            if (localRay.Direction.Y < (Fix64)1e-9m)
             {
                 //Can't hit the bottom cap if the ray isn't pointing up.
                 hit = new RayHit();
@@ -1181,7 +1182,7 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
             t = (-halfHeight - localRay.Position.Y) / localRay.Direction.Y;
             Vector3.Multiply(ref localRay.Direction, t, out planeIntersection);
             Vector3.Add(ref localRay.Position, ref planeIntersection, out planeIntersection);
-            if (planeIntersection.X * planeIntersection.X + planeIntersection.Z * planeIntersection.Z < radius * radius + 1e-9)
+            if (planeIntersection.X * planeIntersection.X + planeIntersection.Z * planeIntersection.Z < radius * radius + (Fix64)1e-9m)
             {
                 //Pull the hit into world space.
                 Quaternion.Transform(ref Toolbox.DownVector, ref transform.Orientation, out hit.Normal);

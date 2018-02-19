@@ -2,6 +2,7 @@
 using BEPUutilities;
 using Microsoft.Xna.Framework.Graphics;
 using BEPUphysics.CollisionShapes;
+using FixMath.NET;
 
 namespace BEPUphysicsDemos.Demos
 {
@@ -23,7 +24,7 @@ namespace BEPUphysicsDemos.Demos
 
             //Create a big hollow sphere (squished into an ellipsoid).
             ModelDataExtractor.GetVerticesAndIndicesFromModel(game.Content.Load<Model>("hollowsphere"), out vertices, out indices);
-            var transform = new AffineTransform(new Vector3(.06f, .04f, .06f), Quaternion.Identity, new Vector3(0, 0, 0));
+            var transform = new AffineTransform(new Vector3(.06m, .04m, .06m), Quaternion.Identity, new Vector3(0, 0, 0));
 
             //Note that meshes can also be made solid (MobileMeshSolidity.Solid).  This gives meshes a solid collidable volume, instead of just
             //being thin shells.  However, enabling solidity is more expensive.
@@ -51,7 +52,7 @@ namespace BEPUphysicsDemos.Demos
             int numRows = 4;
             int numHigh = 4;
 #endif
-            float separation = 1.5f;
+            Fix64 separation = 1.5m;
 
 
             for (int i = 0; i < numRows; i++)
@@ -68,7 +69,7 @@ namespace BEPUphysicsDemos.Demos
         }
 
 
-        public override void Update(float dt)
+        public override void Update(Fix64 dt)
         {
             base.Update(dt);
         }

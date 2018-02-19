@@ -31,7 +31,7 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
             //Space.Add(twistJoint);
             Space.Add(twistMotor);
 
-            var ballSocketJoint = new BallSocketJoint(a, b, (a.Position + b.Position) * 0.5f);
+            var ballSocketJoint = new BallSocketJoint(a, b, (a.Position + b.Position) * 0.5m);
             var swingLimit = new SwingLimit(a, b, a.OrientationMatrix.Right, a.OrientationMatrix.Right, MathHelper.PiOver2);
 
             Space.Add(ballSocketJoint);
@@ -41,7 +41,7 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
 
 
 
-            Box ground = new Box(new Vector3(0, -.5f, 0), 50, 1, 50);
+            Box ground = new Box(new Vector3(0, -.5m, 0), 50, 1, 50);
             Space.Add(ground);
             game.Camera.Position = new Vector3(0, 6, 15);
         }

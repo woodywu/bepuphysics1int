@@ -4,6 +4,7 @@ using System.Diagnostics;
 using BEPUphysics;
 using BEPUutilities;
 using BEPUutilities.Threading;
+using FixMath.NET;
 
 namespace BEPUphysicsDemos.Demos
 {
@@ -13,8 +14,8 @@ namespace BEPUphysicsDemos.Demos
     public abstract class Demo
     {
         private int accumulatedPhysicsFrames;
-        private double accumulatedPhysicsTime;
-        private double previousTimeMeasurement;
+        private Fix64 accumulatedPhysicsTime;
+        private Fix64 previousTimeMeasurement;
         private ParallelLooper parallelLooper;
 
         protected Demo(DemosGame game)
@@ -50,7 +51,7 @@ namespace BEPUphysicsDemos.Demos
         /// <summary>
         /// Gets the average time spent per frame in the physics simulation.
         /// </summary>
-        public double PhysicsTime { get; private set; }
+        public Fix64 PhysicsTime { get; private set; }
 
         /// <summary>
         /// Gets the name of the demo.
@@ -71,7 +72,7 @@ namespace BEPUphysicsDemos.Demos
         /// Updates the game.
         /// </summary>
         /// <param name="dt">Game timestep.</param>
-        public virtual void Update(float dt)
+        public virtual void Update(Fix64 dt)
         {
             long startTime = Stopwatch.GetTimestamp();
 
@@ -86,7 +87,7 @@ namespace BEPUphysicsDemos.Demos
                 //Interpolation isn't used in the demos by default, so passing in a really short time adds a lot of time between discretely visible time steps.
                 //Using a Space.TimeStepSettings.TimeStepDuration of 1/60f (the default), this will perform one time step every 20 frames (about three per second at the usual game update rate).
                 //This can make it easier to examine behavior frame-by-frame.
-                Space.Update(1 / 1200f); 
+                Space.Update(1 / (Fix64)1200); 
             }
             else
 #endif
@@ -94,12 +95,12 @@ namespace BEPUphysicsDemos.Demos
 
 
             long endTime = Stopwatch.GetTimestamp();
-            accumulatedPhysicsTime += (endTime - startTime) / (double)Stopwatch.Frequency;
+            accumulatedPhysicsTime += (Fix64)(endTime - startTime) / (Fix64)Stopwatch.Frequency;
             accumulatedPhysicsFrames++;
             previousTimeMeasurement += dt;
-            if (previousTimeMeasurement > .3f)
+            if (previousTimeMeasurement > (Fix64).3m)
             {
-                previousTimeMeasurement -= .3f;
+                previousTimeMeasurement -= (Fix64).3m;
                 PhysicsTime = accumulatedPhysicsTime / accumulatedPhysicsFrames;
                 accumulatedPhysicsTime = 0;
                 accumulatedPhysicsFrames = 0;

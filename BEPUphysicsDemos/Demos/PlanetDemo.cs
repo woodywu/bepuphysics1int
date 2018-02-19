@@ -5,6 +5,7 @@ using BEPUphysics.UpdateableSystems.ForceFields;
 using BEPUphysicsDemos.SampleCode;
 using BEPUphysics.NarrowPhaseSystems;
 using BEPUutilities;
+using FixMath.NET;
 
 namespace BEPUphysicsDemos.Demos
 {
@@ -30,7 +31,7 @@ namespace BEPUphysicsDemos.Demos
             var planet = new Sphere(planetPosition, 30);
             Space.Add(planet);
 
-            var field = new GravitationalField(new InfiniteForceFieldShape(), planet.Position, 66730 / 2f, 100);
+            var field = new GravitationalField(new InfiniteForceFieldShape(), planet.Position, 66730 / 2, 100);
             Space.Add(field);
 
             //Drop the "meteorites" on the planet.
@@ -38,12 +39,12 @@ namespace BEPUphysicsDemos.Demos
             int numColumns = 10;
             int numRows = 10;
             int numHigh = 10;
-            float separation = 5;
+            Fix64 separation = 5;
             for (int i = 0; i < numRows; i++)
                 for (int j = 0; j < numColumns; j++)
                     for (int k = 0; k < numHigh; k++)
                     {
-                        toAdd = new Box(new Vector3(separation * i - numRows * separation / 2, 40 + k * separation, separation * j - numColumns * separation / 2), 1f, 1f, 1f, 5);
+                        toAdd = new Box(new Vector3(separation * i - numRows * separation / 2, 40 + k * separation, separation * j - numColumns * separation / 2), 1, 1, 1, 5);
                         toAdd.LinearVelocity = new Vector3(30, 0, 0);
                         toAdd.LinearDamping = 0;
                         toAdd.AngularDamping = 0;
@@ -63,7 +64,7 @@ namespace BEPUphysicsDemos.Demos
             get { return "Planet"; }
         }
 
-        public override void Update(float dt)
+        public override void Update(Fix64 dt)
         {
             //Orient the character and camera as needed.
             if (character.IsActive)

@@ -8,6 +8,7 @@ using System;
 using BEPUphysics.CollisionShapes.ConvexShapes;
 using System.Collections.Generic;
 using BEPUphysics.BroadPhaseEntries.MobileCollidables;
+using FixMath.NET;
 
 namespace BEPUphysicsDemos.Demos.Extras.Tests
 {
@@ -41,9 +42,9 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
             var collidables = new List<Collidable>();
 
             //Start with a whole bunch of boxes.  These are entity collidables, but without entities!
-            float xSpacing = 6;
-            float ySpacing = 6;
-            float zSpacing = 6;
+            Fix64 xSpacing = 6;
+            Fix64 ySpacing = 6;
+            Fix64 zSpacing = 6;
 
 
             //NOTE: You might notice this demo takes a while to start, especially on the Xbox360.  Do not fear!  That's due to the creation of the graphics data, not the physics.
@@ -62,13 +63,13 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
                     for (int k = 0; k < zCount; k++)
                     {
                         //Create a transform and the instance of the mesh.
-                        var collidable = new ConvexCollidable<BoxShape>(new BoxShape((float)random.NextDouble() * 6 + .5f, (float)random.NextDouble() * 6 + .5f, (float)random.NextDouble() * 6 + .5f));
+                        var collidable = new ConvexCollidable<BoxShape>(new BoxShape((Fix64)random.NextDouble() * 6 + .5m, (Fix64)random.NextDouble() * 6 + .5m, (Fix64)random.NextDouble() * 6 + .5m));
 
                         //This EntityCollidable isn't associated with an entity, so we must manually tell it where to sit by setting the WorldTransform.
                         //This also updates its bounding box.
                         collidable.WorldTransform = new RigidTransform(
-                            new Vector3(i * xSpacing - xCount * xSpacing * .5f, j * ySpacing + 3, k * zSpacing - zCount * zSpacing * .5f),
-                            Quaternion.CreateFromAxisAngle(Vector3.Normalize(new Vector3((float)random.NextDouble(), (float)random.NextDouble(), (float)random.NextDouble())), (float)random.NextDouble() * 100));
+                            new Vector3(i * xSpacing - xCount * xSpacing * .5m, j * ySpacing + 3, k * zSpacing - zCount * zSpacing * .5m),
+                            Quaternion.CreateFromAxisAngle(Vector3.Normalize(new Vector3((Fix64)random.NextDouble(), (Fix64)random.NextDouble(), (Fix64)random.NextDouble())), (Fix64)random.NextDouble() * 100));
 
                         collidables.Add(collidable);
                     }
@@ -98,9 +99,9 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
                     {
                         //Create a transform and the instance of the mesh.
                         var transform = new AffineTransform(
-                            new Vector3((float)random.NextDouble() * 6 + .5f, (float)random.NextDouble() * 6 + .5f, (float)random.NextDouble() * 6 + .5f),
-                             Quaternion.CreateFromAxisAngle(Vector3.Normalize(new Vector3((float)random.NextDouble(), (float)random.NextDouble(), (float)random.NextDouble())), (float)random.NextDouble() * 100),
-                            new Vector3(i * xSpacing - xCount * xSpacing * .5f, j * ySpacing + 50, k * zSpacing - zCount * zSpacing * .5f));
+                            new Vector3((Fix64)random.NextDouble() * 6 + .5m, (Fix64)random.NextDouble() * 6 + .5m, (Fix64)random.NextDouble() * 6 + .5m),
+                             Quaternion.CreateFromAxisAngle(Vector3.Normalize(new Vector3((Fix64)random.NextDouble(), (Fix64)random.NextDouble(), (Fix64)random.NextDouble())), (Fix64)random.NextDouble() * 100),
+                            new Vector3(i * xSpacing - xCount * xSpacing * .5m, j * ySpacing + 50, k * zSpacing - zCount * zSpacing * .5m));
                         var mesh = new InstancedMesh(meshShape, transform);
                         //Making the triangles one-sided makes collision detection a bit more robust, since the backsides of triangles won't try to collide with things
                         //and 'pull' them back into the mesh.
@@ -154,17 +155,17 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
             xCount = 8;
             yCount = 3;
             zCount = 8;
-            xSpacing = 3f;
-            ySpacing = 5f;
-            zSpacing = 3f;
+            xSpacing = 3;
+            ySpacing = 5;
+            zSpacing = 3;
             for (int i = 0; i < xCount; i++)
                 for (int j = 0; j < zCount; j++)
                     for (int k = 0; k < yCount; k++)
                     {
                         Space.Add(new Box(new Vector3(
-                                                 xSpacing * i - (xCount - 1) * xSpacing / 2f,
+                                                 xSpacing * i - (xCount - 1) * xSpacing / 2,
                                                  100 + k * (ySpacing),
-                                                 2 + zSpacing * j - (zCount - 1) * zSpacing / 2f),
+                                                 2 + zSpacing * j - (zCount - 1) * zSpacing / 2),
                                              1, 1, 1, 10));
                     }
 

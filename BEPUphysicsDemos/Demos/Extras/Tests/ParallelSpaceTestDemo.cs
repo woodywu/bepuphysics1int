@@ -4,6 +4,7 @@ using BEPUphysics;
 using System.Collections.Generic;
 using BEPUphysics.Entities;
 using BEPUutilities;
+using FixMath.NET;
 
 namespace BEPUphysicsDemos.Demos.Extras.Tests
 {
@@ -24,7 +25,7 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
             for (int i = 0; i < 32; i++)
             {
                 var space = new Space(null);
-                space.ForceUpdater.Gravity = new Vector3(0, -9.81f, 0);
+                space.ForceUpdater.Gravity = new Vector3(0, -9.81m, 0);
                 var box = new Box(new Vector3(20 * i, 0, 0), 100, 1, 100);
                 space.Add(box);
                 //game.ModelDrawer.Add(box);
@@ -32,7 +33,7 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
                 {
                     for (int k = 0; k < 10; k++)
                     {
-                        box = new Box(new Vector3(20 * i, 2 + j * 1.1f, 0), 1, 1, 1, 1);
+                        box = new Box(new Vector3(20 * i, 2 + j * 1.1m, 0), 1, 1, 1, 1);
                         entities.Add(box);
                         space.Add(box);
                         //game.ModelDrawer.Add(box);
@@ -45,14 +46,14 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
         }
 
         Random random = new Random();
-        public override void Update(float dt)
+        public override void Update(Fix64 dt)
         {
             base.Update(dt);
             for (int i = 0; i < entities.Count; i++)
             {
-                var impulse = dt * new Vector3((float)(random.NextDouble() * 30 - 15), (float)(random.NextDouble() * 30 - 15), (float)(random.NextDouble() * 30 - 15));
+                var impulse = dt * new Vector3((Fix64)(random.NextDouble() * 30 - 15), (Fix64)(random.NextDouble() * 30 - 15), (Fix64)(random.NextDouble() * 30 - 15));
                 entities[i].ApplyLinearImpulse(ref impulse);
-                impulse = dt * new Vector3((float)(random.NextDouble() * 10 - 5), (float)(random.NextDouble() * 10 - 5), (float)(random.NextDouble() * 10 - 5));
+                impulse = dt * new Vector3((Fix64)(random.NextDouble() * 10 - 5), (Fix64)(random.NextDouble() * 10 - 5), (Fix64)(random.NextDouble() * 10 - 5));
                 entities[i].ApplyAngularImpulse(ref impulse);
             }
 
@@ -74,7 +75,7 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
             }   
         }
         static int resets;
-        float timeSinceLastReset;
+        Fix64 timeSinceLastReset;
 
         /// <summary>
         /// Gets the name of the simulation.

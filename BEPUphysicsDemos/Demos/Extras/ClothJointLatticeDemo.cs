@@ -2,6 +2,7 @@
 using BEPUphysics.Entities;
 using BEPUphysics.Entities.Prefabs;
 using BEPUutilities;
+using FixMath.NET;
 
 namespace BEPUphysicsDemos.Demos.Extras
 {
@@ -26,18 +27,18 @@ namespace BEPUphysicsDemos.Demos.Extras
 
             int numColumns = 16;
             int numRows = 16;
-            float xSpacing = 3.09f;
-            float zSpacing = 3.09f;
+            Fix64 xSpacing = 3.09m;
+            Fix64 zSpacing = 3.09m;
             var lattice = new Entity[numRows,numColumns];
             for (int i = 0; i < numRows; i++)
                 for (int j = 0; j < numColumns; j++)
                 {
                     latticePiece = new Sphere(
                         new Vector3(
-                            xSpacing * i - (numRows - 1) * xSpacing / 2f,
-                            15.58f,
-                            2 + zSpacing * j - (numColumns - 1) * zSpacing / 2f),
-                        .3f, 10);
+                            xSpacing * i - (numRows - 1) * xSpacing / 2,
+                            15.58m,
+                            2 + zSpacing * j - (numColumns - 1) * zSpacing / 2),
+                        .3m, 10);
 
                     latticePiece.LocalInertiaTensorInverse = new Matrix3x3();
                     latticePiece.Tag = "noDisplayObject"; //The joint lines are visible enough; don't add a sphere model for this sphere.
@@ -96,7 +97,7 @@ namespace BEPUphysicsDemos.Demos.Extras
 
             //Add some ground.
             Space.Add(new Sphere(new Vector3(0, 0, 0), 10));
-            Space.Add(new Box(new Vector3(0, -3.5f, 0), 80f, 1, 80f));
+            Space.Add(new Box(new Vector3(0, -3.5m, 0), 80, 1, 80));
 
             game.Camera.Position = new Vector3(0, 5, 25);
         }

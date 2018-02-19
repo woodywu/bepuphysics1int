@@ -10,6 +10,7 @@ using BEPUphysics.Entities;
 using BEPUphysics.Entities.Prefabs;
 using BEPUutilities;
 using BEPUutilities.DataStructures;
+using FixMath.NET;
 
 namespace BEPUphysicsDemos.Demos
 {
@@ -27,8 +28,8 @@ namespace BEPUphysicsDemos.Demos
         {
             int numRows = 8;
             int numColumns = 3;
-            float xSpacing = 5;
-            float zSpacing = 5;
+            Fix64 xSpacing = 5;
+            Fix64 zSpacing = 5;
             for (int i = 0; i < numRows; i++)
             {
                 for (int j = 0; j < numColumns; j++)
@@ -39,7 +40,7 @@ namespace BEPUphysicsDemos.Demos
                     {
                         bone.WorldTransform *= Matrix.CreateTranslation(new Vector3(
                                                          i * xSpacing - (numRows - 1) * xSpacing / 2,
-                                                         i - 1.5f,
+                                                         i - 1.5m,
                                                          j * zSpacing - (numColumns - 1) * zSpacing / 2));
                         Space.Add(bone);
                     }
@@ -53,7 +54,7 @@ namespace BEPUphysicsDemos.Demos
             }
 
             //Add some ground.
-            Space.Add(new Box(new Vector3(0, -3.5f, 0), 50f, 1, 50f));
+            Space.Add(new Box(new Vector3(0, -3.5m, 0), 50, 1, 50));
 
             game.Camera.Position = new Vector3(0, 5, -35);
             game.Camera.ViewDirection = new Vector3(0, 0, 1);
@@ -138,28 +139,28 @@ namespace BEPUphysicsDemos.Demos
 
             #region Ragdoll Entities
             //Create the ragdoll's bones.
-            var pelvis = new Box(Vector3.Zero, .5f, .28f, .33f, 20);
-            var torsoBottom = new Box(pelvis.Position + new Vector3(0, .3f, 0), .42f, .48f, .3f, 15);
-            var torsoTop = new Box(torsoBottom.Position + new Vector3(0, .3f, 0), .5f, .38f, .32f, 20);
+            var pelvis = new Box(Vector3.Zero, .5m, .28m, .33m, 20);
+            var torsoBottom = new Box(pelvis.Position + new Vector3(0, .3m, 0), .42m, .48m, .3m, 15);
+            var torsoTop = new Box(torsoBottom.Position + new Vector3(0, .3m, 0), .5m, .38m, .32m, 20);
 
-            var neck = new Box(torsoTop.Position + new Vector3(0, .2f, .04f), .19f, .24f, .2f, 5);
-            var head = new Sphere(neck.Position + new Vector3(0, .22f, -.04f), .19f, 7);
+            var neck = new Box(torsoTop.Position + new Vector3(0, .2m, .04m), .19m, .24m, .2m, 5);
+            var head = new Sphere(neck.Position + new Vector3(0, .22m, -.04m), .19m, 7);
 
-            var leftUpperArm = new Box(torsoTop.Position + new Vector3(-.46f, .1f, 0), .52f, .19f, .19f, 6);
-            var leftForearm = new Box(leftUpperArm.Position + new Vector3(-.5f, 0, 0), .52f, .18f, .18f, 5);
-            var leftHand = new Box(leftForearm.Position + new Vector3(-.35f, 0, 0), .28f, .13f, .22f, 4);
+            var leftUpperArm = new Box(torsoTop.Position + new Vector3(-.46m, .1m, 0), .52m, .19m, .19m, 6);
+            var leftForearm = new Box(leftUpperArm.Position + new Vector3(-.5m, 0, 0), .52m, .18m, .18m, 5);
+            var leftHand = new Box(leftForearm.Position + new Vector3(-.35m, 0, 0), .28m, .13m, .22m, 4);
 
-            var rightUpperArm = new Box(torsoTop.Position + new Vector3(.46f, .1f, 0), .52f, .19f, .19f, 6);
-            var rightForearm = new Box(rightUpperArm.Position + new Vector3(.5f, 0, 0), .52f, .18f, .18f, 5);
-            var rightHand = new Box(rightForearm.Position + new Vector3(.35f, 0, 0), .28f, .13f, .22f, 4);
+            var rightUpperArm = new Box(torsoTop.Position + new Vector3(.46m, .1m, 0), .52m, .19m, .19m, 6);
+            var rightForearm = new Box(rightUpperArm.Position + new Vector3(.5m, 0, 0), .52m, .18m, .18m, 5);
+            var rightHand = new Box(rightForearm.Position + new Vector3(.35m, 0, 0), .28m, .13m, .22m, 4);
 
-            var leftThigh = new Box(pelvis.Position + new Vector3(-.15f, -.4f, 0), .23f, .63f, .23f, 10);
-            var leftShin = new Box(leftThigh.Position + new Vector3(0, -.6f, 0), .21f, .63f, .21f, 7);
-            var leftFoot = new Box(leftShin.Position + new Vector3(0, -.35f, -.1f), .23f, .15f, .43f, 5);
+            var leftThigh = new Box(pelvis.Position + new Vector3(-.15m, -.4m, 0), .23m, .63m, .23m, 10);
+            var leftShin = new Box(leftThigh.Position + new Vector3(0, -.6m, 0), .21m, .63m, .21m, 7);
+            var leftFoot = new Box(leftShin.Position + new Vector3(0, -.35m, -.1m), .23m, .15m, .43m, 5);
 
-            var rightThigh = new Box(pelvis.Position + new Vector3(.15f, -.4f, 0), .23f, .63f, .23f, 10);
-            var rightShin = new Box(rightThigh.Position + new Vector3(0, -.6f, 0), .21f, .63f, .21f, 7);
-            var rightFoot = new Box(rightShin.Position + new Vector3(0, -.35f, -.1f), .23f, .15f, .43f, 5);
+            var rightThigh = new Box(pelvis.Position + new Vector3(.15m, -.4m, 0), .23m, .63m, .23m, 10);
+            var rightShin = new Box(rightThigh.Position + new Vector3(0, -.6m, 0), .21m, .63m, .21m, 7);
+            var rightFoot = new Box(rightShin.Position + new Vector3(0, -.35m, -.1m), .23m, .15m, .43m, 5);
             #endregion
 
             #region Bone List
@@ -212,126 +213,126 @@ namespace BEPUphysicsDemos.Demos
 
             //Create the constraints between the bones.
             #region Pelvis up to Head Constraints
-            var pelvisToTorsoBottomBallSocketJoint = new BallSocketJoint(pelvis, torsoBottom, pelvis.Position + new Vector3(0, .1f, 0));
+            var pelvisToTorsoBottomBallSocketJoint = new BallSocketJoint(pelvis, torsoBottom, pelvis.Position + new Vector3(0, .1m, 0));
             var pelvisToTorsoBottomTwistLimit = new TwistLimit(pelvis, torsoBottom, Vector3.Up, Vector3.Up, -MathHelper.Pi / 6, MathHelper.Pi / 6);
             var pelvisToTorsoBottomSwingLimit = new SwingLimit(pelvis, torsoBottom, Vector3.Up, Vector3.Up, MathHelper.Pi / 6);
             var pelvisToTorsoBottomMotor = new AngularMotor(pelvis, torsoBottom);
-            pelvisToTorsoBottomMotor.Settings.VelocityMotor.Softness = .05f;
+            pelvisToTorsoBottomMotor.Settings.VelocityMotor.Softness = .05m;
 
-            var torsoBottomToTorsoTopBallSocketJoint = new BallSocketJoint(torsoBottom, torsoTop, torsoBottom.Position + new Vector3(0, .25f, 0));
+            var torsoBottomToTorsoTopBallSocketJoint = new BallSocketJoint(torsoBottom, torsoTop, torsoBottom.Position + new Vector3(0, .25m, 0));
             var torsoBottomToTorsoTopSwingLimit = new SwingLimit(torsoBottom, torsoTop, Vector3.Up, Vector3.Up, MathHelper.Pi / 6);
             var torsoBottomToTorsoTopTwistLimit = new TwistLimit(torsoBottom, torsoTop, Vector3.Up, Vector3.Up, -MathHelper.Pi / 6, MathHelper.Pi / 6);
             var torsoBottomToTorsoTopMotor = new AngularMotor(torsoBottom, torsoTop);
-            torsoBottomToTorsoTopMotor.Settings.VelocityMotor.Softness = .05f;
+            torsoBottomToTorsoTopMotor.Settings.VelocityMotor.Softness = .05m;
 
-            var torsoTopToNeckBallSocketJoint = new BallSocketJoint(torsoTop, neck, torsoTop.Position + new Vector3(0, .15f, .05f));
+            var torsoTopToNeckBallSocketJoint = new BallSocketJoint(torsoTop, neck, torsoTop.Position + new Vector3(0, .15m, .05m));
             var torsoTopToNeckSwingLimit = new SwingLimit(torsoTop, neck, Vector3.Up, Vector3.Up, MathHelper.Pi / 6);
             var torsoTopToNeckTwistLimit = new TwistLimit(torsoTop, neck, Vector3.Up, Vector3.Up, -MathHelper.Pi / 8, MathHelper.Pi / 8);
             var torsoTopToNeckMotor = new AngularMotor(torsoTop, neck);
-            torsoTopToNeckMotor.Settings.VelocityMotor.Softness = .1f;
+            torsoTopToNeckMotor.Settings.VelocityMotor.Softness = .1m;
 
-            var neckToHeadBallSocketJoint = new BallSocketJoint(neck, head, neck.Position + new Vector3(0, .1f, .05f));
+            var neckToHeadBallSocketJoint = new BallSocketJoint(neck, head, neck.Position + new Vector3(0, .1m, .05m));
             var neckToHeadTwistLimit = new TwistLimit(neck, head, Vector3.Up, Vector3.Up, -MathHelper.Pi / 8, MathHelper.Pi / 8);
             var neckToHeadSwingLimit = new SwingLimit(neck, head, Vector3.Up, Vector3.Up, MathHelper.Pi / 6);
             var neckToHeadMotor = new AngularMotor(neck, head);
-            neckToHeadMotor.Settings.VelocityMotor.Softness = .1f;
+            neckToHeadMotor.Settings.VelocityMotor.Softness = .1m;
             #endregion
 
             #region Left Arm
-            var torsoTopToLeftArmBallSocketJoint = new BallSocketJoint(torsoTop, leftUpperArm, torsoTop.Position + new Vector3(-.3f, .1f, 0));
-            var torsoTopToLeftArmEllipseLimit = new EllipseSwingLimit(torsoTop, leftUpperArm, Vector3.Left, MathHelper.Pi * .75f, MathHelper.PiOver2);
+            var torsoTopToLeftArmBallSocketJoint = new BallSocketJoint(torsoTop, leftUpperArm, torsoTop.Position + new Vector3(-.3m, .1m, 0));
+            var torsoTopToLeftArmEllipseLimit = new EllipseSwingLimit(torsoTop, leftUpperArm, Vector3.Left, MathHelper.Pi * .75m, MathHelper.PiOver2);
             var torsoTopToLeftArmTwistLimit = new TwistLimit(torsoTop, leftUpperArm, Vector3.Left, Vector3.Left, -MathHelper.PiOver2, MathHelper.PiOver2);
             var torsoTopToLeftArmMotor = new AngularMotor(torsoTop, leftUpperArm);
-            torsoTopToLeftArmMotor.Settings.VelocityMotor.Softness = .2f;
+            torsoTopToLeftArmMotor.Settings.VelocityMotor.Softness = .2m;
 
-            var leftUpperArmToLeftForearmSwivelHingeJoint = new SwivelHingeJoint(leftUpperArm, leftForearm, leftUpperArm.Position + new Vector3(-.28f, 0, 0), Vector3.Up);
+            var leftUpperArmToLeftForearmSwivelHingeJoint = new SwivelHingeJoint(leftUpperArm, leftForearm, leftUpperArm.Position + new Vector3(-.28m, 0, 0), Vector3.Up);
             leftUpperArmToLeftForearmSwivelHingeJoint.HingeLimit.IsActive = true;
             leftUpperArmToLeftForearmSwivelHingeJoint.TwistLimit.IsActive = true;
             leftUpperArmToLeftForearmSwivelHingeJoint.TwistLimit.MinimumAngle = -MathHelper.Pi / 8;
             leftUpperArmToLeftForearmSwivelHingeJoint.TwistLimit.MaximumAngle = MathHelper.Pi / 8;
-            leftUpperArmToLeftForearmSwivelHingeJoint.HingeLimit.MinimumAngle = -MathHelper.Pi * .8f;
+            leftUpperArmToLeftForearmSwivelHingeJoint.HingeLimit.MinimumAngle = -MathHelper.Pi * .8m;
             leftUpperArmToLeftForearmSwivelHingeJoint.HingeLimit.MaximumAngle = 0;
             //The SwivelHingeJoint has motors, but they are separately defined for twist/bending.
             //The AngularMotor covers all degrees of freedom.
             var leftUpperArmToLeftForearmMotor = new AngularMotor(leftUpperArm, leftForearm);
-            leftUpperArmToLeftForearmMotor.Settings.VelocityMotor.Softness = .3f;
+            leftUpperArmToLeftForearmMotor.Settings.VelocityMotor.Softness = .3m;
 
-            var leftForearmToLeftHandBallSocketJoint = new BallSocketJoint(leftForearm, leftHand, leftForearm.Position + new Vector3(-.2f, 0, 0));
+            var leftForearmToLeftHandBallSocketJoint = new BallSocketJoint(leftForearm, leftHand, leftForearm.Position + new Vector3(-.2m, 0, 0));
             var leftForearmToLeftHandEllipseSwingLimit = new EllipseSwingLimit(leftForearm, leftHand, Vector3.Left, MathHelper.PiOver2, MathHelper.Pi / 6);
             var leftForearmToLeftHandTwistLimit = new TwistLimit(leftForearm, leftHand, Vector3.Left, Vector3.Left, -MathHelper.Pi / 6, MathHelper.Pi / 6);
             var leftForearmToLeftHandMotor = new AngularMotor(leftForearm, leftHand);
-            leftForearmToLeftHandMotor.Settings.VelocityMotor.Softness = .4f;
+            leftForearmToLeftHandMotor.Settings.VelocityMotor.Softness = .4m;
             #endregion
 
             #region Right Arm
-            var torsoTopToRightArmBallSocketJoint = new BallSocketJoint(torsoTop, rightUpperArm, torsoTop.Position + new Vector3(.3f, .1f, 0));
-            var torsoTopToRightArmEllipseLimit = new EllipseSwingLimit(torsoTop, rightUpperArm, Vector3.Right, MathHelper.Pi * .75f, MathHelper.PiOver2);
+            var torsoTopToRightArmBallSocketJoint = new BallSocketJoint(torsoTop, rightUpperArm, torsoTop.Position + new Vector3(.3m, .1m, 0));
+            var torsoTopToRightArmEllipseLimit = new EllipseSwingLimit(torsoTop, rightUpperArm, Vector3.Right, MathHelper.Pi * .75m, MathHelper.PiOver2);
             var torsoTopToRightArmTwistLimit = new TwistLimit(torsoTop, rightUpperArm, Vector3.Right, Vector3.Right, -MathHelper.PiOver2, MathHelper.PiOver2);
             var torsoTopToRightArmMotor = new AngularMotor(torsoTop, rightUpperArm);
-            torsoTopToRightArmMotor.Settings.VelocityMotor.Softness = .2f;
+            torsoTopToRightArmMotor.Settings.VelocityMotor.Softness = .2m;
 
-            var rightUpperArmToRightForearmSwivelHingeJoint = new SwivelHingeJoint(rightUpperArm, rightForearm, rightUpperArm.Position + new Vector3(.28f, 0, 0), Vector3.Up);
+            var rightUpperArmToRightForearmSwivelHingeJoint = new SwivelHingeJoint(rightUpperArm, rightForearm, rightUpperArm.Position + new Vector3(.28m, 0, 0), Vector3.Up);
             rightUpperArmToRightForearmSwivelHingeJoint.HingeLimit.IsActive = true;
             rightUpperArmToRightForearmSwivelHingeJoint.TwistLimit.IsActive = true;
             rightUpperArmToRightForearmSwivelHingeJoint.TwistLimit.MinimumAngle = -MathHelper.Pi / 8;
             rightUpperArmToRightForearmSwivelHingeJoint.TwistLimit.MaximumAngle = MathHelper.Pi / 8;
             rightUpperArmToRightForearmSwivelHingeJoint.HingeLimit.MinimumAngle = 0;
-            rightUpperArmToRightForearmSwivelHingeJoint.HingeLimit.MaximumAngle = MathHelper.Pi * .8f;
+            rightUpperArmToRightForearmSwivelHingeJoint.HingeLimit.MaximumAngle = MathHelper.Pi * .8m;
             //The SwivelHingeJoint has motors, but they are separately defined for twist/bending.
             //The AngularMotor covers all degrees of freedom.
             var rightUpperArmToRightForearmMotor = new AngularMotor(rightUpperArm, rightForearm);
-            rightUpperArmToRightForearmMotor.Settings.VelocityMotor.Softness = .3f;
+            rightUpperArmToRightForearmMotor.Settings.VelocityMotor.Softness = .3m;
 
-            var rightForearmToRightHandBallSocketJoint = new BallSocketJoint(rightForearm, rightHand, rightForearm.Position + new Vector3(.2f, 0, 0));
+            var rightForearmToRightHandBallSocketJoint = new BallSocketJoint(rightForearm, rightHand, rightForearm.Position + new Vector3(.2m, 0, 0));
             var rightForearmToRightHandEllipseSwingLimit = new EllipseSwingLimit(rightForearm, rightHand, Vector3.Right, MathHelper.PiOver2, MathHelper.Pi / 6);
             var rightForearmToRightHandTwistLimit = new TwistLimit(rightForearm, rightHand, Vector3.Right, Vector3.Right, -MathHelper.Pi / 6, MathHelper.Pi / 6);
             var rightForearmToRightHandMotor = new AngularMotor(rightForearm, rightHand);
-            rightForearmToRightHandMotor.Settings.VelocityMotor.Softness = .4f;
+            rightForearmToRightHandMotor.Settings.VelocityMotor.Softness = .4m;
             #endregion
 
             #region Left Leg
-            var pelvisToLeftThighBallSocketJoint = new BallSocketJoint(pelvis, leftThigh, pelvis.Position + new Vector3(-.15f, -.1f, 0));
-            var pelvisToLeftThighEllipseSwingLimit = new EllipseSwingLimit(pelvis, leftThigh, Vector3.Normalize(new Vector3(-.2f, -1, -.6f)), MathHelper.Pi * .7f, MathHelper.PiOver4);
+            var pelvisToLeftThighBallSocketJoint = new BallSocketJoint(pelvis, leftThigh, pelvis.Position + new Vector3(-.15m, -.1m, 0));
+            var pelvisToLeftThighEllipseSwingLimit = new EllipseSwingLimit(pelvis, leftThigh, Vector3.Normalize(new Vector3(-.2m, -1, -.6m)), MathHelper.Pi * .7m, MathHelper.PiOver4);
             pelvisToLeftThighEllipseSwingLimit.LocalTwistAxisB = Vector3.Down;
             var pelvisToLeftThighTwistLimit = new TwistLimit(pelvis, leftThigh, Vector3.Down, Vector3.Down, -MathHelper.Pi / 6, MathHelper.Pi / 6);
             var pelvisToLeftThighMotor = new AngularMotor(pelvis, leftThigh);
-            pelvisToLeftThighMotor.Settings.VelocityMotor.Softness = .1f;
+            pelvisToLeftThighMotor.Settings.VelocityMotor.Softness = .1m;
 
-            var leftThighToLeftShinRevoluteJoint = new RevoluteJoint(leftThigh, leftShin, leftThigh.Position + new Vector3(0, -.3f, 0), Vector3.Right);
+            var leftThighToLeftShinRevoluteJoint = new RevoluteJoint(leftThigh, leftShin, leftThigh.Position + new Vector3(0, -.3m, 0), Vector3.Right);
             leftThighToLeftShinRevoluteJoint.Limit.IsActive = true;
-            leftThighToLeftShinRevoluteJoint.Limit.MinimumAngle = -MathHelper.Pi * .8f;
+            leftThighToLeftShinRevoluteJoint.Limit.MinimumAngle = -MathHelper.Pi * .8m;
             leftThighToLeftShinRevoluteJoint.Limit.MaximumAngle = 0;
             leftThighToLeftShinRevoluteJoint.Motor.IsActive = true;
-            leftThighToLeftShinRevoluteJoint.Motor.Settings.VelocityMotor.Softness = .2f;
+            leftThighToLeftShinRevoluteJoint.Motor.Settings.VelocityMotor.Softness = .2m;
 
-            var leftShinToLeftFootBallSocketJoint = new BallSocketJoint(leftShin, leftFoot, leftShin.Position + new Vector3(0, -.3f, 0));
+            var leftShinToLeftFootBallSocketJoint = new BallSocketJoint(leftShin, leftFoot, leftShin.Position + new Vector3(0, -.3m, 0));
             var leftShinToLeftFootSwingLimit = new SwingLimit(leftShin, leftFoot, Vector3.Forward, Vector3.Forward, MathHelper.Pi / 8);
             var leftShinToLeftFootTwistLimit = new TwistLimit(leftShin, leftFoot, Vector3.Down, Vector3.Forward, -MathHelper.Pi / 8, MathHelper.Pi / 8);
             var leftShinToLeftFootMotor = new AngularMotor(leftShin, leftFoot);
-            leftShinToLeftFootMotor.Settings.VelocityMotor.Softness = .2f;
+            leftShinToLeftFootMotor.Settings.VelocityMotor.Softness = .2m;
 
             #endregion
 
             #region Right Leg
-            var pelvisToRightThighBallSocketJoint = new BallSocketJoint(pelvis, rightThigh, pelvis.Position + new Vector3(.15f, -.1f, 0));
-            var pelvisToRightThighEllipseSwingLimit = new EllipseSwingLimit(pelvis, rightThigh, Vector3.Normalize(new Vector3(.2f, -1, -.6f)), MathHelper.Pi * .7f, MathHelper.PiOver4);
+            var pelvisToRightThighBallSocketJoint = new BallSocketJoint(pelvis, rightThigh, pelvis.Position + new Vector3(.15m, -.1m, 0));
+            var pelvisToRightThighEllipseSwingLimit = new EllipseSwingLimit(pelvis, rightThigh, Vector3.Normalize(new Vector3(.2m, -1, -.6m)), MathHelper.Pi * .7m, MathHelper.PiOver4);
             pelvisToRightThighEllipseSwingLimit.LocalTwistAxisB = Vector3.Down;
             var pelvisToRightThighTwistLimit = new TwistLimit(pelvis, rightThigh, Vector3.Down, Vector3.Down, -MathHelper.Pi / 6, MathHelper.Pi / 6);
             var pelvisToRightThighMotor = new AngularMotor(pelvis, rightThigh);
-            pelvisToRightThighMotor.Settings.VelocityMotor.Softness = .1f;
+            pelvisToRightThighMotor.Settings.VelocityMotor.Softness = .1m;
 
-            var rightThighToRightShinRevoluteJoint = new RevoluteJoint(rightThigh, rightShin, rightThigh.Position + new Vector3(0, -.3f, 0), Vector3.Right);
+            var rightThighToRightShinRevoluteJoint = new RevoluteJoint(rightThigh, rightShin, rightThigh.Position + new Vector3(0, -.3m, 0), Vector3.Right);
             rightThighToRightShinRevoluteJoint.Limit.IsActive = true;
-            rightThighToRightShinRevoluteJoint.Limit.MinimumAngle = -MathHelper.Pi * .8f;
+            rightThighToRightShinRevoluteJoint.Limit.MinimumAngle = -MathHelper.Pi * .8m;
             rightThighToRightShinRevoluteJoint.Limit.MaximumAngle = 0;
             rightThighToRightShinRevoluteJoint.Motor.IsActive = true;
-            rightThighToRightShinRevoluteJoint.Motor.Settings.VelocityMotor.Softness = .2f;
+            rightThighToRightShinRevoluteJoint.Motor.Settings.VelocityMotor.Softness = .2m;
 
-            var rightShinToRightFootBallSocketJoint = new BallSocketJoint(rightShin, rightFoot, rightShin.Position + new Vector3(0, -.3f, 0));
+            var rightShinToRightFootBallSocketJoint = new BallSocketJoint(rightShin, rightFoot, rightShin.Position + new Vector3(0, -.3m, 0));
             var rightShinToRightFootSwingLimit = new SwingLimit(rightShin, rightFoot, Vector3.Forward, Vector3.Forward, MathHelper.Pi / 8);
             var rightShinToRightFootTwistLimit = new TwistLimit(rightShin, rightFoot, Vector3.Down, Vector3.Forward, -MathHelper.Pi / 8, MathHelper.Pi / 8);
             var rightShinToRightFootMotor = new AngularMotor(rightShin, rightFoot);
-            rightShinToRightFootMotor.Settings.VelocityMotor.Softness = .2f;
+            rightShinToRightFootMotor.Settings.VelocityMotor.Softness = .2m;
 
             #endregion
 

@@ -5,6 +5,7 @@ using BEPUphysics.Entities.Prefabs;
 using BEPUphysics.Materials;
 using BEPUphysics.Settings;
 using BEPUutilities;
+using FixMath.NET;
 using Microsoft.Xna.Framework.Input;
 
 namespace BEPUphysicsDemos.Demos.Extras
@@ -21,24 +22,24 @@ namespace BEPUphysicsDemos.Demos.Extras
         public SolidPyramidDemo(DemosGame game)
             : base(game)
         {
-            float boxSize = 1f;
+            Fix64 boxSize = 1;
             int bottomBoxCount = 10;
 
-            var ground = new Box(new Vector3(0, -.5f, 0), 40, 1, 40);
+            var ground = new Box(new Vector3(0, -.5m, 0), 40, 1, 40);
             Space.Add(ground);
 
-            float spacing = 0.05f;
+            Fix64 spacing = 0.05m;
 
-            float offset = -0.5f * ((bottomBoxCount - 1) * (boxSize + spacing));
-            var origin = new Vector3(offset, -boxSize * 0.5f, offset);
+            Fix64 offset = -0.5m * ((bottomBoxCount - 1) * (boxSize + spacing));
+            var origin = new Vector3(offset, -boxSize * 0.5m, offset);
             for (int heightIndex = 0; heightIndex < bottomBoxCount - 2; ++heightIndex)
             {
                 var levelWidth = bottomBoxCount - heightIndex;
-                float perBoxWidth = boxSize + spacing;
+                Fix64 perBoxWidth = boxSize + spacing;
                 //Move the origin for this level.
-                origin.X += perBoxWidth * 0.5f;
+                origin.X += perBoxWidth * 0.5m;
                 origin.Y += boxSize;
-                origin.Z += perBoxWidth * 0.5f;
+                origin.Z += perBoxWidth * 0.5m;
 
                 for (int i = 0; i < levelWidth; ++i)
                 {
@@ -49,7 +50,7 @@ namespace BEPUphysicsDemos.Demos.Extras
                             origin.Y,
                             origin.Z + j * perBoxWidth);
 
-                        var box = new Box(position, boxSize, boxSize, boxSize, 20f);
+                        var box = new Box(position, boxSize, boxSize, boxSize, 20);
 
                         Space.Add(box);
                     }
@@ -57,8 +58,8 @@ namespace BEPUphysicsDemos.Demos.Extras
             }
 
             game.Camera.Position = new Vector3(-bottomBoxCount * boxSize, 2, bottomBoxCount * boxSize);
-            game.Camera.Yaw((float)Math.PI / -4f);
-            game.Camera.Pitch((float)Math.PI / 9f);
+            game.Camera.Yaw(MathHelper.Pi / -4);
+            game.Camera.Pitch(MathHelper.Pi / 9);
         }
 
         /// <summary>

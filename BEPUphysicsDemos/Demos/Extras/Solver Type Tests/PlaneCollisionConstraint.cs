@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using BEPUutilities;
+using FixMath.NET;
 
 namespace BEPUphysicsDemos.Demos.Extras.SolverTypeTests
 {
@@ -10,13 +11,13 @@ namespace BEPUphysicsDemos.Demos.Extras.SolverTypeTests
 
         private Plane plane;
 
-        private float effectiveMass;
+        private Fix64 effectiveMass;
 
 
-        private float biasVelocity;
+        private Fix64 biasVelocity;
 
-        private float accumulatedImpulse;
-        private float impulse;
+        private Fix64 accumulatedImpulse;
+        private Fix64 impulse;
 
 
         public Plane Plane
@@ -27,11 +28,11 @@ namespace BEPUphysicsDemos.Demos.Extras.SolverTypeTests
         /// <summary>
         /// Gets the distance from the plane to the dynamic.
         /// </summary>
-        public float Distance
+        public Fix64 Distance
         {
             get
             {
-                float d;
+                Fix64 d;
                 Vector3.Dot(ref plane.Normal, ref Dynamic.Position, out d);
                 return d + plane.D;
             }
@@ -45,9 +46,9 @@ namespace BEPUphysicsDemos.Demos.Extras.SolverTypeTests
         }
 
 
-        public override void Preupdate(float inverseDt, bool useConstraintCounts)
+        public override void Preupdate(Fix64 inverseDt, bool useConstraintCounts)
         {
-            float d;
+            Fix64 d;
             Vector3.Dot(ref plane.Normal, ref Dynamic.Position, out d);
 
             if (useConstraintCounts)
@@ -55,7 +56,7 @@ namespace BEPUphysicsDemos.Demos.Extras.SolverTypeTests
             else
                 effectiveMass = 1 / (Dynamic.InverseMass + Softness);
 
-            float error = d + plane.D;
+            Fix64 error = d + plane.D;
             if (error > 0)
             {
                 //Allow the dynamic to approach the plane, but no closer.
@@ -69,16 +70,16 @@ namespace BEPUphysicsDemos.Demos.Extras.SolverTypeTests
 
         public override void SolveIteration()
         {
-            float velocityAlongJacobian;
+            Fix64 velocityAlongJacobian;
             Vector3.Dot(ref Dynamic.Velocity, ref plane.Normal, out velocityAlongJacobian);
 
 
-            float changeInVelocity = -velocityAlongJacobian - biasVelocity - Softness * accumulatedImpulse;
+            Fix64 changeInVelocity = -velocityAlongJacobian - biasVelocity - Softness * accumulatedImpulse;
 
-            float newImpulse = changeInVelocity * effectiveMass;
+            Fix64 newImpulse = changeInVelocity * effectiveMass;
 
-            float newAccumulatedImpulse = accumulatedImpulse + newImpulse;
-            newAccumulatedImpulse = Math.Max(newAccumulatedImpulse, 0);
+            Fix64 newAccumulatedImpulse = accumulatedImpulse + newImpulse;
+            newAccumulatedImpulse = MathHelper.Max(newAccumulatedImpulse, 0);
 
             impulse = newAccumulatedImpulse - accumulatedImpulse;
             accumulatedImpulse = newAccumulatedImpulse;

@@ -7,6 +7,7 @@ using BEPUutilities.DataStructures;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System;
+using FixMath.NET;
 
 namespace BEPUphysicsDemos.Demos.Extras.Tests
 {
@@ -57,7 +58,7 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
             var numColumns = 8;
             var numRows = 8;
             var numHigh = 8;
-            float separation = 8;
+            Fix64 separation = 8;
 
             for (int i = 0; i < numRows; i++)
                 for (int j = 0; j < numColumns; j++)
@@ -67,7 +68,7 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
                         character.Body.Position =
                             new Vector3(
                             separation * i - numRows * separation / 2,
-                            40f + k * separation,
+                            40 + k * separation,
                             separation * j - numColumns * separation / 2);
 
                         characters.Add(character);
@@ -88,7 +89,7 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
                         character.Body.Position =
                             new Vector3(
                             separation * i - numRows * separation / 2,
-                            48f + k * separation,
+                            48 + k * separation,
                             separation * j - numColumns * separation / 2);
 
                         sphereCharacters.Add(character);
@@ -111,9 +112,9 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
                         var toAdd = new Box(
                             new Vector3(
                             separation * i - numRows * separation / 2,
-                            52f + k * separation,
+                            52 + k * separation,
                             separation * j - numColumns * separation / 2),
-                            0.8f, 0.8f, 0.8f, 15);
+                            0.8m, 0.8m, 0.8m, 15);
                         toAdd.PositionUpdateMode = BEPUphysics.PositionUpdating.PositionUpdateMode.Continuous;
 
                         Space.Add(toAdd);
@@ -135,7 +136,7 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
             get { return "Character Add/Remove Test"; }
         }
 
-        public override void Update(float dt)
+        public override void Update(Fix64 dt)
         {
             //Add previously removed characters.
             for (int i = removedCharacters.Count - 1; i >= 0; --i)
@@ -168,7 +169,7 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
                     }
                     else
                     {
-                        characters[i].HorizontalMotionConstraint.MovementDirection = new Vector2((float) (random.NextDouble() * 2 - 1), (float) (random.NextDouble() * 2 - 1));
+                        characters[i].HorizontalMotionConstraint.MovementDirection = new Vector2((Fix64) (random.NextDouble() * 2 - 1), (Fix64) (random.NextDouble() * 2 - 1));
                         if (random.NextDouble() < .01f)
                             characters[i].Jump();
 
@@ -197,7 +198,7 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
                     }
                     else
                     {
-                        sphereCharacters[i].HorizontalMotionConstraint.MovementDirection = new Vector2((float) (random.NextDouble() * 2 - 1), (float) (random.NextDouble() * 2 - 1));
+                        sphereCharacters[i].HorizontalMotionConstraint.MovementDirection = new Vector2((Fix64) (random.NextDouble() * 2 - 1), (Fix64) (random.NextDouble() * 2 - 1));
                         if (random.NextDouble() < .01f)
                             sphereCharacters[i].Jump();
                     }

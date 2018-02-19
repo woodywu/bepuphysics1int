@@ -1,4 +1,6 @@
-﻿namespace BEPUik
+﻿using FixMath.NET;
+
+namespace BEPUik
 {
     /// <summary>
     /// Constrains an individual bone in an attempt to keep a bone-attached axis aligned with a specified world axis.
@@ -32,7 +34,7 @@
             AngularMotor.Rigidity = 1;
         }
 
-        protected internal override void Preupdate(float dt, float updateRate)
+        protected internal override void Preupdate(Fix64 dt, Fix64 updateRate)
         {
             AngularMotor.Preupdate(dt, updateRate);
         }
@@ -62,7 +64,7 @@
             AngularMotor.ClearAccumulatedImpulses();
         }
 
-        public override float MaximumForce
+        public override Fix64 MaximumForce
         {
             get { return AngularMotor.MaximumForce; }
             set

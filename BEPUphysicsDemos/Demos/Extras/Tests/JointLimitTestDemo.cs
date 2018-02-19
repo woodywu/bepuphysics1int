@@ -7,6 +7,7 @@ using BEPUphysics.Constraints.TwoEntity.JointLimits;
 using BEPUphysics.Constraints.TwoEntity.Joints;
 using BEPUphysics.Entities.Prefabs;
 using BEPUutilities;
+using FixMath.NET;
 
 namespace BEPUphysicsDemos.Demos.Extras.Tests
 {
@@ -15,9 +16,9 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
         public JointLimitTestDemo(DemosGame game)
             : base(game)
         {
-            float bounciness = 1;
-            float baseMass = 100;
-            float armMass = 10;
+            Fix64 bounciness = 1;
+            Fix64 baseMass = 100;
+            Fix64 armMass = 10;
             //DistanceLimit
             Box boxA = new Box(new Vector3(-21, 4, 0), 3, 3, 3, baseMass);
             Box boxB = new Box(boxA.Position + new Vector3(0, 5, 0), 1, 4, 1, armMass);
@@ -38,7 +39,7 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
             boxB.ActivityInformation.IsAlwaysActive = true;
 
             var ballSocketJoint = new BallSocketJoint(boxA, boxB, boxB.Position + new Vector3(0, -2, 0));
-            var ellipseSwingLimit = new EllipseSwingLimit(boxA, boxB, Vector3.Up, MathHelper.Pi / 1.5f, MathHelper.Pi / 3);
+            var ellipseSwingLimit = new EllipseSwingLimit(boxA, boxB, Vector3.Up, MathHelper.Pi / 1.5m, MathHelper.Pi / 3);
             ellipseSwingLimit.Bounciness = bounciness;
 
             Space.Add(boxA);

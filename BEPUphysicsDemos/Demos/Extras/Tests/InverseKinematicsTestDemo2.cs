@@ -5,6 +5,7 @@ using BEPUphysics.CollisionRuleManagement;
 using BEPUphysics.Entities;
 using BEPUphysics.Entities.Prefabs;
 using BEPUutilities;
+using FixMath.NET;
 
 namespace BEPUphysicsDemos.Demos.Extras.Tests
 {
@@ -22,7 +23,7 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
             //Set up a bone chain.
             bones = new List<Bone>();
             boneEntities = new List<Entity>();
-            var previousBoneEntity = new Cylinder(position, 1, .2f);
+            var previousBoneEntity = new Cylinder(position, 1, .2m);
             var previousBone = new Bone(previousBoneEntity.Position, previousBoneEntity.Orientation, previousBoneEntity.Radius, previousBoneEntity.Height);
             bones.Add(previousBone);
             boneEntities.Add(previousBoneEntity);
@@ -30,7 +31,7 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
             
             for (int i = 1; i < linkCount; i++)
             {
-                var boneEntity = new Cylinder(previousBone.Position + new Vector3(0, 1, 0), 1, .2f);
+                var boneEntity = new Cylinder(previousBone.Position + new Vector3(0, 1, 0), 1, .2m);
                 var bone = new Bone(boneEntity.Position, boneEntity.Orientation, boneEntity.Radius, boneEntity.Height);
                 bones.Add(bone);
                 boneEntities.Add(boneEntity);
@@ -62,13 +63,13 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
             game.Camera.Position = new Vector3(0, 3, 5);
             Box ground = new Box(new Vector3(0, -3, 0), 30, 1, 30);
             Space.Add(ground);
-            Space.ForceUpdater.Gravity = new Vector3(0, -9.81f, 0);
+            Space.ForceUpdater.Gravity = new Vector3(0, -9.81m, 0);
 
             var solver = new IKSolver();
 
             solver.ActiveSet.UseAutomass = true;
             //solver.AutoscaleControlImpulses = true;
-            //solver.AutoscaleControlMaximumForce = float.MaxValue;
+            //solver.AutoscaleControlMaximumForce = Fix64.MaxValue;
             solver.ControlIterationCount = 20;
             solver.FixerIterationCount = 0;
             solver.VelocitySubiterationCount = 3;
@@ -77,11 +78,11 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
             List<Bone> bones;
             List<Entity> boneEntities;
             int boneCount = 10;
-            BuildStick(new Vector3(0, 0.5f, 0), boneCount, out bones, out boneEntities);
+            BuildStick(new Vector3(0, 0.5m, 0), boneCount, out bones, out boneEntities);
 
-            DragControl dragger = new DragControl { TargetBone = bones[boneCount - 1], MaximumForce = 3.402823e38f };
+            DragControl dragger = new DragControl { TargetBone = bones[boneCount - 1], MaximumForce = Fix64.MaxValue };
             dragger.LinearMotor.Rigidity = 16;
-            dragger.LinearMotor.LocalOffset = new Vector3(0, 0.5f, 0);
+            dragger.LinearMotor.LocalOffset = new Vector3(0, 0.5m, 0);
             dragger.LinearMotor.TargetPosition = new Vector3(10, 0, 0);
 
 
@@ -92,7 +93,7 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
 
             solver.Solve(controls);
 
-            var tipLocation = bones[boneCount - 1].Position + Matrix3x3.CreateFromQuaternion(bones[boneCount - 1].Orientation).Up * 0.5f;
+            var tipLocation = bones[boneCount - 1].Position + Matrix3x3.CreateFromQuaternion(bones[boneCount - 1].Orientation).Up * 0.5m;
 
             for (int i = 0; i < bones.Count; ++i)
             {

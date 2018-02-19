@@ -95,6 +95,10 @@
       <Project>{34853dea-43a6-4f2f-a379-d1ee04d256d2}</Project>
       <Name>BEPUutilities</Name>
     </ProjectReference>
+    <ProjectReference Include="..\FixedMath.Net\src\FixedMath.NET.csproj">
+      <Project>{d46c606e-5826-465f-9983-251e3d3b2f1c}</Project>
+      <Name>FixedMath.NET</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -13,6 +13,7 @@ using BEPUphysics.CollisionTests;
 
 using Microsoft.Xna.Framework.Input;
 using ConversionHelper;
+using FixMath.NET;
 
 namespace BEPUphysicsDemos.Demos.Extras.Tests
 {
@@ -36,11 +37,11 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
             shapeB.CollisionMargin = 0;
 
             var transformA = new RigidTransform(new Vector3(0, 0, 0));
-            var transformB = new RigidTransform(new Vector3(.5f, .5f, 0));
+            var transformB = new RigidTransform(new Vector3(.5m, .5m, 0));
             Vector3 overlap;
             bool overlapped = MPRToolbox.GetLocalOverlapPosition(shapeA, shapeB, ref transformB, out overlap);
             Vector3 normal;
-            float depth;
+            Fix64 depth;
             Vector3 direction = new Vector3(0, -1, 0);
             MPRToolbox.LocalSurfaceCast(shapeA, shapeB, ref transformB, ref direction, out depth, out normal);
 
@@ -50,10 +51,10 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
             //Random rand = new Random(0);
             //for (int i = 0; i < 10000000; i++)
             //{
-            //    transformA = new RigidTransform(new Vector3((float)rand.NextDouble() * 10 - 5, (float)rand.NextDouble() * 10 - 5, (float)rand.NextDouble() * 10 - 5),
-            //        Quaternion.CreateFromYawPitchRoll((float)rand.NextDouble() * 1000, (float)rand.NextDouble() * 1000, (float)rand.NextDouble() * 1000));
-            //    transformB = new RigidTransform(new Vector3((float)rand.NextDouble() * 10 - 5, (float)rand.NextDouble() * 10 - 5, (float)rand.NextDouble() * 10 - 5),
-            //        Quaternion.CreateFromYawPitchRoll((float)rand.NextDouble() * 1000, (float)rand.NextDouble() * 1000, (float)rand.NextDouble() * 1000));
+            //    transformA = new RigidTransform(new Vector3((Fix64)rand.NextDouble() * 10 - 5, (Fix64)rand.NextDouble() * 10 - 5, (Fix64)rand.NextDouble() * 10 - 5),
+            //        Quaternion.CreateFromYawPitchRoll((Fix64)rand.NextDouble() * 1000, (Fix64)rand.NextDouble() * 1000, (Fix64)rand.NextDouble() * 1000));
+            //    transformB = new RigidTransform(new Vector3((Fix64)rand.NextDouble() * 10 - 5, (Fix64)rand.NextDouble() * 10 - 5, (Fix64)rand.NextDouble() * 10 - 5),
+            //        Quaternion.CreateFromYawPitchRoll((Fix64)rand.NextDouble() * 1000, (Fix64)rand.NextDouble() * 1000, (Fix64)rand.NextDouble() * 1000));
 
             //    overlapped = MPRTesting.GetOverlapPosition(shapeA, shapeB, ref transformA, ref transformB, out overlap);
 
@@ -78,7 +79,7 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
             //Do these tests with rotationally immobile objects.
             CollisionDetectionSettings.DefaultMargin = 0;
             groundWidth = 10;
-            groundHeight = .1f;
+            groundHeight = .1m;
             groundLength = 10;
             //a = new Box(new Vector3(0, -5, 0), groundWidth, groundHeight, groundLength, 1);
             //a = new TransformableEntity(new Vector3(0,0,0), new TriangleShape(new Vector3(-5, -5, -5), new Vector3(5, -5, -5), new Vector3(-5, -5, 5)), Matrix3x3.Identity);         
@@ -86,13 +87,13 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
             Space.Add(a);
             
             Space.ForceUpdater.Gravity = new Vector3();
-            boxWidth = .25f;
-            boxHeight = .05f;
-            boxLength = 1f;
+            boxWidth = .25m;
+            boxHeight = .05m;
+            boxLength = 1;
             b = new TransformableEntity(new Vector3(0, 2, 0), new BoxShape(boxWidth, boxHeight, boxLength), Matrix3x3.Identity, 1);
-            //b = new Cone(new Vector3(0, 2, 0), .2f, .1f, 1);
-            //b = new Capsule(new Vector3(0, 2, 0), 1, .5f, 1);
-            //b = new Capsule(new Vector3(0, 2, 0), 1, .5f, 1);
+            //b = new Cone(new Vector3(0, 2, 0), .2m, .1m, 1);
+            //b = new Capsule(new Vector3(0, 2, 0), 1, .5m, 1);
+            //b = new Capsule(new Vector3(0, 2, 0), 1, .5m, 1);
             b.LocalInertiaTensorInverse = new Matrix3x3();
             CollisionRules.AddRule(b, a, CollisionRule.NoSolver);
             b.ActivityInformation.IsAlwaysActive = true;
@@ -112,23 +113,23 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
 
         Entity a;
         Entity b;
-        float groundWidth, groundHeight, groundLength;
-        float boxWidth, boxHeight, boxLength;
+        Fix64 groundWidth, groundHeight, groundLength;
+        Fix64 boxWidth, boxHeight, boxLength;
 
 
         Vector3 rayCastDirection = Vector3.Up;
 
-        public override void Update(float dt)
+        public override void Update(Fix64 dt)
         {
 
             if (Game.KeyboardInput.IsKeyDown(Keys.Left))
-                rayCastDirection = Matrix3x3.Transform(rayCastDirection, Matrix3x3.CreateFromAxisAngle(Vector3.Forward, .01f));
+                rayCastDirection = Matrix3x3.Transform(rayCastDirection, Matrix3x3.CreateFromAxisAngle(Vector3.Forward, .01m));
             if (Game.KeyboardInput.IsKeyDown(Keys.Right))
-                rayCastDirection = Matrix3x3.Transform(rayCastDirection, Matrix3x3.CreateFromAxisAngle(Vector3.Forward, -.01f));
+                rayCastDirection = Matrix3x3.Transform(rayCastDirection, Matrix3x3.CreateFromAxisAngle(Vector3.Forward, -.01m));
             if (Game.KeyboardInput.IsKeyDown(Keys.Down))
-                rayCastDirection = Matrix3x3.Transform(rayCastDirection, Matrix3x3.CreateFromAxisAngle(Vector3.Right, .01f));
+                rayCastDirection = Matrix3x3.Transform(rayCastDirection, Matrix3x3.CreateFromAxisAngle(Vector3.Right, .01m));
             if (Game.KeyboardInput.IsKeyDown(Keys.Up))
-                rayCastDirection = Matrix3x3.Transform(rayCastDirection, Matrix3x3.CreateFromAxisAngle(Vector3.Right, -.01f));
+                rayCastDirection = Matrix3x3.Transform(rayCastDirection, Matrix3x3.CreateFromAxisAngle(Vector3.Right, -.01m));
 
 
             if (Game.KeyboardInput.IsKeyDown(Keys.P))
@@ -144,9 +145,9 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
             if (MPRToolbox.GetLocalOverlapPosition((a.CollisionInformation.Shape as ConvexShape), (b.CollisionInformation.Shape as ConvexShape), ref localTransformB, out position))
             {
                 //Vector3 rayCastDirection = new Vector3(1,0,0);// (Vector3.Normalize(localDirection) + Vector3.Normalize(collidableB.worldTransform.Position - collidableA.worldTransform.Position)) / 2;
-                float previousT;
+                Fix64 previousT;
                 Vector3 previousNormal;
-                float t;
+                Fix64 t;
                 Vector3 normal;
 
                 rayCastDirection = localTransformB.Position;
@@ -252,19 +253,19 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
             Vector3 max;
             var direction = new Vector3();
             int NumSamples = 16;
-            float angleChange = MathHelper.TwoPi / NumSamples;
+            Fix64 angleChange = MathHelper.TwoPi / NumSamples;
 
             for (int i = 1; i < NumSamples / 2 - 1; i++)
             {
-                float phi = MathHelper.PiOver2 - i * angleChange;
-                var sinPhi = (float)Math.Sin(phi);
-                var cosPhi = (float)Math.Cos(phi);
+                Fix64 phi = MathHelper.PiOver2 - i * angleChange;
+                var sinPhi = Fix64.Sin(phi);
+                var cosPhi = Fix64.Cos(phi);
                 for (int j = 0; j < NumSamples; j++)
                 {
-                    float theta = j * angleChange;
-                    direction.X = (float)Math.Cos(theta) * cosPhi;
+                    Fix64 theta = j * angleChange;
+                    direction.X = Fix64.Cos(theta) * cosPhi;
                     direction.Y = sinPhi;
-                    direction.Z = (float)Math.Sin(theta) * cosPhi;
+                    direction.Z = Fix64.Sin(theta) * cosPhi;
 
 
                     MinkowskiToolbox.GetLocalMinkowskiExtremePoint(a.CollisionInformation.Shape as ConvexShape, b.CollisionInformation.Shape as ConvexShape, ref direction, ref localTransformB, out max);
@@ -326,7 +327,7 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
         List<VertexPositionColor> minkowskiLines = new List<VertexPositionColor>();
 
         Vector3 contactNormal;
-        float contactDepth;
+        Fix64 contactDepth;
 
         VertexPositionColor[] lines = new VertexPositionColor[12];
         public override void Draw()

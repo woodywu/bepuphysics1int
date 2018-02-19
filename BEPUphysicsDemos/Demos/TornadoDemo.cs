@@ -5,6 +5,7 @@ using BEPUphysics.Entities.Prefabs;
 using BEPUutilities;
 using BEPUphysics.UpdateableSystems.ForceFields;
 using BEPUphysicsDemos.SampleCode;
+using FixMath.NET;
 
 namespace BEPUphysicsDemos.Demos
 {
@@ -33,7 +34,7 @@ namespace BEPUphysicsDemos.Demos
             int numColumns = 10;
             int numRows = 10;
             int numHigh = 1;
-            float separation = 1.5f;
+			Fix64 separation = 1.5m;
             Entity toAdd;
             for (int i = 0; i < numRows; i++)
                 for (int j = 0; j < numColumns; j++)
@@ -54,20 +55,20 @@ namespace BEPUphysicsDemos.Demos
             int xLength = 180;
             int zLength = 180;
 
-            float xSpacing = 8f;
-            float zSpacing = 8f;
-            var heights = new float[xLength,zLength];
+			Fix64 xSpacing = 8;
+			Fix64 zSpacing = 8;
+            var heights = new Fix64[xLength,zLength];
             for (int i = 0; i < xLength; i++)
             {
                 for (int j = 0; j < zLength; j++)
                 {
-                    float x = i - xLength / 2;
-                    float z = j - zLength / 2;
-                    //heights[i,j] = (float)Math.Pow(1.2 * Math.Sqrt(x * x + y * y), 2);
+					Fix64 x = i - xLength / 2;
+					Fix64 z = j - zLength / 2;
+                    //heights[i,j] = (Fix64)Math.Pow(1.2 * Math.Sqrt(x * x + y * y), 2);
                     //heights[i,j] = -1f / (x * x + y * y);
-                    //heights[i,j] = (float)(x * y / 100f);
-                    heights[i,j] = (float)(5 * (Math.Sin(x / 8f) + Math.Sin(z / 8f)));
-                    //heights[i,j] = 3 * (float)Math.Sin(x * y / 100f);
+                    //heights[i,j] = (Fix64)(x * y / 100f);
+                    heights[i,j] = 5 * (Fix64.Sin(x / 8) + Fix64.Sin(z / 8));
+                    //heights[i,j] = 3 * (Fix64)Math.Sin(x * y / 100f);
                     //heights[i,j] = (x * x * x * y - y * y * y * x) / 1000f;
                 }
             }
@@ -90,7 +91,7 @@ namespace BEPUphysicsDemos.Demos
             get { return "Tornado"; }
         }
 
-        public override void Update(float dt)
+        public override void Update(Fix64 dt)
         {
             //Move the origin of the force of the tornado,
             Vector3 increment = new Vector3(10, 0, 0) * dt;

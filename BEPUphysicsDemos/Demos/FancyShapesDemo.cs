@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using BEPUphysics.Entities.Prefabs;
 using BEPUutilities;
 using BEPUphysics.CollisionShapes.ConvexShapes;
+using FixMath.NET;
 
 namespace BEPUphysicsDemos.Demos
 {
@@ -27,7 +28,7 @@ namespace BEPUphysicsDemos.Demos
             var random = new Random(0);
             for (int k = 0; k < 40; k++)
             {
-                points.Add(new Vector3(3 * (float)random.NextDouble(), 5 * (float)random.NextDouble(), 3 * (float)random.NextDouble()));
+                points.Add(new Vector3(3 * (Fix64)random.NextDouble(), 5 * (Fix64)random.NextDouble(), 3 * (Fix64)random.NextDouble()));
             }
             var convexHull = new ConvexHull(new Vector3(0, 7, 0), points, 10);
 
@@ -40,7 +41,7 @@ namespace BEPUphysicsDemos.Demos
             points.Clear();
             for (int k = 0; k < 400; k++)
             {
-                points.Add(new Vector3(1 * (float)random.NextDouble(), 3 * (float)random.NextDouble(), 1 * (float)random.NextDouble()));
+                points.Add(new Vector3(1 * (Fix64)random.NextDouble(), 3 * (Fix64)random.NextDouble(), 1 * (Fix64)random.NextDouble()));
             }
 
 
@@ -66,7 +67,7 @@ namespace BEPUphysicsDemos.Demos
                     new OrientedConvexShapeEntry(new CylinderShape(1, 2)),
                     new OrientedConvexShapeEntry(new MinkowskiSumShape(
                         new OrientedConvexShapeEntry(new TriangleShape(new Vector3(1, 1, 1), new Vector3(-2, 0, 0), new Vector3(0, -1, 0))),
-                        new OrientedConvexShapeEntry(new BoxShape(.3f, 1, .3f)))), 10);
+                        new OrientedConvexShapeEntry(new BoxShape(.3m, 1, .3m)))), 10);
             Space.Add(minkowskiSum);
 
             //Minkowski sums can also be used on more than two shapes at once.  The two-shape constructor is just a convenience wrapper.
@@ -78,7 +79,7 @@ namespace BEPUphysicsDemos.Demos
             var cone = new List<ConvexShapeEntry>
             {
                 new ConvexShapeEntry(new CylinderShape(0, 1)),
-                new ConvexShapeEntry(new RigidTransform(new Vector3(1f, 2, 0)), new SphereShape(0)) 
+                new ConvexShapeEntry(new RigidTransform(new Vector3(1, 2, 0)), new SphereShape(0)) 
             };
             Space.Add(new WrappedBody(new Vector3(-5, 0, 0), cone, 10));
 
@@ -90,9 +91,9 @@ namespace BEPUphysicsDemos.Demos
             var middle = new ConvexShapeEntry(
                 new RigidTransform(
                     new Vector3(-2, 3, 0),
-                    Quaternion.CreateFromAxisAngle(Vector3.Right, (float)Math.PI / 6)),
+                    Quaternion.CreateFromAxisAngle(Vector3.Right, MathHelper.Pi / 6)),
                     new CylinderShape(0, 3));
-            var top = new ConvexShapeEntry(new Vector3(-2, 4, 0), new SphereShape(1f));
+            var top = new ConvexShapeEntry(new Vector3(-2, 4, 0), new SphereShape(1));
             oddShape.Add(bottom);
             oddShape.Add(middle);
             oddShape.Add(top);
@@ -101,8 +102,8 @@ namespace BEPUphysicsDemos.Demos
             //Transformable shapes can be any other kind of convex primitive transformed by any affine transformation.
             Matrix3x3 transform;
             transform = Matrix3x3.Identity;
-            transform.M23 = .5f;
-            transform.M13 = .5f;
+            transform.M23 = .5m;
+            transform.M13 = .5m;
             var transformable = new TransformableEntity(new Vector3(0, 0, 4), new BoxShape(1, 1, 1), transform, 10);
             Space.Add(transformable);
 

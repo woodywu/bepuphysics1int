@@ -23,6 +23,7 @@ using BEPUutilities.DataStructures;
 using BEPUutilities.ResourceManagement;
 using System.Diagnostics;
 using Microsoft.Xna.Framework.Graphics;
+using FixMath.NET;
 
 namespace BEPUphysicsDemos.Demos.Extras
 {
@@ -59,7 +60,7 @@ namespace BEPUphysicsDemos.Demos.Extras
         /// <summary>
         /// Width of a single voxel cell.
         /// </summary>
-        public float CellWidth { get; private set; }
+        public Fix64 CellWidth { get; private set; }
 
         public void GetBoundingBox(ref Vector3 position, out BoundingBox boundingBox)
         {
@@ -68,7 +69,7 @@ namespace BEPUphysicsDemos.Demos.Extras
             Vector3.Add(ref size, ref position, out boundingBox.Max);
         }
 
-        public VoxelGridShape(bool[, ,] cells, float cellWidth)
+        public VoxelGridShape(bool[, ,] cells, Fix64 cellWidth)
         {
             Cells = cells;
             CellWidth = cellWidth;
@@ -78,7 +79,7 @@ namespace BEPUphysicsDemos.Demos.Extras
         {
             Vector3.Subtract(ref boundingBox.Min, ref gridPosition, out boundingBox.Min);
             Vector3.Subtract(ref boundingBox.Max, ref gridPosition, out boundingBox.Max);
-            var inverseWidth = 1f / CellWidth;
+            var inverseWidth = 1 / CellWidth;
             var min = new Int3
             {
                 X = Math.Max(0, (int)(boundingBox.Min.X * inverseWidth)),
@@ -130,7 +131,7 @@ namespace BEPUphysicsDemos.Demos.Extras
             events = new ContactEventManager<VoxelGrid>(this);
         }
 
-        public override bool RayCast(Ray ray, float maximumLength, out RayHit rayHit)
+        public override bool RayCast(Ray ray, Fix64 maximumLength, out RayHit rayHit)
         {
             //This example is primarily to show custom collidable pair management with a minimum of other complexity, and this isn't vital.
             //Note: the character controller makes significant use of ray casts. While its basic features work without ray casts, 
@@ -179,7 +180,7 @@ namespace BEPUphysicsDemos.Demos.Extras
         {
         }
 
-        protected override void UpdateBoundingBoxInternal(float dt)
+        protected override void UpdateBoundingBoxInternal(Fix64 dt)
         {
             Shape.GetBoundingBox(ref worldTransform, out boundingBox);
         }
@@ -223,9 +224,9 @@ namespace BEPUphysicsDemos.Demos.Extras
             boxCollidable.Shape.Length = voxelGrid.Shape.CellWidth;
             pair.Initialize(convex, boxCollidable);
             boxCollidable.WorldTransform = new RigidTransform(new Vector3(
-                voxelGrid.Position.X + (position.X + 0.5f) * voxelGrid.Shape.CellWidth,
-                voxelGrid.Position.Y + (position.Y + 0.5f) * voxelGrid.Shape.CellWidth,
-                voxelGrid.Position.Z + (position.Z + 0.5f) * voxelGrid.Shape.CellWidth));
+                voxelGrid.Position.X + (position.X + Fix64Utils.PointFive) * voxelGrid.Shape.CellWidth,
+                voxelGrid.Position.Y + (position.Y + Fix64Utils.PointFive) * voxelGrid.Shape.CellWidth,
+                voxelGrid.Position.Z + (position.Z + Fix64Utils.PointFive) * voxelGrid.Shape.CellWidth));
             return pair;
         }
 
@@ -276,7 +277,7 @@ namespace BEPUphysicsDemos.Demos.Extras
         }
 
 
-        public override void Update(float dt)
+        public override void Update(Fix64 dt)
         {
             //Refresh the contact manifold for this frame.
             var transform = new RigidTransform(voxelGrid.Position);
@@ -415,7 +416,7 @@ namespace BEPUphysicsDemos.Demos.Extras
             get { return null; }
         }
 
-        public override void UpdateTimeOfImpact(Collidable requester, float dt)
+        public override void UpdateTimeOfImpact(Collidable requester, Fix64 dt)
         {
             //Complicated and not vital. Leaving it out for simplicity. Check out InstancedMeshPairHandler for an example implementation.
             //Notice that we don't test for convex entity null explicitly.  The convex.IsActive property does that for us.
@@ -423,7 +424,7 @@ namespace BEPUphysicsDemos.Demos.Extras
             {
                 //Only perform the test if the minimum radii are small enough relative to the size of the velocity.
                 Vector3 velocity = convex.Entity.LinearVelocity * dt;
-                float velocitySquared = velocity.LengthSquared();
+                Fix64 velocitySquared = velocity.LengthSquared();
 
                 var minimumRadius = convex.Shape.MinimumRadius * MotionSettings.CoreShapeScaling;
                 timeOfImpact = 1;
@@ -558,20 +559,20 @@ namespace BEPUphysicsDemos.Demos.Extras
                 {
                     for (int k = 0; k < cellCountZ; ++k)
                     {
-                        cells[i, j, k] = (Math.Sin(i * 0.55f + 6f + j * -0.325f) + Math.Sin(j * 0.35f - 0.5f + MathHelper.PiOver2) + Math.Sin(k * 0.5f + MathHelper.Pi + 6 + j * 0.25f)) > 0;
+                        cells[i, j, k] = (Fix64.Sin(i * (Fix64)0.55m + 6 + j * (Fix64)(-0.325m)) + Fix64.Sin(j * (Fix64)0.35m - Fix64Utils.PointFive + MathHelper.PiOver2) + Fix64.Sin(k * Fix64Utils.PointFive + MathHelper.Pi + 6 + j * Fix64Utils.PointTwoFive)) > 0;
                     }
                 }
             }
-            var cellWidth = 1f;
+            var cellWidth = 1;
             var shape = new VoxelGridShape(cells, cellWidth);
-            var grid = new VoxelGrid(shape, new Vector3(-cellCountX * cellWidth * 0.5f, -cellCountY * cellWidth, -cellCountZ * cellWidth * 0.5f));
+            var grid = new VoxelGrid(shape, new Vector3(-cellCountX * cellWidth * Fix64Utils.PointFive, -cellCountY * cellWidth, -cellCountZ * cellWidth * Fix64Utils.PointFive));
             Space.Add(grid);
 
             int width = 10;
             int height = 10;
-            float blockWidth = 2f;
-            float blockHeight = 1f;
-            float blockLength = 1f;
+            Fix64 blockWidth = 2;
+            Fix64 blockHeight = 1;
+            Fix64 blockLength = 1;
 
             for (int i = 0; i < width; i++)
             {
@@ -580,8 +581,8 @@ namespace BEPUphysicsDemos.Demos.Extras
                     var toAdd =
                         new Box(
                             new Vector3(
-                                i * blockWidth + .5f * blockWidth * (j % 2) - width * blockWidth * .5f,
-                                blockHeight * .5f + j * (blockHeight),
+                                i * blockWidth + Fix64Utils.PointFive * blockWidth * (j % 2) - width * blockWidth * Fix64Utils.PointFive,
+                                blockHeight * Fix64Utils.PointFive + j * (blockHeight),
                                 0),
                             blockWidth, blockHeight, blockLength, 10);
                     Space.Add(toAdd);
@@ -601,7 +602,7 @@ namespace BEPUphysicsDemos.Demos.Extras
                             //This is a turbo-inefficient way to render things, but good enough for now. If you want to visualize a larger amount... you'll probably have to write your own.
                             game.ModelDrawer.Add(new DisplayModel(game.Content.Load<Model>("cube"), game.ModelDrawer)
                                 {
-                                    WorldTransform = Matrix.CreateWorldRH(grid.Position + new Vector3((i + 0.5f) * cellWidth, (j + 0.5f) * cellWidth, (k + 0.5f) * cellWidth), Vector3.Forward, Vector3.Up)
+                                    WorldTransform = Matrix.CreateWorldRH(grid.Position + new Vector3((i + Fix64Utils.PointFive) * cellWidth, (j + Fix64Utils.PointFive) * cellWidth, (k + Fix64Utils.PointFive) * cellWidth), Vector3.Forward, Vector3.Up)
                                 });
                         }
                     }

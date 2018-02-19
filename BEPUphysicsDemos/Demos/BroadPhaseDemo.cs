@@ -2,6 +2,7 @@
 using BEPUphysics.Entities;
 using BEPUphysics.Entities.Prefabs;
 using BEPUutilities;
+using FixMath.NET;
 
 namespace BEPUphysicsDemos.Demos
 {
@@ -19,7 +20,7 @@ namespace BEPUphysicsDemos.Demos
         {
             //Make a fatter kapow sphere.
             Space.Remove(kapow);
-            kapow = new Sphere(new Vector3(11000, 0, 0), 1.5f, 1000);
+            kapow = new Sphere(new Vector3(11000, 0, 0), (Fix64)1.5m, 1000);
             Space.Add(kapow);
             Space.Solver.IterationLimit = 1; //Essentially no sustained contacts, so don't need to worry about accuracy.
             Space.ForceUpdater.Gravity = Vector3.Zero;
@@ -27,7 +28,7 @@ namespace BEPUphysicsDemos.Demos
             int numColumns = 15;
             int numRows = 15;
             int numHigh = 15;
-            float separation = 3;
+			Fix64 separation = 3;
 
             Entity toAdd;
 
@@ -37,8 +38,8 @@ namespace BEPUphysicsDemos.Demos
                     {
                         toAdd = new Box(new Vector3(separation * i, k * separation, separation * j), 1, 1, 1, 1);
                         toAdd.Material.Bounciness = 1; //Superbouncy boxes help propagate shock waves.
-                        toAdd.LinearDamping = 0f;
-                        toAdd.AngularDamping = 0f;
+                        toAdd.LinearDamping = 0;
+                        toAdd.AngularDamping = 0;
                         Space.Add(toAdd);
                     }
 

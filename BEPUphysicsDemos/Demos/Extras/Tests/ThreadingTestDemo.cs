@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System;
 using BEPUutilities;
 using BEPUphysics.Constraints;
+using FixMath.NET;
 
 namespace BEPUphysicsDemos.Demos.Extras.Tests
 {
@@ -46,9 +47,9 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
 
             int width = 15;
             int height = 15;
-            float blockWidth = 2f;
-            float blockHeight = 1f;
-            float blockLength = 1f;
+            Fix64 blockWidth = 2;
+            Fix64 blockHeight = 1;
+            Fix64 blockLength = 1;
 
 
 
@@ -59,15 +60,15 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
                     var toAdd =
                         new Box(
                             new Vector3(
-                                i * blockWidth + .5f * blockWidth * (j % 2) - width * blockWidth * .5f,
-                                blockHeight * .5f + j * (blockHeight),
+                                i * blockWidth + .5m * blockWidth * (j % 2) - width * blockWidth * .5m,
+                                blockHeight * .5m + j * (blockHeight),
                                 0),
                             blockWidth, blockHeight, blockLength, 10);
                     toAdd.ActivityInformation.IsAlwaysActive = true;
                     Space.Add(toAdd);
                 }
             }
-            Box ground = new Box(new Vector3(0, -.5f, 0), 50, 1, 50);
+            Box ground = new Box(new Vector3(0, -.5m, 0), 50, 1, 50);
             Space.Add(ground);
 
             GC.Collect();

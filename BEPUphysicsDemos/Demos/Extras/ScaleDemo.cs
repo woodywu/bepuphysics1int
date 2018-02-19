@@ -2,6 +2,7 @@
 using BEPUphysics.Entities;
 using BEPUphysics.Entities.Prefabs;
 using BEPUutilities;
+using FixMath.NET;
 
 namespace BEPUphysicsDemos.Demos.Extras
 {
@@ -19,7 +20,7 @@ namespace BEPUphysicsDemos.Demos.Extras
         {
             //Pick a scale!
             //Beware: If you go too far (particularly 0.01 and lower) issues could start to crop up.
-            float scale = 1;
+            Fix64 scale = 1;
 
             //Load in mesh data and create the collision mesh.
             //The 'mesh' will be a supergiant triangle.
@@ -59,10 +60,10 @@ namespace BEPUphysicsDemos.Demos.Extras
             int numColumns = 8;
             int numRows = 8;
             int numHigh = 1;
-            float separation = 2 * scale;
-            float baseWidth = 0.5f;
-            float baseHeight = 1;
-            float baseLength = 1.5f;
+            Fix64 separation = 2 * scale;
+            Fix64 baseWidth = 0.5m;
+            Fix64 baseHeight = 1;
+            Fix64 baseLength = 1.5m;
             Entity toAdd;
             for (int i = 0; i < numRows; i++)
                 for (int j = 0; j < numColumns; j++)
@@ -83,7 +84,7 @@ namespace BEPUphysicsDemos.Demos.Extras
             numRows = 3;
             numHigh = 4;
             separation = 2 * scale;
-            baseWidth = 1f;
+            baseWidth = 1;
             baseHeight = 1;
             for (int i = 0; i < numRows; i++)
                 for (int j = 0; j < numColumns; j++)
@@ -94,7 +95,7 @@ namespace BEPUphysicsDemos.Demos.Extras
                             separation * i - numRows * separation / 2,
                             8 * scale + k * separation,
                             separation * j - numColumns * separation / 2),
-                            baseHeight * scale, 0.5f * baseWidth * scale,  15);
+                            baseHeight * scale, 0.5m * baseWidth * scale,  15);
 
                         Space.Add(toAdd);
                     }
@@ -117,7 +118,7 @@ namespace BEPUphysicsDemos.Demos.Extras
             get { return "Scale Demo"; }
         }
 
-        private float originalCameraSpeed;
+        private Fix64 originalCameraSpeed;
         public override void CleanUp()
         {
             freeCameraControlScheme.Speed = originalCameraSpeed;

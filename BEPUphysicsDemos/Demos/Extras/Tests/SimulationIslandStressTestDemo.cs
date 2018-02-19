@@ -3,6 +3,7 @@ using BEPUphysics.Entities.Prefabs;
 using BEPUutilities;
 using System.Diagnostics;
 using BEPUphysics.NarrowPhaseSystems;
+using FixMath.NET;
 
 namespace BEPUphysicsDemos.Demos.Extras.Tests
 {
@@ -36,23 +37,23 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
             Random rand = new Random();
 
 
-            //float width = 200;
-            //float height = 200;
-            //float length = 200;
+            //Fix64 width = 200;
+            //Fix64 height = 200;
+            //Fix64 length = 200;
             //for (int i = 0; i < 5000; i++)
             //{
             //    Vector3 position =
-            //        new Vector3((float)rand.NextDouble() * width - width * .5f,
-            //            (float)rand.NextDouble() * height + 20,
-            //            (float)rand.NextDouble() * length - length * .5f);
+            //        new Vector3((Fix64)rand.NextDouble() * width - width * .5m,
+            //            (Fix64)rand.NextDouble() * height + 20,
+            //            (Fix64)rand.NextDouble() * length - length * .5m);
             //    var sphere = new Sphere(position, 1, 1);// { Tag = "noDisplayObject" };
             //    sphere.ActivityInformation.IsAlwaysActive = true;
             //    Space.Add(sphere);
             //}
 
-            float width = 10;
-            float height = 50;
-            float length = 10;
+            Fix64 width = 10;
+            Fix64 height = 50;
+            Fix64 length = 10;
             for (int i = 0; i < width; i++)
             {
                 for (int j = 0; j < height; j++)
@@ -60,9 +61,9 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
                     for (int k = 0; k < length; k++)
                     {
                         Vector3 position =
-                            new Vector3(i * 3 + j * .2f,
-                                20 + j * 3f,
-                                k * 3 + j * .2f);
+                            new Vector3(i * 3 + j * .2m,
+                                20 + j * 3,
+                                k * 3 + j * .2m);
                         var e = new Sphere(position, 1, 1);// { Tag = "noDisplayObject" };
                         //var e = new Box(position, 1, 1, 1, 1) { Tag = "noDisplayObject" };
                         e.ActivityInformation.IsAlwaysActive = true;

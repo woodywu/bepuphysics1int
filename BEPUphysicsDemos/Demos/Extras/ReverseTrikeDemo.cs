@@ -7,6 +7,7 @@ using BEPUutilities;
 using Microsoft.Xna.Framework.Input;
 using BEPUphysics.CollisionRuleManagement;
 using BEPUphysics.Materials;
+using FixMath.NET;
 
 namespace BEPUphysicsDemos.Demos.Extras
 {
@@ -23,8 +24,8 @@ namespace BEPUphysicsDemos.Demos.Extras
         private readonly RevoluteMotor drivingMotor2;
         private readonly RevoluteMotor steeringMotor1;
         private readonly RevoluteMotor steeringMotor2;
-        private float driveSpeed = 30;
-        private float maximumTurnAngle = MathHelper.Pi * .3f;
+        private Fix64 driveSpeed = 30;
+        private Fix64 maximumTurnAngle = MathHelper.Pi * .3m;
 
         /// <summary>
         /// Constructs a new demo.
@@ -38,13 +39,13 @@ namespace BEPUphysicsDemos.Demos.Extras
             Space.Add(new Box(new Vector3(0, -5, 0), 20, 1, 20));
 
             var body = new Box(new Vector3(0, 0, 0), 2, 1, 3, 10);
-            body.CollisionInformation.LocalPosition = new Vector3(0, .8f, 0);
+            body.CollisionInformation.LocalPosition = new Vector3(0, .8m, 0);
             Space.Add(body);
 
             #region First Wheel
 
-            var wheel = new Cylinder(body.Position + new Vector3(-1.3f, 0, -1.5f), .2f, .5f, 4);
-            wheel.Material = new Material(1.5f, 1.5f, 0);
+            var wheel = new Cylinder(body.Position + new Vector3(-1.3m, 0, -1.5m), .2m, .5m, 4);
+            wheel.Material = new Material(1.5m, 1.5m, 0);
             wheel.Orientation = Quaternion.CreateFromAxisAngle(Vector3.Forward, MathHelper.PiOver2);
 
             //Preventing the occasional pointless collision pair can speed things up.
@@ -55,7 +56,7 @@ namespace BEPUphysicsDemos.Demos.Extras
             var swivelHingeAngularJoint = new SwivelHingeAngularJoint(body, wheel, Vector3.Up, Vector3.Right);
             //Motorize the wheel.
             drivingMotor1 = new RevoluteMotor(body, wheel, Vector3.Left);
-            drivingMotor1.Settings.VelocityMotor.Softness = .2f;
+            drivingMotor1.Settings.VelocityMotor.Softness = .2m;
             //Let it roll when the user isn't giving specific commands.
             drivingMotor1.IsActive = false;
             steeringMotor1 = new RevoluteMotor(body, wheel, Vector3.Up);
@@ -92,8 +93,8 @@ namespace BEPUphysicsDemos.Demos.Extras
 
             #region Second Wheel
 
-            wheel = new Cylinder(body.Position + new Vector3(1.3f, 0, -1.5f), .2f, .5f, 4);
-            wheel.Material = new Material(1.5f, 1.5f, 0);
+            wheel = new Cylinder(body.Position + new Vector3(1.3m, 0, -1.5m), .2m, .5m, 4);
+            wheel.Material = new Material(1.5m, 1.5m, 0);
             wheel.Orientation = Quaternion.CreateFromAxisAngle(Vector3.Forward, MathHelper.PiOver2);
 
 
@@ -105,7 +106,7 @@ namespace BEPUphysicsDemos.Demos.Extras
             swivelHingeAngularJoint = new SwivelHingeAngularJoint(body, wheel, Vector3.Up, Vector3.Right);
             //Motorize the wheel.
             drivingMotor2 = new RevoluteMotor(body, wheel, Vector3.Left);
-            drivingMotor2.Settings.VelocityMotor.Softness = .2f;
+            drivingMotor2.Settings.VelocityMotor.Softness = .2m;
             //Let it roll when the user isn't giving specific commands.
             drivingMotor2.IsActive = false;
             steeringMotor2 = new RevoluteMotor(body, wheel, Vector3.Up);
@@ -126,8 +127,8 @@ namespace BEPUphysicsDemos.Demos.Extras
 
             #region Third Wheel
 
-            wheel = new Cylinder(body.Position + new Vector3(0, -.3f, 1.5f), .2f, .5f, 4);
-            wheel.Material = new Material(1.5f, 1.5f, 0);
+            wheel = new Cylinder(body.Position + new Vector3(0, -.3m, 1.5m), .2m, .5m, 4);
+            wheel.Material = new Material(1.5m, 1.5m, 0);
             wheel.Orientation = Quaternion.CreateFromAxisAngle(Vector3.Forward, MathHelper.PiOver2);
 
             //Preventing the occasional pointless collision pair can speed things up.
@@ -151,18 +152,18 @@ namespace BEPUphysicsDemos.Demos.Extras
             int xLength = 180;
             int zLength = 180;
 
-            float xSpacing = 8f;
-            float zSpacing = 8f;
-            var heights = new float[xLength, zLength];
+			Fix64 xSpacing = 8;
+			Fix64 zSpacing = 8;
+            var heights = new Fix64[xLength, zLength];
             for (int i = 0; i < xLength; i++)
             {
                 for (int j = 0; j < zLength; j++)
                 {
-                    float x = i - xLength / 2;
-                    float z = j - zLength / 2;
-                    //heights[i,j] = (float)(x * y / 1000f);
-                    heights[i, j] = (float)(10 * (Math.Sin(x / 8) + Math.Sin(z / 8)));
-                    //heights[i,j] = 3 * (float)Math.Sin(x * y / 100f);
+					Fix64 x = i - xLength / 2;
+					Fix64 z = j - zLength / 2;
+                    //heights[i,j] = (Fix64)(x * y / 1000f);
+                    heights[i, j] = 10 * (Fix64.Sin(x / 8) + Fix64.Sin(z / 8));
+                    //heights[i,j] = 3 * (Fix64)Math.Sin(x * y / 100f);
                     //heights[i,j] = (x * x * x * y - y * y * y * x) / 1000f;
                 }
             }
@@ -184,7 +185,7 @@ namespace BEPUphysicsDemos.Demos.Extras
             get { return "Reverse Trike"; }
         }
 
-        public override void Update(float dt)
+        public override void Update(Fix64 dt)
         {
             if (Game.KeyboardInput.IsKeyDown(Keys.NumPad8))
             {

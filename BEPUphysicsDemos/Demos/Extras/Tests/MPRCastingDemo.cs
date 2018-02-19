@@ -8,6 +8,7 @@ using BEPUphysics.CollisionRuleManagement;
 using BEPUphysics.CollisionTests.CollisionAlgorithms;
 using BEPUphysics.NarrowPhaseSystems;
 using ConversionHelper;
+using FixMath.NET;
 
 namespace BEPUphysicsDemos.Demos.Extras.Tests
 {
@@ -27,7 +28,7 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
         {
             bShape = new BoxShape(1, 0, 1);
             //bShape.CollisionMargin = 0;
-            aShape = new ConeShape(1, .4f);
+            aShape = new ConeShape(1, .4m);
             //aShape.CollisionMargin = 0;
             a = new Entity(aShape);
             b = new Entity(bShape);
@@ -48,7 +49,7 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
         bool hit;
         RayHit hitData;
 
-        public override void Update(float dt)
+        public override void Update(Fix64 dt)
         {
             if (Game.KeyboardInput.IsKeyDown(Keys.NumPad6))
                 aTransform.Position += Vector3.Right * dt;
@@ -84,7 +85,7 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
         {
             if (hit)
             {
-                Game.TinyTextDrawer.Draw("Time: ", hitData.T, 10, new Microsoft.Xna.Framework.Vector2(50, 50));
+                Game.TinyTextDrawer.Draw("Time: ", (double)hitData.T, 10, new Microsoft.Xna.Framework.Vector2(50, 50));
             }
             else
             {

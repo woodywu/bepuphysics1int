@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using BEPUutilities;
 using BEPUphysics.BroadPhaseEntries;
- 
+using FixMath.NET;
 
 namespace BEPUphysics.BroadPhaseSystems.SortAndSweep
 {
@@ -32,38 +32,38 @@ namespace BEPUphysics.BroadPhaseSystems.SortAndSweep
             throw new NotSupportedException("The Grid2DSortAndSweep broad phase cannot accelerate infinite ray casts.  Consider using a broad phase which supports infinite tests, using a custom solution, or using a finite ray.");
         }
 
-        public bool RayCast(Ray ray, float maximumLength, IList<BroadPhaseEntry> outputIntersections)
+        public bool RayCast(Ray ray, Fix64 maximumLength, IList<BroadPhaseEntry> outputIntersections)
         {
-            if (maximumLength == float.MaxValue) 
+            if (maximumLength == Fix64.MaxValue) 
                 throw new NotSupportedException("The Grid2DSortAndSweep broad phase cannot accelerate infinite ray casts.  Consider specifying a maximum length or using a broad phase which supports infinite ray casts.");
         
             //Use 2d line rasterization.
             //Compute the exit location in the cell.
             //Test against each bounding box up until the exit value is reached.
-            float length = 0;
+            Fix64 length = 0;
             Int2 cellIndex;
             Vector3 currentPosition = ray.Position;
             Grid2DSortAndSweep.ComputeCell(ref currentPosition, out cellIndex);
             while (true)
             {
 
-                float cellWidth = 1 / Grid2DSortAndSweep.cellSizeInverse;
-                float nextT; //Distance along ray to next boundary.
-                float nextTy; //Distance along ray to next boundary along y axis.
-                float nextTz; //Distance along ray to next boundary along z axis.
-                //Find the next cell.
-                if (ray.Direction.Y > 0)
-                    nextTy = ((cellIndex.Y + 1) * cellWidth - currentPosition.Y) / ray.Direction.Y;
-                else if (ray.Direction.Y < 0)
-                    nextTy = ((cellIndex.Y) * cellWidth - currentPosition.Y) / ray.Direction.Y;
-                else
-                    nextTy = 10e10f;
+                Fix64 cellWidth = 1 / Grid2DSortAndSweep.cellSizeInverse;
+                Fix64 nextT; //Distance along ray to next boundary.
+                Fix64 nextTy; //Distance along ray to next boundary along y axis.
+                Fix64 nextTz; //Distance along ray to next boundary along z axis.
+							  //Find the next cell.
+				if (ray.Direction.Y > 0)
+					nextTy = ((cellIndex.Y + 1) * cellWidth - currentPosition.Y) / ray.Direction.Y;
+				else if (ray.Direction.Y < 0)
+					nextTy = ((cellIndex.Y) * cellWidth - currentPosition.Y) / ray.Direction.Y;
+				else
+					nextTy = Fix64.MaxValue;
                 if (ray.Direction.Z > 0)
                     nextTz = ((cellIndex.Z + 1) * cellWidth - currentPosition.Z) / ray.Direction.Z;
                 else if (ray.Direction.Z < 0)
                     nextTz = ((cellIndex.Z) * cellWidth - currentPosition.Z) / ray.Direction.Z;
                 else
-                    nextTz = 10e10f;
+                    nextTz = Fix64.MaxValue;
 
                 bool yIsMinimum = nextTy < nextTz;
                 nextT = yIsMinimum ? nextTy : nextTz;
@@ -75,7 +75,7 @@ namespace BEPUphysics.BroadPhaseSystems.SortAndSweep
                 GridCell2D cell;
                 if (owner.cellSet.TryGetCell(ref cellIndex, out cell))
                 {
-                    float endingX;
+                    Fix64 endingX;
                     if(ray.Direction.X < 0)
                         endingX = currentPosition.X;
                     else
@@ -88,7 +88,7 @@ namespace BEPUphysics.BroadPhaseSystems.SortAndSweep
                         && cell.entries.Elements[i].item.boundingBox.Min.X <= endingX; i++) //TODO: Try additional x axis pruning?
                     {
                         var item = cell.entries.Elements[i].item;
-                        float t;
+                        Fix64 t;
                         if (ray.Intersects(ref item.boundingBox, out t) && t < maximumLength && !outputIntersections.Contains(item))
                         {
                             outputIntersections.Add(item);

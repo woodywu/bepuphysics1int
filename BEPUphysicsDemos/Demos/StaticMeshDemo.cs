@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using BEPUphysics.BroadPhaseEntries;
 using BEPUphysics.Entities.Prefabs;
+using FixMath.NET;
 
 namespace BEPUphysicsDemos.Demos
 {
@@ -36,7 +37,7 @@ namespace BEPUphysicsDemos.Demos
             int numColumns = 8;
             int numRows = 8;
             int numHigh = 1;
-            float separation = 8;
+            Fix64 separation = 8;
             for (int i = 0; i < numRows; i++)
                 for (int j = 0; j < numColumns; j++)
                     for (int k = 0; k < numHigh; k++)
@@ -44,7 +45,7 @@ namespace BEPUphysicsDemos.Demos
                         var toAdd = new Box(
                             new Vector3(
                             separation * i - numRows * separation / 2,
-                            30f + k * separation,
+                            30 + k * separation,
                             separation * j - numColumns * separation / 2),
                             2, 2, 2, 15);
                         Space.Add(toAdd);

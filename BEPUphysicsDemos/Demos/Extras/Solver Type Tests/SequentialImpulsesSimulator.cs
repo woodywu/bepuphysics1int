@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using BEPUutilities;
 using BEPUutilities.Threading;
+using FixMath.NET;
 
 namespace BEPUphysicsDemos.Demos.Extras.SolverTypeTests
 {
@@ -46,9 +47,9 @@ namespace BEPUphysicsDemos.Demos.Extras.SolverTypeTests
             dynamic.UpdatePosition(dt);
         }
 
-        private float inverseDt;
-        private float dt;
-        public override void Update(float dt)
+        private Fix64 inverseDt;
+        private Fix64 dt;
+        public override void Update(Fix64 dt)
         {
             var wholeStartTime = Stopwatch.GetTimestamp();
             this.dt = dt;
@@ -88,7 +89,7 @@ namespace BEPUphysicsDemos.Demos.Extras.SolverTypeTests
             TotalTime = (wholeEndTime - wholeStartTime) / (double)Stopwatch.Frequency;
         }
 
-        public override void Update(float dt, IParallelLooper looper)
+        public override void Update(Fix64 dt, IParallelLooper looper)
         {
             var wholeStartTime = Stopwatch.GetTimestamp();
             this.dt = dt;

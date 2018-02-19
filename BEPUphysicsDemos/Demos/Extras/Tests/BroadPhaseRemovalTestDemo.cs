@@ -6,6 +6,7 @@ using ConversionHelper;
 using Microsoft.Xna.Framework;
 using System.Diagnostics;
 using System;
+using FixMath.NET;
 
 namespace BEPUphysicsDemos.Demos.Extras.Tests
 {
@@ -24,8 +25,8 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
             : base(game)
         {
             Entity toAdd;
-            //BoundingBox box = new BoundingBox(new Vector3(-5, 1, 1), new Vector3(5, 7, 7));
-            BoundingBox box = new BoundingBox(new Vector3(-500, -500, -500), new Vector3(500, 500, 500));
+			//BoundingBox box = new BoundingBox(new Vector3(-5, 1, 1), new Vector3(5, 7, 7));
+			BEPUutilities.BoundingBox box = new BEPUutilities.BoundingBox(new BEPUutilities.Vector3(-500, -500, -500), new BEPUutilities.Vector3(500, 500, 500));
 
             DynamicHierarchy dh = new DynamicHierarchy();
 
@@ -34,10 +35,10 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
             RawList<Entity> entities = new RawList<Entity>();
             for (int k = 0; k < 1000; k++)
             {
-                Vector3 position = new Vector3((float)(rand.NextDouble() * (box.Max.X - box.Min.X) + box.Min.X),
-                                               (float)(rand.NextDouble() * (box.Max.Y - box.Min.Y) + box.Min.Y),
-                                               (float)(rand.NextDouble() * (box.Max.Z - box.Min.Z) + box.Min.Z));
-                toAdd = new Box(MathConverter.Convert(position), 1, 1, 1, 1);
+				BEPUutilities.Vector3 position = new BEPUutilities.Vector3((Fix64)rand.NextDouble() * (box.Max.X - box.Min.X) + box.Min.X,
+                                               (Fix64)rand.NextDouble() * (box.Max.Y - box.Min.Y) + box.Min.Y,
+                                               (Fix64)rand.NextDouble() * (box.Max.Z - box.Min.Z) + box.Min.Z);
+                toAdd = new Box(position, 1, 1, 1, 1);
 
                 entities.Add(toAdd);
 

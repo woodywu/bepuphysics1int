@@ -7,6 +7,7 @@ using BEPUphysics.CollisionShapes.ConvexShapes;
 using Microsoft.Xna.Framework.Graphics;
 using BEPUphysics;
 using BEPUphysicsDrawer.Models;
+using FixMath.NET;
 
 namespace BEPUphysicsDemos.Demos.Extras.Tests
 {
@@ -78,27 +79,27 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
 
             for (int i = 0; i < 100; i++)
             {
-                Entity e = new Box(new Vector3(.1f * i, 1 * i + 1, 0), 1, 1, 1, 1);
-                //Entity e = new Capsule(new Vector3(.1f * i, 1 * i + 1, 0), .5f, .5f, 1);
-                //Entity e = new Sphere(new Vector3(.1f * i, 1 * i + 1, 0), .5f, 1);
+                Entity e = new Box(new Vector3(.1m * i, 1 * i + 1, 0), 1, 1, 1, 1);
+                //Entity e = new Capsule(new Vector3(.1m * i, 1 * i + 1, 0), .5m, .5m, 1);
+                //Entity e = new Sphere(new Vector3(.1m * i, 1 * i + 1, 0), .5m, 1);
                 e.ActivityInformation.IsAlwaysActive = true;
                 e.CollisionInformation.Tag = i;
                 space.Add(e);
             }
             for (int i = 0; i < 200; i++)
             {
-                //Entity e = new Box(new Vector3(.1f * i, 1 * i + 1, 2), 1, 1, 1, 1);
-                Entity e = new Capsule(new Vector3(.1f * i, 1 * i + 1, 2), .5f, .5f, 1);
-                //Entity e = new Sphere(new Vector3(.1f * i, 1 * i + 1, 2), .5f, 1);
+                //Entity e = new Box(new Vector3(.1m * i, 1 * i + 1, 2), 1, 1, 1, 1);
+                Entity e = new Capsule(new Vector3(.1m * i, 1 * i + 1, 2), .5m, .5m, 1);
+                //Entity e = new Sphere(new Vector3(.1m * i, 1 * i + 1, 2), .5m, 1);
                 e.ActivityInformation.IsAlwaysActive = true;
                 e.CollisionInformation.Tag = i;
                 space.Add(e);
             }
             for (int i = 0; i < 300; i++)
             {
-                //Entity e = new Box(new Vector3(.1f * i, 1 * i + 1, 4), 1, 1, 1, 1);
-                //Entity e = new Capsule(new Vector3(.1f * i, 1 * i + 1, 4), .5f, .5f, 1);
-                Entity e = new Sphere(new Vector3(.1f * i, 1 * i + 1, 4), .5f, 1);
+                //Entity e = new Box(new Vector3(.1m * i, 1 * i + 1, 4), 1, 1, 1, 1);
+                //Entity e = new Capsule(new Vector3(.1m * i, 1 * i + 1, 4), .5m, .5m, 1);
+                Entity e = new Sphere(new Vector3(.1m * i, 1 * i + 1, 4), .5m, 1);
                 e.ActivityInformation.IsAlwaysActive = true;
                 e.CollisionInformation.Tag = i;
                 space.Add(e);
@@ -113,7 +114,7 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
         }
 
         int frameIndex;
-        public override void Update(float dt)
+        public override void Update(Fix64 dt)
         {
             base.Update(dt);
             testSpace0.Update();

@@ -5,6 +5,7 @@ using BEPUphysics.CollisionShapes;
 using System.Collections.Generic;
 using BEPUphysics.CollisionShapes.ConvexShapes;
 using BEPUphysics.Entities;
+using FixMath.NET;
 
 namespace BEPUphysicsDemos.Demos.Extras.Tests
 {
@@ -22,18 +23,18 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
         {
 
             List<CompoundShapeEntry> shapes = new List<CompoundShapeEntry>();
-            float totalWeight = 0;
-            float density = 10;
+            Fix64 totalWeight = 0;
+            Fix64 density = 10;
 
 
-            float weight = density * 2;
+            Fix64 weight = density * 2;
             totalWeight += weight;
             for (int i = 0; i < 4; i++)
             {
                 shapes.Add(new CompoundShapeEntry(
                     new BoxShape(1, 1, 2),
                     new RigidTransform(
-                    new Vector3(-.5f + i * 1, 0, 15),
+                    new Vector3(-.5m + i * 1, 0, 15),
                     Quaternion.CreateFromAxisAngle(Vector3.Forward, MathHelper.PiOver2 * 2))
                     //Quaternion.Identity)
                     , weight));
@@ -65,9 +66,9 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
             int width = 3;
             int height = 3;
             int length = 10;
-            float blockWidth = 1f;
-            float blockHeight = 1f;
-            float blockLength = 1f;
+            Fix64 blockWidth = 1;
+            Fix64 blockHeight = 1;
+            Fix64 blockLength = 1;
 
 
 
@@ -117,7 +118,7 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
 
             }
 
-            Box ground = new Box(new Vector3(0, -4.5f, 0), 50, 1, 50);
+            Box ground = new Box(new Vector3(0, -4.5m, 0), 50, 1, 50);
             Space.Add(ground);
             game.Camera.Position = new Vector3(0, 6, 15);
         }

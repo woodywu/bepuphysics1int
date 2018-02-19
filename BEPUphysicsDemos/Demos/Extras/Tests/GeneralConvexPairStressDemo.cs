@@ -3,6 +3,7 @@ using System;
 using BEPUphysics.CollisionShapes;
 using BEPUphysics.CollisionShapes.ConvexShapes;
 using BEPUutilities;
+using FixMath.NET;
 
 namespace BEPUphysicsDemos.Demos.Extras.Tests
 {
@@ -14,9 +15,9 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
 
 
         Random random = new Random();
-        float width = 45;
-        float height = 45;
-        float length = 45;
+        Fix64 width = 45;
+        Fix64 height = 45;
+        Fix64 length = 45;
         /// <summary>
         /// Constructs a new demo.
         /// </summary>
@@ -34,13 +35,13 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
                 switch (i % 3)
                 {
                     case 0:
-                        shape = new CylinderShape(0.5f + (float)random.NextDouble() * 1.5f, 0.5f + (float)random.NextDouble() * 1.5f);
+                        shape = new CylinderShape(0.5m + (Fix64)random.NextDouble() * 1.5m, 0.5m + (Fix64)random.NextDouble() * 1.5m);
                         break;
                     case 1:
-                        shape = new ConeShape(0.5f + (float)random.NextDouble() * 1.5f, 0.5f + (float)random.NextDouble() * 1.5f);
+                        shape = new ConeShape(0.5m + (Fix64)random.NextDouble() * 1.5m, 0.5m + (Fix64)random.NextDouble() * 1.5m);
                         break;
                     default:
-                        shape = new CapsuleShape(0.5f + (float)random.NextDouble() * 1.5f, 0.5f + (float)random.NextDouble() * 1.5f);
+                        shape = new CapsuleShape(0.5m + (Fix64)random.NextDouble() * 1.5m, 0.5m + (Fix64)random.NextDouble() * 1.5m);
                         break;
 
                 }
@@ -59,28 +60,28 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
         private void RandomizeEntityState(Entity entity)
         {
             entity.Position = new Vector3(
-                (float)random.NextDouble() * width,
-                (float)random.NextDouble() * height,
-                (float)random.NextDouble() * length);
+                (Fix64)random.NextDouble() * width,
+                (Fix64)random.NextDouble() * height,
+                (Fix64)random.NextDouble() * length);
             entity.Orientation = Quaternion.CreateFromAxisAngle(
                 Vector3.Normalize(new Vector3(
-                    (float)random.NextDouble() * 2 - 1,
-                    (float)random.NextDouble() * 2 - 1,
-                    (float)random.NextDouble() * 2 - 1)),
-                (float)random.NextDouble() * 50);
-            float linearFactor = 0.5f;
+                    (Fix64)random.NextDouble() * 2 - 1,
+                    (Fix64)random.NextDouble() * 2 - 1,
+                    (Fix64)random.NextDouble() * 2 - 1)),
+                (Fix64)random.NextDouble() * 50);
+            Fix64 linearFactor = 0.5m;
             entity.LinearVelocity = new Vector3(
-                ((float)random.NextDouble() * 2 - 1) * linearFactor,
-                ((float)random.NextDouble() * 2 - 1) * linearFactor,
-                ((float)random.NextDouble() * 2 - 1) * linearFactor);
-            float angularFactor = 0.5f;
+                ((Fix64)random.NextDouble() * 2 - 1) * linearFactor,
+                ((Fix64)random.NextDouble() * 2 - 1) * linearFactor,
+                ((Fix64)random.NextDouble() * 2 - 1) * linearFactor);
+            Fix64 angularFactor = 0.5m;
             entity.AngularVelocity = new Vector3(
-                ((float)random.NextDouble() * 2 - 1) * angularFactor,
-                ((float)random.NextDouble() * 2 - 1) * angularFactor,
-                ((float)random.NextDouble() * 2 - 1) * angularFactor);
+                ((Fix64)random.NextDouble() * 2 - 1) * angularFactor,
+                ((Fix64)random.NextDouble() * 2 - 1) * angularFactor,
+                ((Fix64)random.NextDouble() * 2 - 1) * angularFactor);
         }
 
-        public override void Update(float dt)
+        public override void Update(Fix64 dt)
         {
             for (int i = 0; i < 10; i++)
             {

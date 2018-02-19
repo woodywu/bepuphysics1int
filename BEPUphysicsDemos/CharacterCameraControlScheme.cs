@@ -5,6 +5,7 @@ using System.Text;
 using BEPUphysics.BroadPhaseEntries.MobileCollidables;
 using BEPUphysics.Character;
 using BEPUutilities;
+using FixMath.NET;
 using Microsoft.Xna.Framework.Input;
 
 namespace BEPUphysicsDemos
@@ -16,18 +17,18 @@ namespace BEPUphysicsDemos
         /// <summary>
         /// Gets or sets the offset from the position of the character to the 'eyes' while the character is standing.
         /// </summary>
-        public float StandingCameraOffset { get; set; }
+        public Fix64 StandingCameraOffset { get; set; }
 
 
         /// <summary>
         /// Gets or sets the Offset from the position of the character to the 'eyes' while the character is crouching.
         /// </summary>
-        public float CrouchingCameraOffset { get; set; }
+        public Fix64 CrouchingCameraOffset { get; set; }
 
         /// <summary>
         /// Gets or sets the Offset from the position of the character to the 'eyes' while the character is prone.
         /// </summary>
-        public float ProneCameraOffset { get; set; }
+        public Fix64 ProneCameraOffset { get; set; }
 
         /// <summary>
         /// Gets the character associated with the control scheme.
@@ -45,12 +46,12 @@ namespace BEPUphysicsDemos
         {
             Character = character;
             UseCameraSmoothing = true;
-            StandingCameraOffset = 0.7f;
-            CrouchingCameraOffset = 0.4f;
-            ProneCameraOffset = 0.1f;
+            StandingCameraOffset = (Fix64)0.7m;
+            CrouchingCameraOffset = (Fix64)0.4m;
+            ProneCameraOffset = (Fix64)0.1m;
         }
 
-        public override void Update(float dt)
+        public override void Update(Fix64 dt)
         {
             base.Update(dt);
             ////Rotate the camera of the character based on the support velocity, if a support with velocity exists.
@@ -65,12 +66,12 @@ namespace BEPUphysicsDemos
             //    var support = data.Value.SupportObject as EntityCollidable;
             //    if (support != null && !support.Entity.IsDynamic) //Having the view turned by dynamic entities is extremely confusing for the most part.
             //    {
-            //        float dot = Vector3.Dot(support.Entity.AngularVelocity, Character.Body.OrientationMatrix.Up);
+            //        Fix64 dot = Vector3.Dot(support.Entity.AngularVelocity, Character.Body.OrientationMatrix.Up);
             //        Camera.Yaw(dot * dt);
             //    }
             //}
 
-            float cameraOffset;
+            Fix64 cameraOffset;
             switch (Character.StanceManager.CurrentStance)
             {
                 case Stance.Prone:
@@ -110,7 +111,7 @@ namespace BEPUphysicsDemos
                 //Picking those as bounds creates a constraining cylinder.
 
                 Vector3 error = goalPosition - Camera.Position;
-                float verticalError = Vector3.Dot(error, up);
+				Fix64 verticalError = Vector3.Dot(error, up);
                 Vector3 horizontalError = error - verticalError * up;
                 //Clamp the vertical component of the camera position within the bounding cylinder.
                 if (verticalError > Character.StepManager.MaximumStepHeight)
@@ -123,24 +124,24 @@ namespace BEPUphysicsDemos
                     Camera.Position -= up * (-Character.StepManager.MaximumStepHeight - verticalError);
                     verticalError = -Character.StepManager.MaximumStepHeight;
                 }
-                //Clamp the horizontal distance too.
-                float horizontalErrorLength = horizontalError.LengthSquared();
-                float margin = Character.Body.CollisionInformation.Shape.CollisionMargin;
+				//Clamp the horizontal distance too.
+				Fix64 horizontalErrorLength = horizontalError.LengthSquared();
+				Fix64 margin = Character.Body.CollisionInformation.Shape.CollisionMargin;
                 if (horizontalErrorLength > margin * margin)
                 {
                     Vector3 previousHorizontalError = horizontalError;
-                    Vector3.Multiply(ref horizontalError, margin / (float)Math.Sqrt(horizontalErrorLength), out horizontalError);
+                    Vector3.Multiply(ref horizontalError, margin / Fix64.Sqrt(horizontalErrorLength), out horizontalError);
                     Camera.Position -= horizontalError - previousHorizontalError;
                 }
-                //Now that the error/camera position is known to lie within the constraining cylinder, we can perform a smooth correction.
+				//Now that the error/camera position is known to lie within the constraining cylinder, we can perform a smooth correction.
 
-                //This removes a portion of the error each frame.
-                //Note that this is not framerate independent.  If fixed time step is not enabled,
-                //a different smoothing method should be applied to the final error values.
-                //float errorCorrectionFactor = .3f;
+				//This removes a portion of the error each frame.
+				//Note that this is not framerate independent.  If fixed time step is not enabled,
+				//a different smoothing method should be applied to the final error values.
+				//Fix64 errorCorrectionFactor = .3m;
 
-                //This version is framerate independent, although it is more expensive.
-                float errorCorrectionFactor = (float)(1 - Math.Pow(.000000001, dt));
+				//This version is framerate independent, although it is more expensive.
+				Fix64 errorCorrectionFactor = 1 - Fix64.Pow((Fix64).000000001m, dt);
                 Camera.Position += up * (verticalError * errorCorrectionFactor);
                 Camera.Position += horizontalError * errorCorrectionFactor;
 

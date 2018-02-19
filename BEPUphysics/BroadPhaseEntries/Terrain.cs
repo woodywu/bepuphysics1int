@@ -6,6 +6,7 @@ using BEPUphysics.CollisionTests.CollisionAlgorithms;
 using BEPUphysics.OtherSpaceStages;
 using BEPUutilities.DataStructures;
 using BEPUutilities.ResourceManagement;
+using FixMath.NET;
 
 namespace BEPUphysics.BroadPhaseEntries
 {
@@ -124,12 +125,12 @@ namespace BEPUphysics.BroadPhaseEntries
         }
 
 
-        internal float thickness;
+        internal Fix64 thickness;
         /// <summary>
         /// Gets or sets the thickness of the terrain.  This defines how far below the triangles of the terrain's surface the terrain 'body' extends.
         /// Anything within the body of the terrain will be pulled back up to the surface.
         /// </summary>
-        public float Thickness
+        public Fix64 Thickness
         {
             get
             {
@@ -183,7 +184,7 @@ namespace BEPUphysics.BroadPhaseEntries
         ///</summary>
         ///<param name="heights">Height data to use to create the TerrainShape.</param>
         ///<param name="worldTransform">Transform to use for the terrain.</param>
-        public Terrain(float[,] heights, AffineTransform worldTransform)
+        public Terrain(Fix64[,] heights, AffineTransform worldTransform)
             : this(new TerrainShape(heights), worldTransform)
         {
         }
@@ -220,7 +221,7 @@ namespace BEPUphysics.BroadPhaseEntries
         /// <param name="maximumLength">Maximum length, in units of the ray's direction's length, to test.</param>
         /// <param name="rayHit">Hit location of the ray on the entry, if any.</param>
         /// <returns>Whether or not the ray hit the entry.</returns>
-        public override bool RayCast(Ray ray, float maximumLength, out RayHit rayHit)
+        public override bool RayCast(Ray ray, Fix64 maximumLength, out RayHit rayHit)
         {
             return Shape.RayCast(ref ray, maximumLength, ref worldTransform, out rayHit);
         }
@@ -242,25 +243,25 @@ namespace BEPUphysics.BroadPhaseEntries
             var hitElements = new QuickList<int>(BufferPools<int>.Thread);
             if (Shape.GetOverlaps(localSpaceBoundingBox, ref hitElements))
             {
-                hit.T = float.MaxValue;
+                hit.T = Fix64.MaxValue;
                 for (int i = 0; i < hitElements.Count; i++)
                 {
                     Shape.GetTriangle(hitElements.Elements[i], ref worldTransform, out tri.vA, out tri.vB, out tri.vC);
                     Vector3 center;
                     Vector3.Add(ref tri.vA, ref tri.vB, out center);
                     Vector3.Add(ref center, ref tri.vC, out center);
-                    Vector3.Multiply(ref center, 1f / 3f, out center);
+                    Vector3.Multiply(ref center, Fix64Utils.OneThird, out center);
                     Vector3.Subtract(ref tri.vA, ref center, out tri.vA);
                     Vector3.Subtract(ref tri.vB, ref center, out tri.vB);
                     Vector3.Subtract(ref tri.vC, ref center, out tri.vC);
                     tri.MaximumRadius = tri.vA.LengthSquared();
-                    float radius = tri.vB.LengthSquared();
+                    Fix64 radius = tri.vB.LengthSquared();
                     if (tri.MaximumRadius < radius)
                         tri.MaximumRadius = radius;
                     radius = tri.vC.LengthSquared();
                     if (tri.MaximumRadius < radius)
                         tri.MaximumRadius = radius;
-                    tri.MaximumRadius = (float)Math.Sqrt(tri.MaximumRadius);
+                    tri.MaximumRadius = Fix64.Sqrt(tri.MaximumRadius);
                     tri.collisionMargin = 0;
                     var triangleTransform = new RigidTransform { Orientation = Quaternion.Identity, Position = center };
                     RayHit tempHit;
@@ -272,7 +273,7 @@ namespace BEPUphysics.BroadPhaseEntries
                 tri.MaximumRadius = 0;
                 PhysicsThreadResources.GiveBack(tri);
                 hitElements.Dispose();
-                return hit.T != float.MaxValue;
+                return hit.T != Fix64.MaxValue;
             }
             PhysicsThreadResources.GiveBack(tri);
             hitElements.Dispose();

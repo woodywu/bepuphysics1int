@@ -9,6 +9,7 @@ using BEPUphysicsDrawer.Models;
 using BEPUutilities;
 using BEPUutilities.DataStructures;
 using ConversionHelper;
+using FixMath.NET;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Plane = BEPUutilities.Plane;
@@ -26,7 +27,7 @@ namespace BEPUphysicsDemos.Demos.Extras.SolverTypeTests
             public DynamicVisualizer(LinearDynamic dynamic, ModelDrawer modelDrawer)
             {
                 Dynamic = dynamic;
-                DisplayCollidable = new DisplayEntityCollidable(modelDrawer, new ConvexCollidable<BoxShape>(new BoxShape(0.5f, 0.5f, 0.5f)));
+                DisplayCollidable = new DisplayEntityCollidable(modelDrawer, new ConvexCollidable<BoxShape>(new BoxShape(0.5m, 0.5m, 0.5m)));
                 modelDrawer.Add(DisplayCollidable);
             }
 
@@ -52,7 +53,7 @@ namespace BEPUphysicsDemos.Demos.Extras.SolverTypeTests
             int width = 30;
             int height = 10;
             int length = 30;
-            float spacing = 3;
+            Fix64 spacing = 3;
             var dynamics = new LinearDynamic[width, height, length];
             for (int widthIndex = 0; widthIndex < width; ++widthIndex)
             {
@@ -165,14 +166,14 @@ namespace BEPUphysicsDemos.Demos.Extras.SolverTypeTests
             var planeConstraint = constraint as PlaneCollisionConstraint;
             if (planeConstraint != null)
             {
-                float threshold = 1;
-                float distance = planeConstraint.Distance;
+                Fix64 threshold = 1;
+                Fix64 distance = planeConstraint.Distance;
                 if (distance < threshold)
                 {
                     if (distance > 0)
                     {
                         //We're near enough to see it, but not penetrating.
-                        color = Color.Lerp(new Color(1f, 1f, 1f), new Color(1f, 0f, 0f), (threshold - distance) / threshold);
+                        color = Color.Lerp(new Color(1f, 1f, 1f), new Color(1f, 0f, 0f), (float)((threshold - distance) / threshold));
                         lines[index] = new VertexPositionColor(MathConverter.Convert(planeConstraint.Dynamic.Position), color);
                         lines[index + 1] = new VertexPositionColor(MathConverter.Convert(planeConstraint.Dynamic.Position - planeConstraint.Plane.Normal * distance), color);
                     }
@@ -199,12 +200,12 @@ namespace BEPUphysicsDemos.Demos.Extras.SolverTypeTests
         {
             for (int i = 0; i < dynamics.Count; ++i)
             {
-                dynamics[i].Velocity += 5 * new Vector3(2 * (float)random.NextDouble() - 1, (float)random.NextDouble(), 2 * (float)random.NextDouble() - 1);
+                dynamics[i].Velocity += 5 * new Vector3(2 * (Fix64)random.NextDouble() - 1, (Fix64)random.NextDouble(), 2 * (Fix64)random.NextDouble() - 1);
             }
         }
 
 
-        public override void Update(float dt)
+        public override void Update(Fix64 dt)
         {
             if (Game.WasKeyPressed(Microsoft.Xna.Framework.Input.Keys.P))
             {
@@ -212,8 +213,8 @@ namespace BEPUphysicsDemos.Demos.Extras.SolverTypeTests
                 ShakeDynamics(sequentialImpulsesSimulator.Dynamics);
             }
 
-            jacobiSimulator.Update(1 / 60f, Space.ParallelLooper);
-            sequentialImpulsesSimulator.Update(1 / 60f, Space.ParallelLooper);
+            jacobiSimulator.Update(1 / (Fix64)60, Space.ParallelLooper);
+            sequentialImpulsesSimulator.Update(1 / (Fix64)60, Space.ParallelLooper);
 
             //Update the dynamics visualizers.
             if (Game.displayEntities)

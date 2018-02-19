@@ -11,6 +11,7 @@ using BEPUphysics.CollisionShapes;
 using BEPUutilities;
 using ConversionHelper;
 using System.Diagnostics;
+using FixMath.NET;
 
 namespace BEPUphysicsDemos.AlternateMovement
 {
@@ -23,12 +24,12 @@ namespace BEPUphysicsDemos.AlternateMovement
         /// <summary>
         /// Speed that the Vehicle tries towreach when moving backward.
         /// </summary>
-        public float BackwardSpeed = -13;
+        public Fix64 BackwardSpeed = -13;
 
         /// <summary>
         /// Speed that the Vehicle tries to reach when moving forward.
         /// </summary>
-        public float ForwardSpeed = 30;
+        public Fix64 ForwardSpeed = 30;
 
         /// <summary>
         /// Whether or not to use the Vehicle's input.
@@ -39,7 +40,7 @@ namespace BEPUphysicsDemos.AlternateMovement
         /// <summary>
         /// Maximum turn angle of the wheels.
         /// </summary>
-        public float MaximumTurnAngle = (float)Math.PI / 6;
+        public Fix64 MaximumTurnAngle = MathHelper.Pi / 6;
 
         /// <summary>
         /// Draws the body and wheels.
@@ -54,7 +55,7 @@ namespace BEPUphysicsDemos.AlternateMovement
         /// <summary>
         /// Turning speed of the wheels in radians per second.
         /// </summary>
-        public float TurnSpeed = MathHelper.Pi;
+        public Fix64 TurnSpeed = MathHelper.Pi;
 
         /// <summary>
         /// Physics representation of the Vehicle.
@@ -86,11 +87,11 @@ namespace BEPUphysicsDemos.AlternateMovement
         {
             var bodies = new List<CompoundShapeEntry>
                 {
-                    new CompoundShapeEntry(new BoxShape(2.5f, .75f, 4.5f), new Vector3(0, 0, 0), 60),
-                    new CompoundShapeEntry(new BoxShape(2.5f, .3f, 2f), new Vector3(0, .75f / 2 + .3f / 2, .5f), 1)
+                    new CompoundShapeEntry(new BoxShape((Fix64)2.5m, (Fix64).75m, (Fix64)4.5m), new Vector3(0, 0, 0), 60),
+                    new CompoundShapeEntry(new BoxShape((Fix64)2.5m, (Fix64).3m, (Fix64)2f), new Vector3(0, (Fix64).75m / 2 + (Fix64).3m / 2, (Fix64).5m), 1)
                 };
             var body = new CompoundBody(bodies, 61);
-            body.CollisionInformation.LocalPosition = new Vector3(0, .5f, 0);
+            body.CollisionInformation.LocalPosition = new Vector3(0, (Fix64).5m, 0);
             body.Position = position; //At first, just keep it out of the way.
             Vehicle = new Vehicle(body);
 
@@ -99,28 +100,28 @@ namespace BEPUphysicsDemos.AlternateMovement
             //The wheel model used is not aligned initially with how a wheel would normally look, so rotate them.
             Matrix wheelGraphicRotation = Matrix.CreateFromAxisAngle(Vector3.Forward, MathHelper.PiOver2);
             Vehicle.AddWheel(new Wheel(
-                                 new CylinderCastWheelShape(.375f, 0.2f, localWheelRotation, wheelGraphicRotation, false),
-                                 new WheelSuspension(2000, 100f, Vector3.Down, 0.325f, new Vector3(-1.1f, -0.1f, 1.8f)),
-                                 new WheelDrivingMotor(2.5f, 30000, 10000),
-                                 new WheelBrake(1.5f, 2, .02f),
+                                 new CylinderCastWheelShape((Fix64).375m, (Fix64)0.2m, localWheelRotation, wheelGraphicRotation, false),
+                                 new WheelSuspension(2000, 100, Vector3.Down, (Fix64)0.325m, new Vector3((Fix64)(- 1.1m), (Fix64)(-0.1m), (Fix64)1.8m)),
+                                 new WheelDrivingMotor((Fix64)2.5m, 30000, 10000),
+                                 new WheelBrake((Fix64)1.5m, 2, (Fix64).02m),
                                  new WheelSlidingFriction(4, 5)));
             Vehicle.AddWheel(new Wheel(
-                                 new CylinderCastWheelShape(.375f, 0.2f, localWheelRotation, wheelGraphicRotation, false),
-                                 new WheelSuspension(2000, 100f, Vector3.Down, 0.325f, new Vector3(-1.1f, -0.1f, -1.8f)),
-                                 new WheelDrivingMotor(2.5f, 30000, 10000),
-                                 new WheelBrake(1.5f, 2, .02f),
+                                 new CylinderCastWheelShape((Fix64).375m, (Fix64)0.2m, localWheelRotation, wheelGraphicRotation, false),
+                                 new WheelSuspension(2000, 100, Vector3.Down, (Fix64)0.325m, new Vector3((Fix64)(-1.1m), (Fix64)(- 0.1m), (Fix64)(- 1.8m))),
+                                 new WheelDrivingMotor((Fix64)2.5m, 30000, 10000),
+                                 new WheelBrake((Fix64)1.5m, 2, (Fix64).02m),
                                  new WheelSlidingFriction(4, 5)));
             Vehicle.AddWheel(new Wheel(
-                                 new CylinderCastWheelShape(.375f, 0.2f, localWheelRotation, wheelGraphicRotation, false),
-                                 new WheelSuspension(2000, 100f, Vector3.Down, 0.325f, new Vector3(1.1f, -0.1f, 1.8f)),
-                                 new WheelDrivingMotor(2.5f, 30000, 10000),
-                                 new WheelBrake(1.5f, 2, .02f),
+                                 new CylinderCastWheelShape((Fix64).375m, (Fix64)0.2m, localWheelRotation, wheelGraphicRotation, false),
+                                 new WheelSuspension(2000, 100, Vector3.Down, (Fix64)0.325m, new Vector3((Fix64)1.1m, (Fix64)(-0.1m), (Fix64)1.8m)),
+                                 new WheelDrivingMotor((Fix64)2.5m, 30000, 10000),
+                                 new WheelBrake((Fix64)1.5m, 2, (Fix64).02m),
                                  new WheelSlidingFriction(4, 5)));
             Vehicle.AddWheel(new Wheel(
-                                 new CylinderCastWheelShape(.375f, 0.2f, localWheelRotation, wheelGraphicRotation, false),
-                                 new WheelSuspension(2000, 100f, Vector3.Down, 0.325f, new Vector3(1.1f, -0.1f, -1.8f)),
-                                 new WheelDrivingMotor(2.5f, 30000, 10000),
-                                 new WheelBrake(1.5f, 2, .02f),
+                                 new CylinderCastWheelShape((Fix64).375m, (Fix64)0.2m, localWheelRotation, wheelGraphicRotation, false),
+                                 new WheelSuspension(2000, 100, Vector3.Down, (Fix64)0.325m, new Vector3((Fix64)1.1m, (Fix64)(-0.1m), (Fix64)(-1.8m))),
+                                 new WheelDrivingMotor((Fix64)2.5m, 30000, 10000),
+                                 new WheelBrake((Fix64)1.5m, 2, (Fix64).02m),
                                  new WheelSlidingFriction(4, 5)));
 
 
@@ -156,7 +157,7 @@ namespace BEPUphysicsDemos.AlternateMovement
 
 
 
-            CameraControlScheme = new ChaseCameraControlScheme(Vehicle.Body, new Vector3(0, 0.6f, 0), true, 10, camera, game);
+            CameraControlScheme = new ChaseCameraControlScheme(Vehicle.Body, new Vector3(0, (Fix64)0.6m, 0), true, 10, camera, game);
 
         }
 
@@ -194,9 +195,8 @@ namespace BEPUphysicsDemos.AlternateMovement
         /// <param name="dt">Time since last frame in simulation seconds.</param>
         /// <param name="keyboardInput">Keyboard state.</param>
         /// <param name="gamePadInput">Gamepad state.</param>
-        public void Update(float dt, KeyboardState keyboardInput, GamePadState gamePadInput)
+        public void Update(Fix64 dt, KeyboardState keyboardInput, GamePadState gamePadInput)
         {
-
             //Update the wheel's graphics.
             for (int k = 0; k < 4; k++)
             {
@@ -207,7 +207,7 @@ namespace BEPUphysicsDemos.AlternateMovement
             {
                 CameraControlScheme.Update(dt);
 #if XBOX360
-                float speed = gamePadInput.Triggers.Right * ForwardSpeed + gamePadInput.Triggers.Left * BackwardSpeed;
+                Fix64 speed = gamePadInput.Triggers.Right * ForwardSpeed + gamePadInput.Triggers.Left * BackwardSpeed;
                 Vehicle.Wheels[1].DrivingMotor.TargetSpeed = speed;
                 Vehicle.Wheels[3].DrivingMotor.TargetSpeed = speed;
 
@@ -261,19 +261,19 @@ namespace BEPUphysicsDemos.AlternateMovement
                 }
                 //Use smooth steering; while held down, move towards maximum.
                 //When not pressing any buttons, smoothly return to facing forward.
-                float angle;
+                Fix64 angle;
                 bool steered = false;
                 if (keyboardInput.IsKeyDown(Keys.S))
                 {
                     steered = true;
-                    angle = Math.Max(Vehicle.Wheels[1].Shape.SteeringAngle - TurnSpeed * dt, -MaximumTurnAngle);
+                    angle = MathHelper.Max(Vehicle.Wheels[1].Shape.SteeringAngle - TurnSpeed * dt, -MaximumTurnAngle);
                     Vehicle.Wheels[1].Shape.SteeringAngle = angle;
                     Vehicle.Wheels[3].Shape.SteeringAngle = angle;
                 }
                 if (keyboardInput.IsKeyDown(Keys.F))
                 {
                     steered = true;
-                    angle = Math.Min(Vehicle.Wheels[1].Shape.SteeringAngle + TurnSpeed * dt, MaximumTurnAngle);
+                    angle = MathHelper.Min(Vehicle.Wheels[1].Shape.SteeringAngle + TurnSpeed * dt, MaximumTurnAngle);
                     Vehicle.Wheels[1].Shape.SteeringAngle = angle;
                     Vehicle.Wheels[3].Shape.SteeringAngle = angle;
                 }
@@ -282,13 +282,13 @@ namespace BEPUphysicsDemos.AlternateMovement
                     //Neither key was pressed, so de-steer.
                     if (Vehicle.Wheels[1].Shape.SteeringAngle > 0)
                     {
-                        angle = Math.Max(Vehicle.Wheels[1].Shape.SteeringAngle - TurnSpeed * dt, 0);
+                        angle = MathHelper.Max(Vehicle.Wheels[1].Shape.SteeringAngle - TurnSpeed * dt, 0);
                         Vehicle.Wheels[1].Shape.SteeringAngle = angle;
                         Vehicle.Wheels[3].Shape.SteeringAngle = angle;
                     }
                     else
                     {
-                        angle = Math.Min(Vehicle.Wheels[1].Shape.SteeringAngle + TurnSpeed * dt, 0);
+                        angle = MathHelper.Min(Vehicle.Wheels[1].Shape.SteeringAngle + TurnSpeed * dt, 0);
                         Vehicle.Wheels[1].Shape.SteeringAngle = angle;
                         Vehicle.Wheels[3].Shape.SteeringAngle = angle;
                     }

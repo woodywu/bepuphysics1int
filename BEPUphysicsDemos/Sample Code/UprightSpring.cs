@@ -2,6 +2,7 @@ using System;
 using BEPUphysics.Entities;
 using BEPUphysics.UpdateableSystems;
 using BEPUutilities;
+using FixMath.NET;
 
 namespace BEPUphysicsDemos.SampleCode
 {
@@ -21,8 +22,8 @@ namespace BEPUphysicsDemos.SampleCode
 
 
         private Vector3 myLocalUpVector;
-        private float myMaximumAngle;
-        private float myMinimumAngle;
+        private Fix64 myMaximumAngle;
+        private Fix64 myMinimumAngle;
 
         private Vector3 myWorldUpVector;
 
@@ -36,7 +37,7 @@ namespace BEPUphysicsDemos.SampleCode
         /// <param name="maximumAngle">Maximum angle between the car's transformed up vector and the actual up vector
         /// past which the constraint 'gives up' and lets the entity tumble.</param>
         /// <param name="correctionFactor">Factor of the orientation error to apply in angular velocity each frame.</param>
-        public UprightSpring(Entity entity, Vector3 upVector, float minimumAngle, float maximumAngle, float correctionFactor)
+        public UprightSpring(Entity entity, Vector3 upVector, Fix64 minimumAngle, Fix64 maximumAngle, Fix64 correctionFactor)
         {
             this.Entity = entity;
             this.UpVector = upVector;
@@ -80,7 +81,7 @@ namespace BEPUphysicsDemos.SampleCode
         /// Gets or sets the minimum angle between the car's transformed up vector and the actual up vector
         /// before the constraint begins to apply forces.
         /// </summary>
-        public float MinimumAngle
+        public Fix64 MinimumAngle
         {
             get { return myMinimumAngle; }
             set
@@ -95,7 +96,7 @@ namespace BEPUphysicsDemos.SampleCode
         /// Gets or sets the maximum angle between the car's transformed up vector and the actual up vector
         /// past which the constraint 'gives up' and lets the entity tumble.
         /// </summary>
-        public float MaximumAngle
+        public Fix64 MaximumAngle
         {
             get { return myMaximumAngle; }
             set
@@ -109,7 +110,7 @@ namespace BEPUphysicsDemos.SampleCode
         /// <summary>
         /// Gets or sets the factor of the orientation error to apply in torque each frame.
         /// </summary>
-        public float CorrectionFactor { get; set; }
+        public Fix64 CorrectionFactor { get; set; }
 
 
         /// <summary>
@@ -117,13 +118,13 @@ namespace BEPUphysicsDemos.SampleCode
         /// Called automatically by its owning space.
         /// </summary>
         /// <param name="dt">Time since last frame in simulation seconds.</param>
-        void IDuringForcesUpdateable.Update(float dt)
+        void IDuringForcesUpdateable.Update(Fix64 dt)
         {
             myWorldUpVector = Matrix3x3.Transform(myLocalUpVector, Entity.OrientationMatrix);
 
             //Compute the axis and angle 
             Vector3 axis = Vector3.Cross(myWorldUpVector, Vector3.Up);
-            var angle = (float) Math.Acos(Vector3.Dot(Vector3.Up, myWorldUpVector));
+            var angle = Fix64.Acos(Vector3.Dot(Vector3.Up, myWorldUpVector));
 
             if (angle > MinimumAngle && angle < MaximumAngle)
             {

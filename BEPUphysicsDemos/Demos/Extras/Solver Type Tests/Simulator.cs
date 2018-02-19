@@ -1,6 +1,7 @@
 ﻿using BEPUutilities;
 using BEPUutilities.DataStructures;
 using BEPUutilities.Threading;
+using FixMath.NET;
 
 namespace BEPUphysicsDemos.Demos.Extras.SolverTypeTests
 {
@@ -36,9 +37,9 @@ namespace BEPUphysicsDemos.Demos.Extras.SolverTypeTests
         public double TotalTime { get; protected set; }
         public double SolveTime { get; protected set; }
 
-        public abstract void Update(float dt);
+        public abstract void Update(Fix64 dt);
 
-        public abstract void Update(float dt, IParallelLooper looper);
+        public abstract void Update(Fix64 dt, IParallelLooper looper);
 
 
         Vector3 gravityVelocityChange;
@@ -48,7 +49,7 @@ namespace BEPUphysicsDemos.Demos.Extras.SolverTypeTests
             Vector3.Add(ref dynamics.Elements[i].Velocity, ref gravityVelocityChange, out dynamics.Elements[i].Velocity);
         }
 
-        protected void ApplyGravity(float dt)
+        protected void ApplyGravity(Fix64 dt)
         {
             Vector3.Multiply(ref Gravity, dt, out gravityVelocityChange);
             for (int i = dynamics.Count - 1; i >= 0; --i)
@@ -56,7 +57,7 @@ namespace BEPUphysicsDemos.Demos.Extras.SolverTypeTests
                 ApplyGravity(i);
             }
         }
-        protected void ApplyGravity(float dt, IParallelLooper looper)
+        protected void ApplyGravity(Fix64 dt, IParallelLooper looper)
         {
             Vector3.Multiply(ref Gravity, dt, out gravityVelocityChange);
             looper.ForLoop(0, dynamics.Count, ApplyGravity);

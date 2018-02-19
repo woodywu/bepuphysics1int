@@ -4,6 +4,7 @@ using BEPUphysics.Constraints.TwoEntity.Motors;
 using BEPUphysics.Entities;
 using BEPUphysics.UpdateableSystems;
 using BEPUutilities;
+using FixMath.NET;
 
 namespace BEPUphysicsDemos.SampleCode
 {
@@ -127,7 +128,7 @@ namespace BEPUphysicsDemos.SampleCode
             linearMotor.Settings.Servo.SpringSettings.Stiffness = 60000 * e.Mass;
             linearMotor.Settings.Servo.SpringSettings.Damping = 9000 * e.Mass;
 
-            angularMotor.Settings.VelocityMotor.Softness = .1f / e.Mass;
+            angularMotor.Settings.VelocityMotor.Softness = Fix64Utils.PointOne / e.Mass;
             //An unlimited motor will gladly push the entity through other objects.
             //Putting a limit on the strength of the motor will prevent it from doing so.
             linearMotor.Settings.MaximumForce = 1000 * e.Mass;
@@ -153,7 +154,7 @@ namespace BEPUphysicsDemos.SampleCode
         /// Updates the grab constraint's grab position after the end of a frame.
         /// </summary>
         /// <param name="dt">Time since last frame in simulation seconds.</param>
-        void IEndOfFrameUpdateable.Update(float dt)
+        void IEndOfFrameUpdateable.Update(Fix64 dt)
         {
             //Since the grabbed position is usually examined graphically, 
             //it's good to use the interpolated positions in case the 

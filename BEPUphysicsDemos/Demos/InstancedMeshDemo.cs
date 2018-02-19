@@ -4,6 +4,7 @@ using BEPUphysics.CollisionShapes;
 using BEPUphysics.DataStructures;
 using BEPUphysics.Entities.Prefabs;
 using BEPUutilities;
+using FixMath.NET;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace BEPUphysicsDemos.Demos
@@ -37,8 +38,8 @@ namespace BEPUphysicsDemos.Demos
                 {
                     //Create a transform and the instance of the mesh.
                     var transform = new AffineTransform(
-                        new Vector3((float)random.NextDouble() * 6 + .5f, (float)random.NextDouble() * 6 + .5f, (float)random.NextDouble() * 6 + .5f), 
-                         Quaternion.CreateFromAxisAngle(Vector3.Normalize(new Vector3((float)random.NextDouble(), (float)random.NextDouble(), (float)random.NextDouble())), (float)random.NextDouble() * 100),
+                        new Vector3((Fix64)random.NextDouble() * 6 + .5m, (Fix64)random.NextDouble() * 6 + .5m, (Fix64)random.NextDouble() * 6 + .5m), 
+                         Quaternion.CreateFromAxisAngle(Vector3.Normalize(new Vector3((Fix64)random.NextDouble(), (Fix64)random.NextDouble(), (Fix64)random.NextDouble())), (Fix64)random.NextDouble() * 100),
                         new Vector3(i * 2, 3, j * 2));
                     var mesh = new InstancedMesh(meshShape, transform);
                     //Making the triangles one-sided makes collision detection a bit more robust, since the backsides of triangles won't try to collide with things

@@ -7,6 +7,7 @@ using BEPUphysics.Materials;
 using BEPUphysics.NarrowPhaseSystems;
 using BEPUphysics.Settings;
 using BEPUutilities;
+using FixMath.NET;
 using Microsoft.Xna.Framework.Input;
 
 namespace BEPUphysicsDemos.Demos.Extras.Tests
@@ -23,7 +24,7 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
         public PersistentManifoldStressTestDemo(DemosGame game)
             : base(game)
         {
-            var ground = new Box(new Vector3(0, -.5f, 0), 200, 1, 200);
+            var ground = new Box(new Vector3(0, -.5m, 0), 200, 1, 200);
             Space.Add(ground);
 
 
@@ -42,11 +43,11 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
             for (int i = 0; i < 5000; ++i)
             {
                 Vector3 position;
-                position.X = spawnVolume.Min.X + (float)random.NextDouble() * span.X;
-                position.Y = spawnVolume.Min.Y + (float)random.NextDouble() * span.Y;
-                position.Z = spawnVolume.Min.Z + (float)random.NextDouble() * span.Z;
+                position.X = spawnVolume.Min.X + (Fix64)random.NextDouble() * span.X;
+                position.Y = spawnVolume.Min.Y + (Fix64)random.NextDouble() * span.Y;
+                position.Z = spawnVolume.Min.Z + (Fix64)random.NextDouble() * span.Z;
 
-                var entity = new Capsule(position, 2, 0.8f, 10);
+                var entity = new Capsule(position, 2, 0.8m, 10);
                 Space.Add(entity);
             }
 
@@ -68,8 +69,8 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
             Console.WriteLine("Time: {0}", time);
  
             game.Camera.Position = new Vector3(-10, 10, 10);
-            game.Camera.Yaw((float)Math.PI / -4f);
-            game.Camera.Pitch((float)Math.PI / 9f);
+            game.Camera.Yaw(MathHelper.Pi / -4);
+            game.Camera.Pitch(MathHelper.Pi / 9);
         }
 
 

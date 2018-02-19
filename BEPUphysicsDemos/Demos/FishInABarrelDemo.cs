@@ -30,9 +30,9 @@ namespace BEPUphysicsDemos.Demos
         {
             game.Camera.Position = new Vector3(0, 7, 30);
 
-            var detector = new Box(new Vector3(0, 0, 0), 1.5f, 1.5f, 1.5f);
+            var detector = new Box(new Vector3(0, 0, 0), 1.5m, 1.5m, 1.5m);
             detector.CollisionInformation.CollisionRules.Personal = CollisionRule.NoSolver;
-            var acceptedTriggerEntity = new Box(new Vector3(5, 0, 0), 1.6f, .7f, .4f, 1);
+            var acceptedTriggerEntity = new Box(new Vector3(5, 0, 0), 1.6m, .7m, .4m, 1);
             acceptedTrigger = acceptedTriggerEntity.CollisionInformation;
 
             detector.Tag = "noDisplayObject";

@@ -2,6 +2,7 @@ using BEPUphysics.BroadPhaseSystems;
 using BEPUphysics.Entities;
 using BEPUphysics.UpdateableSystems.ForceFields;
 using BEPUutilities;
+using FixMath.NET;
 
 namespace BEPUphysicsDemos.SampleCode
 {
@@ -11,7 +12,7 @@ namespace BEPUphysicsDemos.SampleCode
     public class PushField : ForceField
     {
         private Vector3 forceDirection;
-        private float forceMagnitude;
+        private Fix64 forceMagnitude;
         private Vector3 myForce;
 
         /// <summary>
@@ -20,7 +21,7 @@ namespace BEPUphysicsDemos.SampleCode
         /// <param name="shape">Shape representing the volume of the force field.</param>
         /// <param name="forceToApply">Force to apply to entities within the field.  Magnitude of the vector represents the magnitude of the force.</param>
         /// <param name="maxPushSpeed">Maximum speed that the field will accelerate objects to, regardless of force applied. Set to a non-positive for infinite.</param>
-        public PushField(ForceFieldShape shape, Vector3 forceToApply, float maxPushSpeed)
+        public PushField(ForceFieldShape shape, Vector3 forceToApply, Fix64 maxPushSpeed)
             : base(shape)
         {
             Force = forceToApply;
@@ -44,7 +45,7 @@ namespace BEPUphysicsDemos.SampleCode
         /// <summary>
         /// Gets or sets the maximum speed that the field will accelerate objects to, regardless of force applied.  Set to a non-positive value for infinite.
         /// </summary>
-        public float MaximumPushSpeed { get; set; }
+        public Fix64 MaximumPushSpeed { get; set; }
 
         /// <summary>
         /// Calculates the impulse to apply to the center of mass of physically simulated bodies within the field.
@@ -52,12 +53,12 @@ namespace BEPUphysicsDemos.SampleCode
         /// <param name="e">Target of the impulse.</param>
         /// <param name="dt">Time since the last frame in simulation seconds.</param>
         /// <param name="impulse">Force to apply at the given position.</param>
-        protected override void CalculateImpulse(Entity e, float dt, out Vector3 impulse)
+        protected override void CalculateImpulse(Entity e, Fix64 dt, out Vector3 impulse)
         {
             if (MaximumPushSpeed > 0)
             {
                 //Current velocity along the tangent direction.
-                float dot = Vector3.Dot(e.LinearVelocity, forceDirection);
+                Fix64 dot = Vector3.Dot(e.LinearVelocity, forceDirection);
                 //Compute the velocity difference between the current and the maximum
                 dot = MaximumPushSpeed - dot;
                 //Compute the force needed to reach the maximum, but clamp it to the amount of force that the field can apply

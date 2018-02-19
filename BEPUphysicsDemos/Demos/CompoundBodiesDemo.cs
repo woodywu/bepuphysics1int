@@ -23,9 +23,9 @@ namespace BEPUphysicsDemos.Demos
             //Build the first body
             var bodies = new List<CompoundShapeEntry>
             {
-                new CompoundShapeEntry(new SphereShape(.5f), new Vector3(0, 1, 0), 1),
-                new CompoundShapeEntry(new ConeShape(2, .5f), new Vector3(1, 1, 0), 1),
-                new CompoundShapeEntry(new SphereShape(.5f), new Vector3(-1, 1, 0), 1)
+                new CompoundShapeEntry(new SphereShape(.5m), new Vector3(0, 1, 0), 1),
+                new CompoundShapeEntry(new ConeShape(2, .5m), new Vector3(1, 1, 0), 1),
+                new CompoundShapeEntry(new SphereShape(.5m), new Vector3(-1, 1, 0), 1)
             };
             var cb1 = new CompoundBody(bodies, 45);
 
@@ -35,7 +35,7 @@ namespace BEPUphysicsDemos.Demos
             bodies = new List<CompoundShapeEntry>
             {
                 new CompoundShapeEntry(new BoxShape(1,1,1), new Vector3(0, 3, 0), 1),
-                new CompoundShapeEntry(new BoxShape(1,1,1), new Vector3(1, 3.5f, 0), 1),
+                new CompoundShapeEntry(new BoxShape(1,1,1), new Vector3(1, 3.5m, 0), 1),
             };
             var cb2 = new CompoundBody(bodies, 4);
 
@@ -43,7 +43,7 @@ namespace BEPUphysicsDemos.Demos
             //Build the third Braum's-fry style body
             for (int k = 0; k < 7; k++)
             {
-                bodies.Add(new CompoundShapeEntry(new BoxShape(1, 1, 1), new Vector3(-4 + k * .7f, 2 + .7f * k, 2 + k * .2f), 1));
+                bodies.Add(new CompoundShapeEntry(new BoxShape(1, 1, 1), new Vector3(-4 + k * .7m, 2 + .7m * k, 2 + k * .2m), 1));
             }
             var cb3 = new CompoundBody(bodies, 7);
 
@@ -54,7 +54,7 @@ namespace BEPUphysicsDemos.Demos
 
 
 
-            Space.Add(new Box(new Vector3(0, -.5f, 0), 10, 1, 10));
+            Space.Add(new Box(new Vector3(0, -.5m, 0), 10, 1, 10));
             game.Camera.Position = new Vector3(0, 3, 15);
 
         }

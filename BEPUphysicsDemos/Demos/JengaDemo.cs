@@ -2,6 +2,7 @@
 using BEPUphysics.Entities.Prefabs;
 using BEPUphysics.PositionUpdating;
 using BEPUutilities;
+using FixMath.NET;
 
 namespace BEPUphysicsDemos.Demos
 {
@@ -20,12 +21,12 @@ namespace BEPUphysicsDemos.Demos
 
             Space.Remove(kapow);
             //Have to shrink the ball a little to make it fit between jenga tower blocks.
-            kapow = new Sphere(new Vector3(-11000, 0, 0), .2f, 20);
+            kapow = new Sphere(new Vector3(-11000, 0, 0), .2m, 20);
             kapow.PositionUpdateMode = PositionUpdateMode.Continuous; //The ball's really tiny! It will work better if it's handled continuously.
             Space.Add(kapow);
             int numBlocksTall = 18; //How many 'stories' tall.
-            float blockWidth = 3f; //Total width/length of the tower.
-            float blockHeight = 1 / 2f;
+            Fix64 blockWidth = 3; //Total width/length of the tower.
+            Fix64 blockHeight = 1 / (Fix64)2;
             Entity toAdd;
 
 
@@ -36,7 +37,7 @@ namespace BEPUphysicsDemos.Demos
                     for (int j = 0; j < 3; j++)
                     {
                         toAdd = new Box(new Vector3(
-                                            j * (blockWidth / 3) - blockWidth / 3f,
+                                            j * (blockWidth / 3) - blockWidth / 3,
                                             blockHeight / 2 + i * (blockHeight),
                                             0),
                                         blockWidth / 3, blockHeight, blockWidth, 10);
@@ -50,14 +51,14 @@ namespace BEPUphysicsDemos.Demos
                         toAdd = new Box(new Vector3(
                                             0,
                                             blockHeight / 2 + (i) * (blockHeight),
-                                            j * (blockWidth / 3) - blockWidth / 3f),
+                                            j * (blockWidth / 3) - blockWidth / 3),
                                         blockWidth, blockHeight, blockWidth / 3, 10);
                         Space.Add(toAdd);
 
                     }
                 }
             }
-            Space.Add(new Box(new Vector3(0, -.5f, 0), 40, 1, 40));
+            Space.Add(new Box(new Vector3(0, -.5m, 0), 40, 1, 40));
             game.Camera.Position = new Vector3(0, 5, 15);
 
         }

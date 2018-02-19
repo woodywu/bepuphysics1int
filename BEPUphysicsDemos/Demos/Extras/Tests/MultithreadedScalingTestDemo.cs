@@ -8,6 +8,7 @@ using BEPUphysicsDemos.SampleCode;
 using System.Diagnostics;
 using System;
 using BEPUutilities.Threading;
+using FixMath.NET;
 
 namespace BEPUphysicsDemos.Demos.Extras.Tests
 {
@@ -105,9 +106,9 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
             for (int k = 0; k < 250; k++)
 #endif
             {
-                Vector3 position = new Vector3((float)(rand.NextDouble() * (box.Max.X - box.Min.X) + box.Min.X),
-                                               (float)(rand.NextDouble() * (box.Max.Y - box.Min.Y) + box.Min.Y),
-                                               (float)(rand.NextDouble() * (box.Max.Z - box.Min.Z) + box.Min.Z));
+                Vector3 position = new Vector3((Fix64)rand.NextDouble() * (box.Max.X - box.Min.X) + box.Min.X,
+                                               (Fix64)rand.NextDouble() * (box.Max.Y - box.Min.Y) + box.Min.Y,
+                                               (Fix64)rand.NextDouble() * (box.Max.Z - box.Min.Z) + box.Min.Z);
                 var toAdd = new Box(position, 1, 1, 1, 1);
                 toAdd.ActivityInformation.IsAlwaysActive = true;
 
@@ -137,9 +138,9 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
             int width = 25;
             int height = 15;
 #endif
-            float blockWidth = 2f;
-            float blockHeight = 1f;
-            float blockLength = 3f;
+            Fix64 blockWidth = 2;
+            Fix64 blockHeight = 1;
+            Fix64 blockLength = 3;
 
 
             for (int i = 0; i < width; i++)
@@ -149,8 +150,8 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
                     var toAdd =
                         new Box(
                             new Vector3(
-                                i * blockWidth + .5f * blockWidth * (j % 2) - width * blockWidth * .5f,
-                                blockHeight * .5f + j * (blockHeight),
+                                i * blockWidth + .5m * blockWidth * (j % 2) - width * blockWidth * .5m,
+                                blockHeight * .5m + j * (blockHeight),
                                 0),
                             blockWidth, blockHeight, blockLength, 10);
                     toAdd.ActivityInformation.IsAlwaysActive = true;
@@ -159,7 +160,7 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
                 }
             }
 
-            Box ground = new Box(new Vector3(0, -5f, 0), 500, 10, 500);
+            Box ground = new Box(new Vector3(0, -5, 0), 500, 10, 500);
             space.Add(ground);
 #if WINDOWS
             return 800;
@@ -176,7 +177,7 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
             var planet = new Sphere(new Vector3(0, 0, 0), 30);
             space.Add(planet);
 
-            var field = new GravitationalField(new InfiniteForceFieldShape(), planet.Position, 66730 / 2f, 100);
+            var field = new GravitationalField(new InfiniteForceFieldShape(), planet.Position, 66730 / 2, 100);
             space.Add(field);
 
             //Drop the "meteorites" on the planet.
@@ -194,12 +195,12 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
             int numRows = 10;
             int numHigh = 10;
 #endif
-            float separation = 5;
+            Fix64 separation = 5;
             for (int i = 0; i < numRows; i++)
                 for (int j = 0; j < numColumns; j++)
                     for (int k = 0; k < numHigh; k++)
                     {
-                        toAdd = new Box(new Vector3(separation * i - numRows * separation / 2, 40 + k * separation, separation * j - numColumns * separation / 2), 1f, 1f, 1f, 5);
+                        toAdd = new Box(new Vector3(separation * i - numRows * separation / 2, 40 + k * separation, separation * j - numColumns * separation / 2), 1, 1, 1, 5);
                         toAdd.LinearVelocity = new Vector3(30, 0, 0);
                         toAdd.LinearDamping = 0;
                         toAdd.AngularDamping = 0;
@@ -234,7 +235,7 @@ namespace BEPUphysicsDemos.Demos.Extras.Tests
 
         private int timeStepsElapsed;
 
-        public override void Update(float dt)
+        public override void Update(Fix64 dt)
         {
             timeStepsElapsed++;
             base.Update(dt);

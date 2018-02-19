@@ -33,23 +33,23 @@ namespace BEPUphysicsDemos.Demos.Extras
             //Make the torso.
             var bodies = new List<CompoundShapeEntry>()
             {
-                new CompoundShapeEntry(new BoxShape(2, 1.5f, 1), new Vector3(-1, 3, 0), 50),
-                new CompoundShapeEntry(new SphereShape(.45f), new Vector3(.4f, 3, 0), 1),
-                new CompoundShapeEntry(new SphereShape(.25f), new Vector3(-1.9f, 3.5f, 0), 1),
-                new CompoundShapeEntry(new SphereShape(.25f), new Vector3(-1.9f, 2.5f, 0), 1),
-                new CompoundShapeEntry(new SphereShape(.25f), new Vector3(-.3f, 2.3f, 0), 1)
+                new CompoundShapeEntry(new BoxShape(2, 1.5m, 1), new Vector3(-1, 3, 0), 50),
+                new CompoundShapeEntry(new SphereShape(.45m), new Vector3(.4m, 3, 0), 1),
+                new CompoundShapeEntry(new SphereShape(.25m), new Vector3(-1.9m, 3.5m, 0), 1),
+                new CompoundShapeEntry(new SphereShape(.25m), new Vector3(-1.9m, 2.5m, 0), 1),
+                new CompoundShapeEntry(new SphereShape(.25m), new Vector3(-.3m, 2.3m, 0), 1)
             };
 
             var torso = new CompoundBody(bodies, 54);
             Space.Add(torso);
 
             //Make the upper arm.
-            Entity upperArm = new Box(torso.Position + new Vector3(1, 1.4f, 0), .4f, 1.2f, .4f, 8);
+            Entity upperArm = new Box(torso.Position + new Vector3(1, 1.4m, 0), .4m, 1.2m, .4m, 8);
             Space.Add(upperArm);
 
 
             //A ball socket joint will handle the linear degrees of freedom between the two entities.
-            var ballSocketJoint = new BallSocketJoint(torso, upperArm, torso.Position + new Vector3(1, .7f, 0));
+            var ballSocketJoint = new BallSocketJoint(torso, upperArm, torso.Position + new Vector3(1, .7m, 0));
             Space.Add(ballSocketJoint);
 
             //Shoulders don't have a simple limit.  The EllipseSwingLimit allows angles within an ellipse, which is closer to how some joints function
@@ -65,11 +65,11 @@ namespace BEPUphysicsDemos.Demos.Extras
 
 
             //Make the lower arm.
-            Entity lowerArm = new Box(upperArm.Position + new Vector3(0, 1.4f, 0), .35f, 1.3f, .35f, 8);
+            Entity lowerArm = new Box(upperArm.Position + new Vector3(0, 1.4m, 0), .35m, 1.3m, .35m, 8);
             Space.Add(lowerArm);
 
 
-            var elbow = new SwivelHingeJoint(upperArm, lowerArm, upperArm.Position + new Vector3(0, .6f, 0), Vector3.Forward);
+            var elbow = new SwivelHingeJoint(upperArm, lowerArm, upperArm.Position + new Vector3(0, .6m, 0), Vector3.Forward);
             //Forearm can twist a little.
             elbow.TwistLimit.IsActive = true;
             elbow.TwistLimit.MinimumAngle = -MathHelper.PiOver4 / 2;
@@ -81,13 +81,13 @@ namespace BEPUphysicsDemos.Demos.Extras
             //The elbow is like a hinge, but it can't hyperflex.
             elbow.HingeLimit.IsActive = true;
             elbow.HingeLimit.MinimumAngle = 0;
-            elbow.HingeLimit.MaximumAngle = MathHelper.Pi * .7f;
+            elbow.HingeLimit.MaximumAngle = MathHelper.Pi * .7m;
             Space.Add(elbow);
 
-            Entity hand = new Box(lowerArm.Position + new Vector3(0, .9f, 0), .4f, .55f, .25f, 3);
+            Entity hand = new Box(lowerArm.Position + new Vector3(0, .9m, 0), .4m, .55m, .25m, 3);
             Space.Add(hand);
 
-            ballSocketJoint = new BallSocketJoint(lowerArm, hand, lowerArm.Position + new Vector3(0, .7f, 0));
+            ballSocketJoint = new BallSocketJoint(lowerArm, hand, lowerArm.Position + new Vector3(0, .7m, 0));
             Space.Add(ballSocketJoint);
 
             //Wrists can use an ellipse limit too.
@@ -102,7 +102,7 @@ namespace BEPUphysicsDemos.Demos.Extras
 
             //The hand is pretty floppy without some damping.
             var angularMotor = new AngularMotor(lowerArm, hand);
-            angularMotor.Settings.VelocityMotor.Softness = .5f;
+            angularMotor.Settings.VelocityMotor.Softness = .5m;
             Space.Add(angularMotor);
 
             //Make sure the parts of the arm don't collide.

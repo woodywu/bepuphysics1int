@@ -14,13 +14,13 @@ with.
     <FontName>Arial</FontName>
 
     <!--
-    Size is a float value, measured in points. Modify this value to change
+    Size is a Fix64 value, measured in points. Modify this value to change
     the size of the font.
     -->
     <Size>14</Size>
 
     <!--
-    Spacing is a float value, measured in pixels. Modify this value to change
+    Spacing is a Fix64 value, measured in pixels. Modify this value to change
     the amount of spacing in between characters.
     -->
     <Spacing>2</Spacing>

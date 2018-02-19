@@ -4,6 +4,7 @@ using BEPUphysics.BroadPhaseEntries.MobileCollidables;
 using BEPUutilities.DataStructures;
 using BEPUutilities.ResourceManagement;
 using BEPUutilities;
+using FixMath.NET;
 
 namespace BEPUphysics.NarrowPhaseSystems.Pairs
 {
@@ -34,14 +35,14 @@ namespace BEPUphysics.NarrowPhaseSystems.Pairs
             //Construct a TriangleCollidable from the static mesh.
             var toReturn = PhysicsResources.GetTriangleCollidable();
             Vector3 terrainUp = new Vector3(mesh.worldTransform.LinearTransform.M21, mesh.worldTransform.LinearTransform.M22, mesh.worldTransform.LinearTransform.M23);
-            float dot;
+            Fix64 dot;
             Vector3 AB, AC, normal;
             var shape = toReturn.Shape;
             mesh.Shape.GetTriangle(index, ref mesh.worldTransform, out shape.vA, out shape.vB, out shape.vC);
             Vector3 center;
             Vector3.Add(ref shape.vA, ref shape.vB, out center);
             Vector3.Add(ref center, ref shape.vC, out center);
-            Vector3.Multiply(ref center, 1 / 3f, out center);
+            Vector3.Multiply(ref center, Fix64Utils.OneThird, out center);
             Vector3.Subtract(ref shape.vA, ref center, out shape.vA);
             Vector3.Subtract(ref shape.vB, ref center, out shape.vB);
             Vector3.Subtract(ref shape.vC, ref center, out shape.vC);
@@ -68,7 +69,7 @@ namespace BEPUphysics.NarrowPhaseSystems.Pairs
         }
 
 
-        protected override void ConfigureCollidable(TriangleEntry entry, float dt)
+        protected override void ConfigureCollidable(TriangleEntry entry, Fix64 dt)
         {
 
         }
@@ -113,7 +114,7 @@ namespace BEPUphysics.NarrowPhaseSystems.Pairs
 
 
 
-        protected override void UpdateContainedPairs(float dt)
+        protected override void UpdateContainedPairs(Fix64 dt)
         {
             var overlappedElements = new QuickList<int>(BufferPools<int>.Thread);
             BoundingBox localBoundingBox;

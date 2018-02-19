@@ -54,7 +54,7 @@ public static readonly Dictionary<string, string[]> Hashes = new Dictionary<stri
 		//[Fact]
 		public void OutputExpectedHashesForBenchmark()
 		{
-			Benchmark b = new DiscreteVsContinuousBenchmark();
+			Benchmark b = new PathFollowingBenchmark();
 
 			StringBuilder result = new StringBuilder();
 

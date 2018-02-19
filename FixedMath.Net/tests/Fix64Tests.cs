@@ -180,21 +180,31 @@ namespace FixMath.NET
             int failures = 0;
             for (int i = 0; i < m_testCases.Length; ++i)
             {
-                for (int j = 0; j < m_testCases.Length; ++j)
-                {
-                    var x = Fix64.FromRaw(m_testCases[i]);
-                    var y = Fix64.FromRaw(m_testCases[j]);
-                    var xM = (decimal)x;
-                    var yM = (decimal)y;
-                    var expected = xM * yM;
-                    expected =
-                        expected > (decimal)Fix64.MaxValue
-                            ? (decimal)Fix64.MaxValue
-                            : expected < (decimal)Fix64.MinValue
-                                  ? (decimal)Fix64.MinValue
-                                  : expected;
+				for (int j = 0; j < m_testCases.Length; ++j)
+				{
+					var x = Fix64.FromRaw(m_testCases[i]);
+					var y = Fix64.FromRaw(m_testCases[j]);
+					var xM = (decimal)x;
+					var yM = (decimal)y;
+					var expected = xM * yM;
+
+					bool overflow = false;
+					if (expected > (decimal)Fix64.MaxValue)
+					{
+						expected = (decimal)Fix64.MaxValue;
+						overflow = true;
+					}
+					else if (expected < (decimal)Fix64.MinValue)
+					{
+						expected = (decimal)Fix64.MinValue;
+						overflow = true;
+					}
                     sw.Start();
-                    var actual = x * y;
+					Fix64 actual;
+					if (overflow)
+						actual = Fix64.SafeMul(x, y);
+					else
+						actual = x * y;
                     sw.Stop();
                     var actualM = (decimal)actual;
                     var maxDelta = (decimal)Fix64.FromRaw(1);

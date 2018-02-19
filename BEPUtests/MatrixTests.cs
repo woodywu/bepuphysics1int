@@ -89,6 +89,9 @@ namespace BEPUtests
 					Matrix.Invert(ref testCase, out actual);
 					swd.Stop();
 
+					if (float.IsInfinity(expected.M11) || float.IsNaN(expected.M11))
+						expected = new FloatMatrix();
+
 					foreach (decimal delta in GetDeltas(expected, actual))
 						deltas.Add(delta);
 				}

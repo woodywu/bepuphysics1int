@@ -109,6 +109,7 @@ namespace BEPUbenchmark.Benchmarks
 			pathTime += Space.TimeStepSettings.TimeStepDuration;
 			mover.TargetPosition = positionPath.Evaluate(pathTime);
 			rotator.TargetOrientation = orientationPath.Evaluate(pathTime);
+			base.Step();
 		}
 	}
 }

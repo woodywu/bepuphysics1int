@@ -143,7 +143,7 @@ namespace FixMath.NET
 						
 			for (int i = 2; i < 40; i++)
 			{
-				term = term * x / i;
+				term = (term / i ) * x;
 				result += term;
 
 				if (term == 0)
@@ -823,9 +823,9 @@ namespace FixMath.NET
             Fix64 atan;
             var z = y / x;
 
-            // Deal with overflow
-            if (One + (Fix64)0.28M * z * z == MaxValue) {
-                return y < Zero ? -PiOver2 : PiOver2;
+			// Deal with overflow
+			if (SafeAdd(One, SafeMul(SafeMul((Fix64)0.28M, z), z)) == MaxValue) {
+				return y < Zero ? -PiOver2 : PiOver2;
             }
 
             if (Abs(z) < One) {
@@ -916,7 +916,7 @@ namespace FixMath.NET
 			var z = y / x;
 
 			// Deal with overflow
-			if (One + (Fix64)0.28M * z * z == MaxValue)
+			if (SafeAdd(One, SafeMul(SafeMul((Fix64)0.28M, z), z)) == MaxValue)
 			{
 				return y < Zero ? -PiOver2 : PiOver2;
 			}

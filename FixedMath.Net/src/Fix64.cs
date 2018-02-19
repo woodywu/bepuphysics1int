@@ -63,11 +63,12 @@ namespace FixMath.NET
         }
 
 
-        /// <summary>
-        /// Returns the absolute value of a Fix64 number.
-        /// Note: Abs(Fix64.MinValue) == Fix64.MaxValue.
-        /// </summary>
-        public static Fix64 Abs(Fix64 value) {
+		/// <summary>
+		/// Returns the absolute value of a Fix64 number.
+		/// Note: Abs(Fix64.MinValue) == Fix64.MaxValue.
+		/// </summary>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Fix64 Abs(Fix64 value) {
             if (value.m_rawValue == MIN_VALUE) {
                 return MaxValue;
             }
@@ -76,17 +77,6 @@ namespace FixMath.NET
             var mask = value.m_rawValue >> 63;
             return new Fix64((value.m_rawValue + mask) ^ mask);
         }
-
-        /// <summary>
-        /// Returns the absolute value of a Fix64 number.
-        /// FastAbs(Fix64.MinValue) is undefined.
-        /// </summary>
-        public static Fix64 FastAbs(Fix64 value) {
-            // branchless implementation, see http://www.strchr.com/optimized_abs_function
-            var mask = value.m_rawValue >> 63;
-            return new Fix64((value.m_rawValue + mask) ^ mask);
-        }
-
 
         /// <summary>
         /// Returns the largest integer less than or equal to the specified number.
@@ -251,12 +241,14 @@ namespace FixMath.NET
                        : integralPart + One;
         }
 
-        /// <summary>
-        /// Adds x and y. Performs saturating addition, i.e. in case of overflow, 
-        /// rounds to MinValue or MaxValue depending on sign of operands.
-        /// </summary>
-        public static Fix64 operator +(Fix64 x, Fix64 y) {
-            var xl = x.m_rawValue;
+		/// <summary>
+		/// Adds x and y. Performs saturating addition, i.e. in case of overflow, 
+		/// rounds to MinValue or MaxValue depending on sign of operands.
+		/// </summary>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Fix64 operator +(Fix64 x, Fix64 y) {
+#if CHECKMATH
+			var xl = x.m_rawValue;
             var yl = y.m_rawValue;
             var sum = xl + yl;
             // if signs of operands are equal and signs of sum and x are different
@@ -264,7 +256,10 @@ namespace FixMath.NET
                 sum = xl > 0 ? MAX_VALUE : MIN_VALUE;
             }
             return new Fix64(sum);
-        }
+#else
+			return new Fix64(x.m_rawValue + y.m_rawValue);
+#endif
+		}
 
 		public static Fix64 SafeAdd(Fix64 x, Fix64 y)
 		{
@@ -280,18 +275,13 @@ namespace FixMath.NET
 		}
 
 		/// <summary>
-		/// Adds x and y witout performing overflow checking. Should be inlined by the CLR.
+		/// Subtracts y from x. Performs saturating substraction, i.e. in case of overflow, 
+		/// rounds to MinValue or MaxValue depending on sign of operands.
 		/// </summary>
-		public static Fix64 FastAdd(Fix64 x, Fix64 y) {
-            return new Fix64(x.m_rawValue + y.m_rawValue);
-        }
-
-        /// <summary>
-        /// Subtracts y from x. Performs saturating substraction, i.e. in case of overflow, 
-        /// rounds to MinValue or MaxValue depending on sign of operands.
-        /// </summary>
-        public static Fix64 operator -(Fix64 x, Fix64 y) {
-            var xl = x.m_rawValue;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Fix64 operator -(Fix64 x, Fix64 y) {
+#if CHECKMATH
+			var xl = x.m_rawValue;
             var yl = y.m_rawValue;
             var diff = xl - yl;
             // if signs of operands are different and signs of sum and x are different
@@ -299,7 +289,10 @@ namespace FixMath.NET
                 diff = xl < 0 ? MIN_VALUE : MAX_VALUE;
             }
             return new Fix64(diff);
-        }
+#else
+			return new Fix64(x.m_rawValue - y.m_rawValue);
+#endif
+		}
 
 		public static Fix64 SafeSub(Fix64 x, Fix64 y)
 		{
@@ -314,13 +307,6 @@ namespace FixMath.NET
 			return new Fix64(diff);
 		}
 
-		/// <summary>
-		/// Subtracts y from x witout performing overflow checking. Should be inlined by the CLR.
-		/// </summary>
-		public static Fix64 FastSub(Fix64 x, Fix64 y) {
-            return new Fix64(x.m_rawValue - y.m_rawValue);
-        }
-
         static long AddOverflowHelper(long x, long y, ref bool overflow) {
             var sum = x + y;
             // x + y overflows if sign(x) ^ sign(y) != sign(sum)
@@ -328,9 +314,10 @@ namespace FixMath.NET
             return sum;
         }
 
-        public static Fix64 operator *(Fix64 x, Fix64 y) {
-
-            var xl = x.m_rawValue;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Fix64 operator *(Fix64 x, Fix64 y) {
+#if CHECKMATH
+			var xl = x.m_rawValue;
             var yl = y.m_rawValue;
 
             var xlo = (ulong)(xl & 0x00000000FFFFFFFF);
@@ -398,7 +385,29 @@ namespace FixMath.NET
             }
 
             return new Fix64(sum);
-        }
+#else
+			var xl = x.m_rawValue;
+			var yl = y.m_rawValue;
+
+			var xlo = (ulong)(xl & 0x00000000FFFFFFFF);
+			var xhi = xl >> FRACTIONAL_PLACES;
+			var ylo = (ulong)(yl & 0x00000000FFFFFFFF);
+			var yhi = yl >> FRACTIONAL_PLACES;
+
+			var lolo = xlo * ylo;
+			var lohi = (long)xlo * yhi;
+			var hilo = xhi * (long)ylo;
+			var hihi = xhi * yhi;
+
+			var loResult = lolo >> FRACTIONAL_PLACES;
+			var midResult1 = lohi;
+			var midResult2 = hilo;
+			var hiResult = hihi << FRACTIONAL_PLACES;
+
+			var sum = (long)loResult + midResult1 + midResult2 + hiResult;
+			return new Fix64(sum);
+#endif
+		}
 
 		public static Fix64 SafeMul(Fix64 x, Fix64 y)
 		{
@@ -476,34 +485,6 @@ namespace FixMath.NET
 
 			return new Fix64(sum);
 		}
-
-		/// <summary>
-		/// Performs multiplication without checking for overflow.
-		/// Useful for performance-critical code where the values are guaranteed not to cause overflow
-		/// </summary>
-		public static Fix64 FastMul(Fix64 x, Fix64 y) {
-
-            var xl = x.m_rawValue;
-            var yl = y.m_rawValue;
-
-            var xlo = (ulong)(xl & 0x00000000FFFFFFFF);
-            var xhi = xl >> FRACTIONAL_PLACES;
-            var ylo = (ulong)(yl & 0x00000000FFFFFFFF);
-            var yhi = yl >> FRACTIONAL_PLACES;
-
-            var lolo = xlo * ylo;
-            var lohi = (long)xlo * yhi;
-            var hilo = xhi * (long)ylo;
-            var hihi = xhi * yhi;
-
-            var loResult = lolo >> FRACTIONAL_PLACES;
-            var midResult1 = lohi;
-            var midResult2 = hilo;
-            var hiResult = hihi << FRACTIONAL_PLACES;
-
-            var sum = (long)loResult + midResult1 + midResult2 + hiResult;
-            return new Fix64(sum);
-        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)] 
         static int CountLeadingZeroes(ulong x) {
@@ -689,9 +670,9 @@ namespace FixMath.NET
 
             // Find the two closest values in the LUT and perform linear interpolation
             // This is what kills the performance of this function on x86 - x64 is fine though
-            var rawIndex = FastMul(clamped, LutInterval);
+            var rawIndex = clamped * LutInterval;
             var roundedIndex = Round(rawIndex); 
-            var indexError = FastSub(rawIndex, roundedIndex);
+            var indexError = rawIndex - roundedIndex;
 
             var nearestValue = new Fix64(SinLut[flipHorizontal ? 
                 SinLut.Length - 1 - (int)roundedIndex : 
@@ -700,7 +681,7 @@ namespace FixMath.NET
                 SinLut.Length - 1 - (int)roundedIndex - Sign(indexError) : 
                 (int)roundedIndex + Sign(indexError)]);
 
-            var delta = FastMul(indexError, FastAbs(FastSub(nearestValue, secondNearestValue))).m_rawValue;
+            var delta = (indexError * Abs(nearestValue - secondNearestValue)).m_rawValue;
             var interpolatedValue = nearestValue.m_rawValue + (flipHorizontal ? -delta : delta);
             var finalValue = flipVertical ? -interpolatedValue : interpolatedValue;
             return new Fix64(finalValue);
@@ -795,14 +776,14 @@ namespace FixMath.NET
             var clamped = new Fix64(clampedPi);
 
             // Find the two closest values in the LUT and perform linear interpolation
-            var rawIndex = FastMul(clamped, LutInterval);
+            var rawIndex = clamped * LutInterval;
             var roundedIndex = Round(rawIndex);
-            var indexError = FastSub(rawIndex, roundedIndex);
+            var indexError = rawIndex - roundedIndex;
 
             var nearestValue = new Fix64(TanLut[(int)roundedIndex]);
             var secondNearestValue = new Fix64(TanLut[(int)roundedIndex + Sign(indexError)]);
 
-            var delta = FastMul(indexError, FastAbs(FastSub(nearestValue, secondNearestValue))).m_rawValue;
+            var delta = (indexError * Abs(nearestValue - secondNearestValue)).m_rawValue;
             var interpolatedValue = nearestValue.m_rawValue + delta;
             var finalValue = flip ? -interpolatedValue : interpolatedValue;
             return new Fix64(finalValue);

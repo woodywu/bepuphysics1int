@@ -134,10 +134,16 @@ namespace FixMath.NET
         [Fact]
         public void Addition()
         {
+#if CHECKMATH
             var terms1 = new[] { Fix64.MinValue, (Fix64)(-1), Fix64.Zero, Fix64.One, Fix64.MaxValue };
             var terms2 = new[] { (Fix64)(-1), (Fix64)2, (Fix64)(-1.5m), (Fix64)(-2), Fix64.One };
-            var expecteds = new[] { Fix64.MinValue, Fix64.One, (Fix64)(-1.5m), (Fix64)(-1), Fix64.MaxValue };
-            for (int i = 0; i < terms1.Length; ++i)
+			var expecteds = new[] { Fix64.MinValue, Fix64.One, (Fix64)(-1.5m), (Fix64)(-1), Fix64.MaxValue };
+#else
+			var terms1 = new[] { (Fix64)(-1), Fix64.Zero, Fix64.One};
+			var terms2 = new[] { (Fix64)2, (Fix64)(-1.5m), (Fix64)(-2)};
+			var expecteds = new[] { Fix64.One, (Fix64)(-1.5m), (Fix64)(-1), Fix64.MaxValue };
+#endif
+			for (int i = 0; i < terms1.Length; ++i)
             {
                 var actual = terms1[i] + terms2[i];
                 var expected = expecteds[i];
@@ -146,11 +152,17 @@ namespace FixMath.NET
         }
 
         [Fact]
-        public void Substraction()
+        public void Subtraction()
         {
-            var terms1 = new[] { Fix64.MinValue, (Fix64)(-1), Fix64.Zero, Fix64.One, Fix64.MaxValue };
+#if CHECKMATH
+			var terms1 = new[] { Fix64.MinValue, (Fix64)(-1), Fix64.Zero, Fix64.One, Fix64.MaxValue };
             var terms2 = new[] { Fix64.One, (Fix64)(-2), (Fix64)(1.5m), (Fix64)(2), (Fix64)(-1) };
-            var expecteds = new[] { Fix64.MinValue, Fix64.One, (Fix64)(-1.5m), (Fix64)(-1), Fix64.MaxValue };
+			var expecteds = new[] { Fix64.MinValue, Fix64.One, (Fix64)(-1.5m), (Fix64)(-1), Fix64.MaxValue };
+#else
+			var terms1 = new[] { (Fix64)(-1), Fix64.Zero, Fix64.One, Fix64.MaxValue };
+			var terms2 = new[] { (Fix64)(-2), (Fix64)(1.5m), (Fix64)(2), (Fix64)(-1) };
+			var expecteds = new[] { Fix64.One, (Fix64)(-1.5m), (Fix64)(-1), Fix64.MaxValue };
+#endif
             for (int i = 0; i < terms1.Length; ++i)
             {
                 var actual = terms1[i] - terms2[i];
@@ -305,20 +317,6 @@ namespace FixMath.NET
         }
 
         [Fact]
-        public void FastAbs()
-        {
-            Assert.Equal(Fix64.MinValue, Fix64.FastAbs(Fix64.MinValue));
-            var sources = new[] { -1, 0, 1, int.MaxValue };
-            var expecteds = new[] { 1, 0, 1, int.MaxValue };
-            for (int i = 0; i < sources.Length; ++i)
-            {
-                var actual = Fix64.FastAbs((Fix64)sources[i]);
-                var expected = (Fix64)expecteds[i];
-                Assert.Equal(expected, actual);
-            }
-        }
-
-        [Fact]
         public void Floor()
         {
             var sources = new[] { -5.1m, -1, 0, 1, 5.1m };
@@ -342,8 +340,9 @@ namespace FixMath.NET
                 var expected = expecteds[i];
                 Assert.Equal(expected, actual);
             }
-
-            Assert.Equal(Fix64.MaxValue, Fix64.Ceiling(Fix64.MaxValue));
+#if CHECKMATH
+			Assert.Equal(Fix64.MaxValue, Fix64.Ceiling(Fix64.MaxValue));
+#endif
         }
 
         [Fact]
@@ -357,7 +356,10 @@ namespace FixMath.NET
                 var expected = expecteds[i];
                 Assert.Equal(expected, actual);
             }
-            Assert.Equal(Fix64.MaxValue, Fix64.Round(Fix64.MaxValue));
+#if CHECKMATH
+			// Rounding MaxValue fails in optimised builds without CHECKMATH
+			Assert.Equal(Fix64.MaxValue, Fix64.Round(Fix64.MaxValue));
+#endif
         }
 
 

@@ -56,16 +56,17 @@ namespace BEPUutilities
 				}
 
 				// Divide row by pivot
-				Fix64 pivot = M[k, k];
+				Fix64 pivotInverse = 1 / M[k, k];
+
 				M[k, k] = 1;
 				for (int j = k + 1; j < n; j++)
 				{
-					M[k, j] /= pivot;
+					M[k, j] *= pivotInverse;
 				}
 
 				for (int i = k + 1; i < m; i++)
 				{
-					Fix64 f = M[i, k] / M[k, k];
+					Fix64 f = M[i, k];
 					/* Do for all remaining elements in current row: */
 					for (int j = k + 1; j < n; j++)
 					{

@@ -163,7 +163,7 @@ namespace BEPUphysicsDemos.Demos
 
             for (int i = 0; i < MaximumShellCount; ++i)
             {
-                var shell = new Sphere(new Vector3(100000, 0, 0), (Fix64)0.2m, 2);
+                var shell = new Sphere(new Vector3(10000, 0, 0), (Fix64)0.2m, 2);
                 shell.PositionUpdateMode = BEPUphysics.PositionUpdating.PositionUpdateMode.Continuous;
                 shellPool.Enqueue(shell);
             }

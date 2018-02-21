@@ -506,8 +506,7 @@ namespace BEPUutilities
 		/// <returns>false if matrix is singular, true otherwise</returns>
 		public static bool Invert(ref Matrix3x3 matrix, out Matrix3x3 result)
         {
-			Matrix3x6 temp = new Matrix3x6(matrix);
-			return temp.Invert(out result);
+			return Matrix3x6.Invert(ref matrix, out result);
         }
 
         /// <summary>

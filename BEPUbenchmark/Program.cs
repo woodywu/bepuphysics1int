@@ -1,5 +1,4 @@
-﻿using BEPUbenchmark.Benchmarks;
-using System;
+﻿using System;
 
 namespace BEPUbenchmark
 {

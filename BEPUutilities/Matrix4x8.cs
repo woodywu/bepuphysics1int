@@ -3,13 +3,15 @@ using System;
 
 namespace BEPUutilities
 {
-	struct Matrix4x8
+	static class Matrix4x8
 	{
-		public Fix64[,] M;
+		[ThreadStatic] private static Fix64[,] Matrix;
 
-		public Matrix4x8(Matrix m)
+		public static bool Invert(ref Matrix m, out Matrix r)
 		{
-			M = new Fix64[4, 8];
+			if (Matrix == null)
+				Matrix = new Fix64[4, 8];
+			Fix64[,] M = Matrix;
 
 			M[0, 0] = m.M11;
 			M[0, 1] = m.M12;
@@ -29,64 +31,23 @@ namespace BEPUutilities
 			M[3, 3] = m.M44;
 
 			M[0, 4] = Fix64.One;
+			M[0, 5] = Fix64.Zero;
+			M[0, 6] = Fix64.Zero;
+			M[0, 7] = Fix64.Zero;
+			M[1, 4] = Fix64.Zero;
 			M[1, 5] = Fix64.One;
+			M[1, 6] = Fix64.Zero;
+			M[1, 7] = Fix64.Zero;
+			M[2, 4] = Fix64.Zero;
+			M[2, 5] = Fix64.Zero;
 			M[2, 6] = Fix64.One;
+			M[2, 7] = Fix64.Zero;
+			M[3, 4] = Fix64.Zero;
+			M[3, 5] = Fix64.Zero;
+			M[3, 6] = Fix64.Zero;
 			M[3, 7] = Fix64.One;
-		}
 
-		public void Gauss()
-		{
-			// Perform Gauss-Jordan elimination
-			for (int k = 0; k < 4; k++)
-			{
-				Fix64 maxValue = Fix64.Abs(M[k, k]);
-				int iMax = k;
-				for (int i = k+1; i < 4; i++)
-				{
-					Fix64 value = Fix64.Abs(M[i, k]);
-					if (value >= maxValue)
-					{
-						maxValue = value;
-						iMax = i;
-					}
-				}
-				if (M[iMax, k] == 0)
-					throw new ArgumentException("Matrix is singular");
-				// Swap rows k, iMax
-				if (k != iMax)
-				{
-					for (int j = 0; j < 8; j++)
-					{
-						Fix64 temp = M[k, j];
-						M[k, j] = M[iMax, j];
-						M[k, j] = temp;
-					}
-				}
 
-				// Divide row by pivot
-				Fix64 pivot = M[k, k];
-				M[k, k] = 1;
-				for (int j = k + 1; j < 6; j++)
-				{
-					M[k, j] /= pivot;
-				}
-
-				for (int i = k + 1; i < 3; i++)
-				{
-					Fix64 f = M[i, k] / M[k, k];
-					/* Do for all remaining elements in current row: */
-					for (int j = k + 1; j < 6; j++)
-					{
-						M[i, j] = M[i, j] - M[k, j] * f;
-					}
-					/* Fill lower triangular matrix with zeros: */
-					M[i, k] = 0;
-				}
-			}
-		}
-
-		public bool Invert(out Matrix r)
-		{
 			if (!Matrix3x6.Gauss(M, 4, 8))
 			{
 				r = new Matrix();

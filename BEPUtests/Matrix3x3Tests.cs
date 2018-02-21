@@ -17,7 +17,13 @@ namespace BEPUtests
 			Matrix3x3.Identity,
 			new Matrix3x3(6770.833m, 0, 0, 0, 13500, 0, 0, 0, 6770.833m),
 			new Matrix3x3(0.6770833m, 0, 0, 0, 1.35m, 0, 0, 0, 0.6770833m),
-			new Matrix3x3(0, 0, 0, 0, 13500, 0, 0, 0, 6770.833m)
+			new Matrix3x3(0, 0, 0, 0, 13500, 0, 0, 0, 6770.833m),
+
+			new Matrix3x3(5, 135, -5, 8, 13500, 20, -5, 100, 6770.833m),
+			new Matrix3x3(0.1m, 3, 838, -200, 13500, 0.001m, 22, 42, 6770.833m),
+			new Matrix3x3(-3, 3, 2, -1, -8, -5, 63, 5, 0.833m),
+			new Matrix3x3(5, 3, 2, -3, 11, 1900, 76, 96, 33.833m),
+
 		};
 
 		private readonly ITestOutputHelper output;
@@ -33,7 +39,7 @@ namespace BEPUtests
 		[Fact]
 		public void Invert()
 		{
-			var maxDelta = 0.00001m;
+			var maxDelta = 0.001m;
 
 			var deltas = new List<decimal>();
 
@@ -104,7 +110,7 @@ namespace BEPUtests
 		[Fact]
 		public void AdaptiveInvert()
 		{
-			var maxDelta = 0.00001m;
+			var maxDelta = 0.001m;
 
 			var deltas = new List<decimal>();
 

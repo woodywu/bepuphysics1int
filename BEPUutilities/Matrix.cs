@@ -844,8 +844,7 @@ namespace BEPUutilities
         /// <param name="inverted">Inverted version of the matrix.</param>
         public static void Invert(ref Matrix m, out Matrix inverted)
         {
-			Matrix4x8 temp = new Matrix4x8(m);
-			temp.Invert(out inverted);			
+			Matrix4x8.Invert(ref m, out inverted);
         }
 
         /// <summary>

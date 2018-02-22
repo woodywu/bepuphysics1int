@@ -188,11 +188,11 @@ namespace BEPUphysics.CollisionShapes
             Fix64 maxZ = heights.GetLength(1) - 1;
 
             Vector3 progressingOrigin = localRay.Position;
-            Fix64 distance = 0;
+            Fix64 distance = F64.C0;
             //Check the outside cases first.
-            if (progressingOrigin.X < 0)
+            if (progressingOrigin.X < F64.C0)
             {
-                if (localRay.Direction.X > 0)
+                if (localRay.Direction.X > F64.C0)
                 {
                     //Off the left side.
                     Fix64 timeToMinX = -progressingOrigin.X / localRay.Direction.X;
@@ -206,7 +206,7 @@ namespace BEPUphysics.CollisionShapes
             }
             else if (progressingOrigin.X > maxX)
             {
-                if (localRay.Direction.X < 0)
+                if (localRay.Direction.X < F64.C0)
                 {
                     //Off the left side.
                     Fix64 timeToMinX = -(progressingOrigin.X - maxX) / localRay.Direction.X;
@@ -219,9 +219,9 @@ namespace BEPUphysics.CollisionShapes
                     return false; //Outside and pointing away from the terrain.
             }
 
-            if (progressingOrigin.Z < 0)
+            if (progressingOrigin.Z < F64.C0)
             {
-                if (localRay.Direction.Z > 0)
+                if (localRay.Direction.Z > F64.C0)
                 {
                     Fix64 timeToMinZ = -progressingOrigin.Z / localRay.Direction.Z;
                     distance += timeToMinZ;
@@ -234,7 +234,7 @@ namespace BEPUphysics.CollisionShapes
             }
             else if (progressingOrigin.Z > maxZ)
             {
-                if (localRay.Direction.Z < 0)
+                if (localRay.Direction.Z < F64.C0)
                 {
                     Fix64 timeToMinZ = -(progressingOrigin.Z - maxZ) / localRay.Direction.Z;
                     distance += timeToMinZ;
@@ -258,9 +258,9 @@ namespace BEPUphysics.CollisionShapes
             //If it's hitting the border and going in, then correct the index
             //so that it will initially target a valid quad.
             //Without this, a quad beyond the border would be tried and failed.
-            if (xCell == heights.GetLength(0) - 1 && localRay.Direction.X < 0)
+            if (xCell == heights.GetLength(0) - 1 && localRay.Direction.X < F64.C0)
                 xCell = heights.GetLength(0) - 2;
-            if (zCell == heights.GetLength(1) - 1 && localRay.Direction.Z < 0)
+            if (zCell == heights.GetLength(1) - 1 && localRay.Direction.Z < F64.C0)
                 zCell = heights.GetLength(1) - 2;
 
             while (true)
@@ -302,8 +302,8 @@ namespace BEPUphysics.CollisionShapes
                     lowest = v4.Y;
 
 
-                if (!(progressingOrigin.Y > highest && localRay.Direction.Y > 0 ||
-                    progressingOrigin.Y < lowest && localRay.Direction.Y < 0))
+                if (!(progressingOrigin.Y > highest && localRay.Direction.Y > F64.C0 ||
+                    progressingOrigin.Y < lowest && localRay.Direction.Y < F64.C0))
                 {
 
 
@@ -355,17 +355,17 @@ namespace BEPUphysics.CollisionShapes
                 //Move to the next cell.
 
                 Fix64 timeToX;
-                if (localRay.Direction.X < 0)
+                if (localRay.Direction.X < F64.C0)
                     timeToX = -(progressingOrigin.X - xCell) / localRay.Direction.X;
-                else if (localRay.Direction.X > 0)
+                else if (localRay.Direction.X > F64.C0)
                     timeToX = (xCell + 1 - progressingOrigin.X) / localRay.Direction.X;
                 else
                     timeToX = Fix64.MaxValue;
 
                 Fix64 timeToZ;
-                if (localRay.Direction.Z < 0)
+                if (localRay.Direction.Z < F64.C0)
                     timeToZ = -(progressingOrigin.Z - zCell) / localRay.Direction.Z;
-                else if (localRay.Direction.Z > 0)
+                else if (localRay.Direction.Z > F64.C0)
                     timeToZ = (zCell + 1 - progressingOrigin.Z) / localRay.Direction.Z;
                 else
                     timeToZ = Fix64.MaxValue;
@@ -373,7 +373,7 @@ namespace BEPUphysics.CollisionShapes
                 //Move to the next cell.
                 if (timeToX < timeToZ)
                 {
-                    if (localRay.Direction.X < 0)
+                    if (localRay.Direction.X < F64.C0)
                         xCell--;
                     else
                         xCell++;
@@ -388,7 +388,7 @@ namespace BEPUphysics.CollisionShapes
                 }
                 else
                 {
-                    if (localRay.Direction.Z < 0)
+                    if (localRay.Direction.Z < F64.C0)
                         zCell--;
                     else
                         zCell++;
@@ -483,7 +483,7 @@ namespace BEPUphysics.CollisionShapes
             //Fix64 resultZ = 0 * leftToRight.Y - bottomToTop.Y * 2;
             //Which becomes:
             normal.X = rightHeight - leftHeight;
-            normal.Y = 2;
+            normal.Y = F64.C2;
             normal.Z = topHeight - bottomHeight;
 
         }

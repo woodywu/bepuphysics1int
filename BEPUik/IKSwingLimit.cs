@@ -43,7 +43,7 @@ namespace BEPUik
         public Fix64 MaximumAngle
         {
             get { return maximumAngle; }
-            set { maximumAngle = MathHelper.Max(0, value); }
+            set { maximumAngle = MathHelper.Max(F64.C0, value); }
         }
 
 
@@ -79,7 +79,7 @@ namespace BEPUik
 
             //Yes, we could avoid this acos here. Performance is not the highest goal of this system; the less tricks used, the easier it is to understand.
 			// TODO investigate performance
-            Fix64 angle = Fix64.Acos(MathHelper.Clamp(dot, -1, 1));
+            Fix64 angle = Fix64.Acos(MathHelper.Clamp(dot, -1, F64.C1));
 
             //One angular DOF is constrained by this limit.
             Vector3 hingeAxis;
@@ -92,13 +92,13 @@ namespace BEPUik
             //This is to enable 'speculative' limits.
             if (angle >= maximumAngle)
             {
-                velocityBias = new Vector3(errorCorrectionFactor * (angle - maximumAngle), 0, 0);
+                velocityBias = new Vector3(errorCorrectionFactor * (angle - maximumAngle), F64.C0, F64.C0);
             }
             else
             {
                 //The constraint is not yet violated. But, it may be- allow only as much motion as could occur without violating the constraint.
                 //Limits can't 'pull,' so this will not result in erroneous sticking.
-                velocityBias = new Vector3(angle - maximumAngle, 0, 0);
+                velocityBias = new Vector3(angle - maximumAngle, F64.C0, F64.C0);
             }
 
 

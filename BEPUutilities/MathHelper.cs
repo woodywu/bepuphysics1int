@@ -107,7 +107,7 @@ namespace BEPUutilities
         /// <returns>Radians equivalent to the input degrees.</returns>
         public static Fix64 ToRadians(Fix64 degrees)
         {
-            return degrees * (Pi / 180);
+            return degrees * (Pi / F64.C180);
         }
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace BEPUutilities
         /// <returns>Degrees equivalent to the input radians.</returns>
         public static Fix64 ToDegrees(Fix64 radians)
         {
-            return radians * (180 / Pi);
+            return radians * (F64.C180 / Pi);
         }
     }
 }

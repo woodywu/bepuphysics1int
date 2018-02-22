@@ -48,7 +48,7 @@ namespace BEPUutilities
         /// <param name="points">List of points to prune.</param>
         public static void RemoveRedundantPoints(IList<Vector3> points)
         {
-            RemoveRedundantPoints(points, Fix64Utils.PointZeroZeroOne);
+            RemoveRedundantPoints(points, F64.C0p001);
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace BEPUutilities
         /// <param name="points">List of points to prune.</param>
         public static void RemoveRedundantPoints(RawList<Vector3> points)
         {
-            RemoveRedundantPoints(points, Fix64Utils.PointZeroZeroOne);
+            RemoveRedundantPoints(points, F64.C0p001);
         }
 
         /// <summary>

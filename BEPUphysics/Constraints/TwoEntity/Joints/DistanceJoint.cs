@@ -77,7 +77,7 @@ namespace BEPUphysics.Constraints.TwoEntity.Joints
         public Fix64 Distance
         {
             get { return distance; }
-            set { distance = MathHelper.Max(0, value); }
+            set { distance = MathHelper.Max(F64.C0, value); }
         }
 
         /// <summary>
@@ -337,14 +337,14 @@ namespace BEPUphysics.Constraints.TwoEntity.Joints
             {
                 //No point in trying to solve with two kinematics.
                 isActiveInSolver = false;
-                accumulatedImpulse = 0;
+                accumulatedImpulse = F64.C0;
                 return;
             }
 
             Fix64 errorReduction;
-            springSettings.ComputeErrorReductionAndSoftness(dt, 1 / dt, out errorReduction, out softness);
+            springSettings.ComputeErrorReductionAndSoftness(dt, F64.C1 / dt, out errorReduction, out softness);
 
-            velocityToImpulse = 1 / (softness + velocityToImpulse);
+            velocityToImpulse = F64.C1 / (softness + velocityToImpulse);
             //Finish computing jacobian; it's down here as an optimization (since it didn't need to be negated in mass matrix)
             jAngularA.X = -jAngularA.X;
             jAngularA.Y = -jAngularA.Y;

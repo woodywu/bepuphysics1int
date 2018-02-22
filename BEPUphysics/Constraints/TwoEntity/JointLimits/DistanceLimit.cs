@@ -106,7 +106,7 @@ namespace BEPUphysics.Constraints.TwoEntity.JointLimits
             get { return maximumLength; }
             set
             {
-                maximumLength = MathHelper.Max(0, value);
+                maximumLength = MathHelper.Max(F64.C0, value);
                 minimumLength = MathHelper.Min(minimumLength, maximumLength);
             }
         }
@@ -119,7 +119,7 @@ namespace BEPUphysics.Constraints.TwoEntity.JointLimits
             get { return minimumLength; }
             set
             {
-                minimumLength = MathHelper.Max(0, value);
+                minimumLength = MathHelper.Max(F64.C0, value);
                 maximumLength = MathHelper.Max(minimumLength, maximumLength);
             }
         }
@@ -171,7 +171,7 @@ namespace BEPUphysics.Constraints.TwoEntity.JointLimits
                     lambda += dot;
                     return lambda;
                 }
-                return 0;
+                return F64.C0;
             }
         }
 
@@ -267,7 +267,7 @@ namespace BEPUphysics.Constraints.TwoEntity.JointLimits
 
             //Clamp accumulated impulse (can't go negative)
             Fix64 previousAccumulatedImpulse = accumulatedImpulse;
-            accumulatedImpulse = MathHelper.Max(accumulatedImpulse + lambda, 0);
+            accumulatedImpulse = MathHelper.Max(accumulatedImpulse + lambda, F64.C0);
             lambda = accumulatedImpulse - previousAccumulatedImpulse;
 
             //Apply the impulse
@@ -309,8 +309,8 @@ namespace BEPUphysics.Constraints.TwoEntity.JointLimits
             if (distance <= maximumLength && distance >= minimumLength)
             {
                 isActiveInSolver = false;
-                accumulatedImpulse = 0;
-                error = 0;
+                accumulatedImpulse = F64.C0;
+                error = F64.C0;
                 isLimitActive = false;
                 return;
             }
@@ -395,14 +395,14 @@ namespace BEPUphysics.Constraints.TwoEntity.JointLimits
             {
                 //No point in trying to solve with two kinematics.
                 isActiveInSolver = false;
-                accumulatedImpulse = 0;
+                accumulatedImpulse = F64.C0;
                 return;
             }
 
             Fix64 errorReduction;
-            springSettings.ComputeErrorReductionAndSoftness(dt, 1 / dt, out errorReduction, out softness);
+            springSettings.ComputeErrorReductionAndSoftness(dt, F64.C1 / dt, out errorReduction, out softness);
 
-            velocityToImpulse = 1 / (softness + velocityToImpulse);
+            velocityToImpulse = F64.C1 / (softness + velocityToImpulse);
             //Finish computing jacobian; it's down here as an optimization (since it didn't need to be negated in mass matrix)
             jAngularA.X = -jAngularA.X;
             jAngularA.Y = -jAngularA.Y;
@@ -410,11 +410,11 @@ namespace BEPUphysics.Constraints.TwoEntity.JointLimits
 
             //Compute bias velocity
             if (distance > maximumLength)
-                error = MathHelper.Max(0, distance - maximumLength - Margin);
+                error = MathHelper.Max(F64.C0, distance - maximumLength - Margin);
             else
-                error = MathHelper.Max(0, minimumLength - Margin - distance);
+                error = MathHelper.Max(F64.C0, minimumLength - Margin - distance);
             biasVelocity = MathHelper.Min(errorReduction * error, maxCorrectiveVelocity);
-            if (bounciness > 0)
+            if (bounciness > F64.C0)
             {
                 //Compute currently relative velocity for bounciness.
                 Fix64 relativeVelocity, dot;

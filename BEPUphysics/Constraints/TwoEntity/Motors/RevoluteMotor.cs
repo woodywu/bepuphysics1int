@@ -216,7 +216,7 @@ namespace BEPUphysics.Constraints.TwoEntity.Motors
             basis.ComputeWorldSpaceAxes();
             Matrix3x3.Transform(ref localTestAxis, ref connectionB.orientationMatrix, out worldTestAxis);
 
-            Fix64 updateRate = 1 / dt;
+            Fix64 updateRate = F64.C1 / dt;
             if (settings.mode == MotorMode.Servomechanism)
             {
                 Fix64 y, x;
@@ -234,7 +234,7 @@ namespace BEPUphysics.Constraints.TwoEntity.Motors
                 Fix64 absErrorOverDt = Fix64.Abs(error * updateRate);
                 Fix64 errorReduction;
                 settings.servo.springSettings.ComputeErrorReductionAndSoftness(dt, updateRate, out errorReduction, out usedSoftness);
-                biasVelocity = Fix64Utils.Sign(error) * MathHelper.Min(settings.servo.baseCorrectiveSpeed, absErrorOverDt) + error * errorReduction;
+                biasVelocity = Fix64.Sign(error) * MathHelper.Min(settings.servo.baseCorrectiveSpeed, absErrorOverDt) + error * errorReduction;
 
                 biasVelocity = MathHelper.Clamp(biasVelocity, -settings.servo.maxCorrectiveVelocity, settings.servo.maxCorrectiveVelocity);
             }
@@ -242,7 +242,7 @@ namespace BEPUphysics.Constraints.TwoEntity.Motors
             {
                 biasVelocity = settings.velocityMotor.goalVelocity;
                 usedSoftness = settings.velocityMotor.softness * updateRate;
-                error = 0;
+                error = F64.C0;
             }
 
 
@@ -263,7 +263,7 @@ namespace BEPUphysics.Constraints.TwoEntity.Motors
                 Vector3.Dot(ref transformedAxis, ref jacobianA, out entryA);
             }
             else
-                entryA = 0;
+                entryA = F64.C0;
 
             //Connection B's contribution to the mass matrix
             Fix64 entryB;
@@ -273,10 +273,10 @@ namespace BEPUphysics.Constraints.TwoEntity.Motors
                 Vector3.Dot(ref transformedAxis, ref jacobianB, out entryB);
             }
             else
-                entryB = 0;
+                entryB = F64.C0;
 
             //Compute the inverse mass matrix
-            velocityToImpulse = 1 / (usedSoftness + entryA + entryB);
+            velocityToImpulse = F64.C1 / (usedSoftness + entryA + entryB);
 
 
             //Update the maximum force
@@ -352,11 +352,11 @@ namespace BEPUphysics.Constraints.TwoEntity.Motors
 
             Fix64 forwardDistance;
             Fix64 goalAngle = MathHelper.WrapAngle(settings.servo.goal);
-            if (goalAngle > 0)
+            if (goalAngle > F64.C0)
             {
                 if (angle > goalAngle)
                     forwardDistance = angle - goalAngle;
-                else if (angle > 0)
+                else if (angle > F64.C0)
                     forwardDistance = MathHelper.TwoPi - goalAngle + angle;
                 else //if (angle <= 0)
                     forwardDistance = MathHelper.TwoPi - goalAngle + angle;

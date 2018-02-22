@@ -146,7 +146,7 @@ namespace BEPUutilities
         /// </summary>
         public void Normalize()
         {
-            Fix64 inverse = 1 / Fix64.Sqrt(X * X + Y * Y + Z * Z + W * W);
+            Fix64 inverse = F64.C1 / Fix64.Sqrt(X * X + Y * Y + Z * Z + W * W);
             X *= inverse;
             Y *= inverse;
             Z *= inverse;
@@ -247,7 +247,7 @@ namespace BEPUutilities
         /// <param name="result">Result of the division.</param>
         public static void Divide(ref Vector4 v, Fix64 divisor, out Vector4 result)
         {
-            Fix64 inverse = 1 / divisor;
+            Fix64 inverse = F64.C1 / divisor;
             result.X = v.X * inverse;
             result.Y = v.Y * inverse;
             result.Z = v.Z * inverse;
@@ -308,7 +308,7 @@ namespace BEPUutilities
         public static Vector4 operator /(Vector4 v, Fix64 f)
         {
             Vector4 toReturn;
-            f = 1 / f;
+            f = F64.C1 / f;
             toReturn.X = v.X * f;
             toReturn.Y = v.Y * f;
             toReturn.Z = v.Z * f;
@@ -479,7 +479,7 @@ namespace BEPUutilities
         /// </summary>
         public static Vector4 UnitX
         {
-            get { return new Vector4 { X = 1 }; }
+            get { return new Vector4 { X = F64.C1 }; }
         }
 
         /// <summary>
@@ -487,7 +487,7 @@ namespace BEPUutilities
         /// </summary>
         public static Vector4 UnitY
         {
-            get { return new Vector4 { Y = 1 }; }
+            get { return new Vector4 { Y = F64.C1 }; }
         }
 
         /// <summary>
@@ -495,7 +495,7 @@ namespace BEPUutilities
         /// </summary>
         public static Vector4 UnitZ
         {
-            get { return new Vector4 { Z = 1 }; }
+            get { return new Vector4 { Z = F64.C1 }; }
         }
 
         /// <summary>
@@ -503,7 +503,7 @@ namespace BEPUutilities
         /// </summary>
         public static Vector4 UnitW
         {
-            get { return new Vector4 { W = 1 }; }
+            get { return new Vector4 { W = F64.C1 }; }
         }
 
         /// <summary>
@@ -525,7 +525,7 @@ namespace BEPUutilities
         /// <param name="result">Normalized vector.</param>
         public static void Normalize(ref Vector4 v, out Vector4 result)
         {
-            Fix64 inverse = 1 / Fix64.Sqrt(v.X * v.X + v.Y * v.Y + v.Z * v.Z + v.W * v.W);
+            Fix64 inverse = F64.C1 / Fix64.Sqrt(v.X * v.X + v.Y * v.Y + v.Z * v.Z + v.W * v.W);
             result.X = v.X * inverse;
             result.Y = v.Y * inverse;
             result.Z = v.Z * inverse;
@@ -553,19 +553,19 @@ namespace BEPUutilities
         /// <param name="result">Vector with nonnegative elements.</param>
         public static void Abs(ref Vector4 v, out Vector4 result)
         {
-            if (v.X < 0)
+            if (v.X < F64.C0)
                 result.X = -v.X;
             else
                 result.X = v.X;
-            if (v.Y < 0)
+            if (v.Y < F64.C0)
                 result.Y = -v.Y;
             else
                 result.Y = v.Y;
-            if (v.Z < 0)
+            if (v.Z < F64.C0)
                 result.Z = -v.Z;
             else
                 result.Z = v.Z;
-            if (v.W < 0)
+            if (v.W < F64.C0)
                 result.W = -v.W;
             else
                 result.W = v.W;
@@ -660,7 +660,7 @@ namespace BEPUutilities
         /// <param name="result">Interpolated intermediate state.</param>
         public static void Lerp(ref Vector4 start, ref Vector4 end, Fix64 interpolationAmount, out Vector4 result)
         {
-            Fix64 startAmount = 1 - interpolationAmount;
+            Fix64 startAmount = F64.C1 - interpolationAmount;
             result.X = start.X * startAmount + end.X * interpolationAmount;
             result.Y = start.Y * startAmount + end.Y * interpolationAmount;
             result.Z = start.Z * startAmount + end.Z * interpolationAmount;
@@ -680,9 +680,9 @@ namespace BEPUutilities
         {
             Fix64 weightSquared = interpolationAmount * interpolationAmount;
             Fix64 weightCubed = interpolationAmount * weightSquared;
-            Fix64 value1Blend = 2 * weightCubed - 3 * weightSquared + 1;
-            Fix64 tangent1Blend = weightCubed - 2 * weightSquared + interpolationAmount;
-            Fix64 value2Blend = -2 * weightCubed + 3 * weightSquared;
+            Fix64 value1Blend = F64.C2 * weightCubed - F64.C3 * weightSquared + F64.C1;
+            Fix64 tangent1Blend = weightCubed - F64.C2 * weightSquared + interpolationAmount;
+            Fix64 value2Blend = -2 * weightCubed + F64.C3 * weightSquared;
             Fix64 tangent2Blend = weightCubed - weightSquared;
             result.X = value1.X * value1Blend + value2.X * value2Blend + tangent1.X * tangent1Blend + tangent2.X * tangent2Blend;
             result.Y = value1.Y * value1Blend + value2.Y * value2Blend + tangent1.Y * tangent1Blend + tangent2.Y * tangent2Blend;

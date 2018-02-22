@@ -9,6 +9,7 @@ using System;
 using BEPUphysics.Constraints.SolverGroups;
 using BEPUphysics.Materials;
 using FixMath.NET;
+using BEPUutilities;
 
 namespace BEPUphysics.NarrowPhaseSystems.Pairs
 {
@@ -57,7 +58,7 @@ namespace BEPUphysics.NarrowPhaseSystems.Pairs
         }
 
 
-        protected internal Fix64 timeOfImpact = 1;
+        protected internal Fix64 timeOfImpact = F64.C1;
         ///<summary>
         /// Gets the last computed time of impact of the pair handler.
         /// This is only computed when one of the members is a continuously
@@ -197,7 +198,7 @@ namespace BEPUphysics.NarrowPhaseSystems.Pairs
 
             broadPhaseOverlap = new BroadPhaseOverlap();
             suppressEvents = false;
-            timeOfImpact = 1;
+            timeOfImpact = F64.C1;
             Parent = null;
 
             previousContactCount = 0;
@@ -247,7 +248,7 @@ namespace BEPUphysics.NarrowPhaseSystems.Pairs
             {
                 foreach (var contact in Contacts)
                 {
-                    if (contact.Contact.PenetrationDepth >= 0)
+                    if (contact.Contact.PenetrationDepth >= F64.C0)
                         return true;
                 }
                 return false;

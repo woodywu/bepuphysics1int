@@ -59,7 +59,7 @@ namespace BEPUphysics.BroadPhaseEntries
                 Matrix3x3.AdjugateTranspose(ref worldTransform.LinearTransform, out normalTransform);
 
                 //If the world 'up' doesn't match the normal 'up', some reflection occurred which requires a winding flip.
-                if (Vector3.Dot(normalTransform.Up, worldTransform.LinearTransform.Up) < 0)
+                if (Vector3.Dot(normalTransform.Up, worldTransform.LinearTransform.Up) < F64.C0)
                 {
                     sidedness = TriangleSidedness.Clockwise;
                 }
@@ -138,7 +138,7 @@ namespace BEPUphysics.BroadPhaseEntries
             }
             set
             {
-                if (value < 0)
+                if (value < F64.C0)
                     throw new ArgumentException("Cannot use a negative thickness value.");
 
                 //Modify the bounding box to include the new thickness.
@@ -147,15 +147,15 @@ namespace BEPUphysics.BroadPhaseEntries
                 //Use the down direction rather than the thicknessOffset to determine which
                 //component of the bounding box to subtract, since the down direction contains all
                 //previous extra thickness.
-                if (down.X < 0)
+                if (down.X < F64.C0)
                     boundingBox.Min.X += thicknessOffset.X;
                 else
                     boundingBox.Max.X += thicknessOffset.X;
-                if (down.Y < 0)
+                if (down.Y < F64.C0)
                     boundingBox.Min.Y += thicknessOffset.Y;
                 else
                     boundingBox.Max.Y += thicknessOffset.Y;
-                if (down.Z < 0)
+                if (down.Z < F64.C0)
                     boundingBox.Min.Z += thicknessOffset.Z;
                 else
                     boundingBox.Max.Z += thicknessOffset.Z;
@@ -198,15 +198,15 @@ namespace BEPUphysics.BroadPhaseEntries
             Shape.GetBoundingBox(ref worldTransform, out boundingBox);
             //Include the thickness of the terrain.
             Vector3 thicknessOffset = Vector3.Normalize(worldTransform.LinearTransform.Down) * thickness;
-            if (thicknessOffset.X < 0)
+            if (thicknessOffset.X < F64.C0)
                 boundingBox.Min.X += thicknessOffset.X;
             else
                 boundingBox.Max.X += thicknessOffset.X;
-            if (thicknessOffset.Y < 0)
+            if (thicknessOffset.Y < F64.C0)
                 boundingBox.Min.Y += thicknessOffset.Y;
             else
                 boundingBox.Max.Y += thicknessOffset.Y;
-            if (thicknessOffset.Z < 0)
+            if (thicknessOffset.Z < F64.C0)
                 boundingBox.Min.Z += thicknessOffset.Z;
             else
                 boundingBox.Max.Z += thicknessOffset.Z;
@@ -250,7 +250,7 @@ namespace BEPUphysics.BroadPhaseEntries
                     Vector3 center;
                     Vector3.Add(ref tri.vA, ref tri.vB, out center);
                     Vector3.Add(ref center, ref tri.vC, out center);
-                    Vector3.Multiply(ref center, Fix64Utils.OneThird, out center);
+                    Vector3.Multiply(ref center, F64.OneThird, out center);
                     Vector3.Subtract(ref tri.vA, ref center, out tri.vA);
                     Vector3.Subtract(ref tri.vB, ref center, out tri.vB);
                     Vector3.Subtract(ref tri.vC, ref center, out tri.vC);
@@ -262,7 +262,7 @@ namespace BEPUphysics.BroadPhaseEntries
                     if (tri.MaximumRadius < radius)
                         tri.MaximumRadius = radius;
                     tri.MaximumRadius = Fix64.Sqrt(tri.MaximumRadius);
-                    tri.collisionMargin = 0;
+                    tri.collisionMargin = F64.C0;
                     var triangleTransform = new RigidTransform { Orientation = Quaternion.Identity, Position = center };
                     RayHit tempHit;
                     if (MPRToolbox.Sweep(castShape, tri, ref sweep, ref Toolbox.ZeroVector, ref startingTransform, ref triangleTransform, out tempHit) && tempHit.T < hit.T)
@@ -270,7 +270,7 @@ namespace BEPUphysics.BroadPhaseEntries
                         hit = tempHit;
                     }
                 }
-                tri.MaximumRadius = 0;
+                tri.MaximumRadius = F64.C0;
                 PhysicsThreadResources.GiveBack(tri);
                 hitElements.Dispose();
                 return hit.T != Fix64.MaxValue;

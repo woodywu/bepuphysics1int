@@ -44,7 +44,7 @@ namespace BEPUphysics.Vehicle
             get { return graphicalRadius; }
             set
             {
-                graphicalRadius = MathHelper.Max(value, 0);
+                graphicalRadius = MathHelper.Max(value, F64.C0);
                 Initialize();
             }
         }
@@ -150,7 +150,7 @@ namespace BEPUphysics.Vehicle
             }
             if (hit)
             {
-                if (suspensionLength > 0)
+                if (suspensionLength > F64.C0)
                     normal.Normalize();
                 else
                     Vector3.Negate(ref wheel.suspension.worldDirection, out normal);
@@ -188,9 +188,9 @@ namespace BEPUphysics.Vehicle
             Vector3 newPosition;
 #endif
 
-            newPosition.X = wheel.suspension.worldAttachmentPoint.X + wheel.suspension.worldDirection.X * wheel.suspension.restLength * Fix64Utils.PointFive;
-            newPosition.Y = wheel.suspension.worldAttachmentPoint.Y + wheel.suspension.worldDirection.Y * wheel.suspension.restLength * Fix64Utils.PointFive;
-            newPosition.Z = wheel.suspension.worldAttachmentPoint.Z + wheel.suspension.worldDirection.Z * wheel.suspension.restLength * Fix64Utils.PointFive;
+            newPosition.X = wheel.suspension.worldAttachmentPoint.X + wheel.suspension.worldDirection.X * wheel.suspension.restLength * F64.C0p5;
+            newPosition.Y = wheel.suspension.worldAttachmentPoint.Y + wheel.suspension.worldDirection.Y * wheel.suspension.restLength * F64.C0p5;
+            newPosition.Z = wheel.suspension.worldAttachmentPoint.Z + wheel.suspension.worldDirection.Z * wheel.suspension.restLength * F64.C0p5;
 
             detector.Position = newPosition;
             detector.OrientationMatrix = wheel.Vehicle.Body.orientationMatrix;

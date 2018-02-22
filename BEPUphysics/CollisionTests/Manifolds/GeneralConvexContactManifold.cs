@@ -85,7 +85,7 @@ namespace BEPUphysics.CollisionTests.Manifolds
                 {
                     Fix64 normalDot;
                     Vector3.Dot(ref contacts.Elements[i].Normal, ref contact.Normal, out normalDot);
-                    if (normalDot < 0)
+                    if (normalDot < F64.C0)
                     {
                         Remove(i);
                         break;

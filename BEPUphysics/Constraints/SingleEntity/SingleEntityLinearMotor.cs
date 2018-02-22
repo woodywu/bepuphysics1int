@@ -211,7 +211,7 @@ namespace BEPUphysics.Constraints.SingleEntity
             Matrix3x3.Transform(ref localPoint, ref entity.orientationMatrix, out r);
             Vector3.Add(ref r, ref entity.position, out worldPoint);
 
-            Fix64 updateRate = 1 / dt;
+            Fix64 updateRate = F64.C1 / dt;
             if (settings.mode == MotorMode.Servomechanism)
             {
                 Vector3.Subtract(ref settings.servo.goal, ref worldPoint, out error);

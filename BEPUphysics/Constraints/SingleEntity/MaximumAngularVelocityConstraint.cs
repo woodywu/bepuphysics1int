@@ -50,13 +50,13 @@ namespace BEPUphysics.Constraints.SingleEntity
         {
             get
             {
-                if (maximumForce > 0)
+                if (maximumForce > F64.C0)
                 {
                     return maximumForce;
                 }
-                return 0;
+                return F64.C0;
             }
-            set { maximumForce = value >= 0 ? value : 0; }
+            set { maximumForce = value >= F64.C0 ? value : F64.C0; }
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace BEPUphysics.Constraints.SingleEntity
             get { return maximumSpeed; }
             set
             {
-                maximumSpeed = MathHelper.Max(0, value);
+                maximumSpeed = MathHelper.Max(F64.C0, value);
                 maximumSpeedSquared = maximumSpeed * maximumSpeed;
             }
         }
@@ -83,7 +83,7 @@ namespace BEPUphysics.Constraints.SingleEntity
         public Fix64 Softness
         {
             get { return softness; }
-            set { softness = MathHelper.Max(0, value); }
+            set { softness = MathHelper.Max(F64.C0, value); }
         }
 
         #region I3DImpulseConstraint Members
@@ -154,7 +154,7 @@ namespace BEPUphysics.Constraints.SingleEntity
                 return (Fix64.Abs(impulse.X) + Fix64.Abs(impulse.Y) + Fix64.Abs(impulse.Z));
             }
 
-            return 0;
+            return F64.C0;
         }
 
         /// <summary>

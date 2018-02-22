@@ -26,7 +26,7 @@ namespace BEPUphysics.Vehicle
         internal WheelDrivingMotor drivingMotor;
 
 
-        internal Vector3 localForwardDirection = new Vector3(0, 0, -1);
+        internal Vector3 localForwardDirection = new Vector3(F64.C0, F64.C0, -1);
 
         internal Vector3 normal;
         internal WheelShape shape;
@@ -340,10 +340,10 @@ namespace BEPUphysics.Vehicle
                 drivingMotor.isActive = false;
                 brake.isActive = false;
 
-                suspension.accumulatedImpulse = 0;
-                slidingFriction.accumulatedImpulse = 0;
-                drivingMotor.accumulatedImpulse = 0;
-                brake.accumulatedImpulse = 0;
+                suspension.accumulatedImpulse = F64.C0;
+                slidingFriction.accumulatedImpulse = F64.C0;
+                drivingMotor.accumulatedImpulse = F64.C0;
+                brake.accumulatedImpulse = F64.C0;
             }
         }
 

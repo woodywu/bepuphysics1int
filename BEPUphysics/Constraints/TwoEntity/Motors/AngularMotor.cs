@@ -225,7 +225,7 @@ namespace BEPUphysics.Constraints.TwoEntity.Motors
             basis.rotationMatrix = connectionA.orientationMatrix;
             basis.ComputeWorldSpaceAxes();
 
-            Fix64 inverseDt = 1 / dt;
+            Fix64 inverseDt = F64.C1 / dt;
             if (settings.mode == MotorMode.Servomechanism) //Only need to do the bulk of this work if it's a servo.
             {
 
@@ -277,15 +277,15 @@ namespace BEPUphysics.Constraints.TwoEntity.Motors
                 }
                 else
                 {
-                    biasVelocity.X = 0;
-                    biasVelocity.Y = 0;
-                    biasVelocity.Z = 0;
+                    biasVelocity.X = F64.C0;
+                    biasVelocity.Y = F64.C0;
+                    biasVelocity.Z = F64.C0;
                 }
             }
             else
             {
                 usedSoftness = settings.velocityMotor.softness * inverseDt;
-                angle = 0; //Zero out the error;
+                angle = F64.C0; //Zero out the error;
                 Matrix3x3 transform = basis.WorldTransform;
                 Matrix3x3.Transform(ref settings.velocityMotor.goalVelocity, ref transform, out biasVelocity);
             }

@@ -22,7 +22,7 @@ namespace BEPUphysics.Character
         private RawList<CharacterContact> sideContacts = new RawList<CharacterContact>();
         private RawList<CharacterContact> headContacts = new RawList<CharacterContact>();
 
-        Fix64 maximumAssistedDownStepHeight = 1;
+        Fix64 maximumAssistedDownStepHeight = F64.C1;
         /// <summary>
         /// Gets or sets the maximum distance from the character's center to the support that will be assisted by downstepping.
         /// If the character walks off a step with height less than this value, the character will retain traction despite
@@ -36,7 +36,7 @@ namespace BEPUphysics.Character
             }
             set
             {
-                maximumAssistedDownStepHeight = MathHelper.Max(value, 0);
+                maximumAssistedDownStepHeight = MathHelper.Max(value, F64.C0);
             }
         }
 
@@ -113,7 +113,7 @@ namespace BEPUphysics.Character
                 }
                 else
                 {
-                    Vector3.Multiply(ref supportData.Normal, 1 / Fix64.Sqrt(length), out supportData.Normal);
+                    Vector3.Multiply(ref supportData.Normal, F64.C1 / Fix64.Sqrt(length), out supportData.Normal);
                 }
             }
             //Now that we have the normal, cycle through all the contacts again and find the deepest projected depth.
@@ -309,7 +309,7 @@ namespace BEPUphysics.Character
             BottomDistance = -extremePoint.Y + convexShape.collisionMargin;
 
             convexShape.GetLocalExtremePointWithoutMargin(ref Toolbox.RightVector, out extremePoint);
-            Fix64 rayCastInnerRadius = MathHelper.Max((extremePoint.X + convexShape.collisionMargin) * Fix64Utils.PointEight, extremePoint.X);
+            Fix64 rayCastInnerRadius = MathHelper.Max((extremePoint.X + convexShape.collisionMargin) * F64.C0p8, extremePoint.X);
 
             //Vertically, the rays will start at the same height as the character's center.
             //While they could be started lower on a cylinder, that wouldn't always work for a sphere or capsule: the origin might end up outside of the shape!
@@ -359,7 +359,7 @@ namespace BEPUphysics.Character
                 }
 
                 //If contacts and the center ray cast failed, try a ray offset in the movement direction.
-                bool tryingToMove = movementDirection.LengthSquared() > 0;
+                bool tryingToMove = movementDirection.LengthSquared() > F64.C0;
                 if (!HasTraction && tryingToMove)
                 {
                     Ray ray = new Ray(
@@ -370,7 +370,7 @@ namespace BEPUphysics.Character
                     Ray obstructionRay;
                     obstructionRay.Position = characterBody.Position;
                     obstructionRay.Direction = ray.Position - obstructionRay.Position;
-                    if (!QueryManager.RayCastHitAnything(obstructionRay, 1))
+                    if (!QueryManager.RayCastHitAnything(obstructionRay, F64.C1))
                     {
                         //The origin isn't obstructed, so now ray cast down.
                         bool hasTraction;
@@ -407,7 +407,7 @@ namespace BEPUphysics.Character
                     Ray obstructionRay;
                     obstructionRay.Position = bodyPosition;
                     obstructionRay.Direction = ray.Position - obstructionRay.Position;
-                    if (!QueryManager.RayCastHitAnything(obstructionRay, 1))
+                    if (!QueryManager.RayCastHitAnything(obstructionRay, F64.C1))
                     {
                         //The origin isn't obstructed, so now ray cast down.
                         bool hasTraction;
@@ -444,7 +444,7 @@ namespace BEPUphysics.Character
                     Ray obstructionRay;
                     obstructionRay.Position = bodyPosition;
                     obstructionRay.Direction = ray.Position - obstructionRay.Position;
-                    if (!QueryManager.RayCastHitAnything(obstructionRay, 1))
+                    if (!QueryManager.RayCastHitAnything(obstructionRay, F64.C1))
                     {
                         //The origin isn't obstructed, so now ray cast down.
                         bool hasTraction;
@@ -493,7 +493,7 @@ namespace BEPUphysics.Character
                 earliestHit.Normal.Normalize();
                 Fix64 dot;
                 Vector3.Dot(ref ray.Direction, ref earliestHit.Normal, out dot);
-                if (dot < 0)
+                if (dot < F64.C0)
                 {
                     //Calibrate the normal so it always faces the same direction relative to the body.
                     Vector3.Negate(ref earliestHit.Normal, out earliestHit.Normal);

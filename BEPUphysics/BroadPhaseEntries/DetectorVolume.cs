@@ -183,10 +183,10 @@ namespace BEPUphysics.BroadPhaseEntries
             //Point from the approximate center of the mesh outwards.
             //This is a cheap way to reduce the number of unnecessary checks when objects are external to the mesh.
             Vector3.Add(ref boundingBox.Max, ref boundingBox.Min, out rayDirection);
-            Vector3.Multiply(ref rayDirection, Fix64Utils.PointFive, out rayDirection);
+            Vector3.Multiply(ref rayDirection, F64.C0p5, out rayDirection);
             Vector3.Subtract(ref point, ref rayDirection, out rayDirection);
             //If the point is right in the middle, we'll need a backup.
-            if (rayDirection.LengthSquared() < Fix64Utils.PointZeroOne)
+            if (rayDirection.LengthSquared() < F64.C0p01)
                 rayDirection = Vector3.Up;
 
             var ray = new Ray(point, rayDirection);
@@ -254,7 +254,7 @@ namespace BEPUphysics.BroadPhaseEntries
                     Vector3 center;
                     Vector3.Add(ref tri.vA, ref tri.vB, out center);
                     Vector3.Add(ref center, ref tri.vC, out center);
-                    Vector3.Multiply(ref center, Fix64Utils.OneThird, out center);
+                    Vector3.Multiply(ref center, F64.OneThird, out center);
                     Vector3.Subtract(ref tri.vA, ref center, out tri.vA);
                     Vector3.Subtract(ref tri.vB, ref center, out tri.vB);
                     Vector3.Subtract(ref tri.vC, ref center, out tri.vC);
@@ -266,7 +266,7 @@ namespace BEPUphysics.BroadPhaseEntries
                     if (tri.MaximumRadius < radius)
                         tri.MaximumRadius = radius;
                     tri.MaximumRadius = Fix64.Sqrt(tri.MaximumRadius);
-                    tri.collisionMargin = 0;
+                    tri.collisionMargin = F64.C0;
                     var triangleTransform = new RigidTransform { Orientation = Quaternion.Identity, Position = center };
                     RayHit tempHit;
                     if (MPRToolbox.Sweep(castShape, tri, ref sweep, ref Toolbox.ZeroVector, ref startingTransform, ref triangleTransform, out tempHit) && tempHit.T < hit.T)
@@ -274,7 +274,7 @@ namespace BEPUphysics.BroadPhaseEntries
                         hit = tempHit;
                     }
                 }
-                tri.MaximumRadius = 0;
+                tri.MaximumRadius = F64.C0;
                 PhysicsThreadResources.GiveBack(tri);
                 CommonResources.GiveBack(hitElements);
                 return hit.T != Fix64.MaxValue;
@@ -298,12 +298,12 @@ namespace BEPUphysics.BroadPhaseEntries
         public void Reinitialize()
         {
             //Pick a point that is known to be outside the mesh as the origin.
-            Vector3 origin = (triangleMesh.Tree.BoundingBox.Max - triangleMesh.Tree.BoundingBox.Min) * Fix64Utils.OnePointFive + triangleMesh.Tree.BoundingBox.Min;
+            Vector3 origin = (triangleMesh.Tree.BoundingBox.Max - triangleMesh.Tree.BoundingBox.Min) * F64.C1p5 + triangleMesh.Tree.BoundingBox.Min;
 
             //Pick a direction which will definitely hit the mesh.
             Vector3 a, b, c;
             triangleMesh.Data.GetTriangle(0, out a, out b, out c);
-            var direction = (a + b + c) / 3 - origin;
+            var direction = (a + b + c) / F64.C3 - origin;
 
             var ray = new Ray(origin, direction);
             var triangles = CommonResources.GetIntList();

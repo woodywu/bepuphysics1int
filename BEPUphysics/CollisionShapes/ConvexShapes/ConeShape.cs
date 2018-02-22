@@ -85,19 +85,19 @@ namespace BEPUphysics.CollisionShapes.ConvexShapes
         public static ConvexShapeDescription ComputeDescription(Fix64 height, Fix64 radius, Fix64 collisionMargin)
         {
             ConvexShapeDescription description;
-            description.EntityShapeVolume.Volume = Fix64Utils.OneThird * MathHelper.Pi * radius * radius * height;
+            description.EntityShapeVolume.Volume = F64.OneThird * MathHelper.Pi * radius * radius * height;
 
             description.EntityShapeVolume.VolumeDistribution = new Matrix3x3();
-            Fix64 diagValue = (Fix64Utils.PointOne * height * height + Fix64Utils.PointOneFive * radius * radius);
+            Fix64 diagValue = (F64.C0p1 * height * height + F64.C0p15 * radius * radius);
             description.EntityShapeVolume.VolumeDistribution.M11 = diagValue;
-            description.EntityShapeVolume.VolumeDistribution.M22 = Fix64Utils.PointThree * radius * radius;
+            description.EntityShapeVolume.VolumeDistribution.M22 = F64.C0p3 * radius * radius;
             description.EntityShapeVolume.VolumeDistribution.M33 = diagValue;
 
-            description.MaximumRadius = collisionMargin + MathHelper.Max(Fix64Utils.PointSevenFive * height, Fix64.Sqrt(Fix64Utils.PointZeroSixTwoFive * height * height + radius * radius));
+            description.MaximumRadius = collisionMargin + MathHelper.Max(F64.C0p75 * height, Fix64.Sqrt(F64.C0p0625 * height * height + radius * radius));
 
             Fix64 denominator = radius / height;
-            denominator = denominator / Fix64.Sqrt(denominator * denominator + 1);
-            description.MinimumRadius = collisionMargin + MathHelper.Min(Fix64Utils.PointTwoFive * height, denominator * Fix64Utils.PointSevenFive * height);
+            denominator = denominator / Fix64.Sqrt(denominator * denominator + F64.C1);
+            description.MinimumRadius = collisionMargin + MathHelper.Min(F64.C0p25 * height, denominator * F64.C0p75 * height);
 
             description.CollisionMargin = collisionMargin;
             return description;
@@ -114,9 +114,9 @@ namespace BEPUphysics.CollisionShapes.ConvexShapes
             //Is it the tip of the cone?
             Fix64 sinThetaSquared = radius * radius / (radius * radius + height * height);
             //If d.Y * d.Y / d.LengthSquared >= sinthetaSquared
-            if (direction.Y > 0 && direction.Y * direction.Y >= direction.LengthSquared() * sinThetaSquared)
+            if (direction.Y > F64.C0 && direction.Y * direction.Y >= direction.LengthSquared() * sinThetaSquared)
             {
-                extremePoint = new Vector3(0, Fix64Utils.PointSevenFive * height, 0);
+                extremePoint = new Vector3(F64.C0, F64.C0p75 * height, F64.C0);
                 return;
             }
             //Is it a bottom edge of the cone?
@@ -124,10 +124,10 @@ namespace BEPUphysics.CollisionShapes.ConvexShapes
             if (horizontalLengthSquared > Toolbox.Epsilon)
             {
                 var radOverSigma = radius / Fix64.Sqrt(horizontalLengthSquared);
-                extremePoint = new Vector3((Fix64)(radOverSigma * direction.X), Fix64Utils.MinusPointTwoFive * height, (Fix64)(radOverSigma * direction.Z));
+                extremePoint = new Vector3((Fix64)(radOverSigma * direction.X), -0.25f * height, (Fix64)(radOverSigma * direction.Z));
             }
             else // It's pointing almost straight down...
-                extremePoint = new Vector3(0, Fix64Utils.MinusPointTwoFive * height, 0);
+                extremePoint = new Vector3(F64.C0, -0.25f * height, F64.C0);
 
 
         }

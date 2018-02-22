@@ -1,4 +1,5 @@
 ﻿using FixMath.NET;
+using BEPUutilities;
 
 namespace BEPUphysics.Settings
 {
@@ -11,13 +12,13 @@ namespace BEPUphysics.Settings
         /// Impact velocity above which the full bounciness of a material pair is taken into account.  Below the threshold, the extra energy introduced by the bounce is reduced. The lower the velocity is relative to the threshold, the lower the effective bounciness.
         /// Defaults to 1.
         /// </summary>
-        public static Fix64 BouncinessVelocityThreshold = 1;
+        public static Fix64 BouncinessVelocityThreshold = F64.C1;
 
         /// <summary>
         /// Maximum speed at which interpenetrating objects will attempt to undo any overlap.
         /// Defaults to 2.
         /// </summary>
-        public static Fix64 MaximumPenetrationRecoverySpeed = 2;
+        public static Fix64 MaximumPenetrationRecoverySpeed = F64.C2;
 
         /// <summary>
         /// Fraction of position error to convert into corrective momentum.

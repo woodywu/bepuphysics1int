@@ -29,7 +29,7 @@ namespace BEPUphysics.Settings
             set
             {
                 //The reason why it doesn't allow up to 1.0 is there exist systems that require a small margin between the full minimum radius and the core shape.
-                coreShapeScaling = MathHelper.Clamp(value, 0, Fix64Utils.PointNineNine);
+                coreShapeScaling = MathHelper.Clamp(value, F64.C0, F64.C0p99);
             }
         }
         static Fix64 coreShapeScaling = (Fix64).8m;

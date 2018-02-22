@@ -54,14 +54,16 @@ namespace Fix64Analyzer
 			if (!value.HasValue)
 				return null;
 
-			return "C"+value.ToString().ToLower().Replace('-', 'm').Replace('.', 'p').Replace("f", "");
+			return "C"+value.ToString().ToLower().Replace("e-0", "e-").Replace('-', 'm').Replace('.', 'p');
 		}
 
-		private string GetStaticDefintionFromValue<T>(Optional<T> value)
+		private string GetStaticDefinitionFromValue<T>(Optional<T> value)
 		{
-			string v = value.ToString().ToLower();
+			string v = value.ToString().ToLower().Replace("e-0", "e-");
 
-			string result = v.Replace('f', 'm');
+			string result = v;
+			if (v.Contains('.') || v.Contains('e'))
+				result += "m";
 			if (v.StartsWith("-"))
 				return "(" + result + ")";
 
@@ -83,7 +85,7 @@ namespace Fix64Analyzer
 			if (staticName == null)
 				return null;
 
-			string staticDefinition = GetStaticDefintionFromValue(value);
+			string staticDefinition = GetStaticDefinitionFromValue(value);
 
 			var newLiteral = SyntaxFactory.ParseExpression("F64." + staticName)
 				  .WithLeadingTrivia(literal.GetLeadingTrivia())

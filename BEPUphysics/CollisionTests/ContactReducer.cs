@@ -60,7 +60,7 @@ namespace BEPUphysics.CollisionTests
             else
                 deepestPosition = contactCandidates.Elements[deepestIndex - contacts.Count].Position;
             Fix64 distanceSquared;
-            Fix64 furthestDistance = 0;
+            Fix64 furthestDistance = F64.C0;
             int furthestIndex = -1;
             for (int i = 0; i < contacts.Count; i++)
             {
@@ -224,7 +224,7 @@ namespace BEPUphysics.CollisionTests
             else
                 deepestPosition = contactCandidate.Position;
             Fix64 distanceSquared;
-            Fix64 furthestDistance = 0;
+            Fix64 furthestDistance = F64.C0;
             int furthestIndex = -1;
             for (int i = 0; i < 4; i++)
             {

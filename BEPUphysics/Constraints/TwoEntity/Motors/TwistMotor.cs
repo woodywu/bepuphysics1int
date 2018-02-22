@@ -273,8 +273,8 @@ namespace BEPUphysics.Constraints.TwoEntity.Motors
                 error = GetDistanceFromGoal(angle);
                 Fix64 absErrorOverDt = Fix64.Abs(error / dt);
                 Fix64 errorReduction;
-                settings.servo.springSettings.ComputeErrorReductionAndSoftness(dt, 1 / dt, out errorReduction, out usedSoftness);
-                biasVelocity = Fix64Utils.Sign(error) * MathHelper.Min(settings.servo.baseCorrectiveSpeed, absErrorOverDt) + error * errorReduction;
+                settings.servo.springSettings.ComputeErrorReductionAndSoftness(dt, F64.C1 / dt, out errorReduction, out usedSoftness);
+                biasVelocity = Fix64.Sign(error) * MathHelper.Min(settings.servo.baseCorrectiveSpeed, absErrorOverDt) + error * errorReduction;
 
                 biasVelocity = MathHelper.Clamp(biasVelocity, -settings.servo.maxCorrectiveVelocity, settings.servo.maxCorrectiveVelocity);
             }
@@ -282,7 +282,7 @@ namespace BEPUphysics.Constraints.TwoEntity.Motors
             {
                 biasVelocity = settings.velocityMotor.goalVelocity;
                 usedSoftness = settings.velocityMotor.softness / dt;
-                error = 0;
+                error = F64.C0;
             }
 
 
@@ -319,7 +319,7 @@ namespace BEPUphysics.Constraints.TwoEntity.Motors
                 Vector3.Dot(ref transformedAxis, ref jacobianA, out entryA);
             }
             else
-                entryA = 0;
+                entryA = F64.C0;
 
             //Connection B's contribution to the mass matrix
             Fix64 entryB;
@@ -329,10 +329,10 @@ namespace BEPUphysics.Constraints.TwoEntity.Motors
                 Vector3.Dot(ref transformedAxis, ref jacobianB, out entryB);
             }
             else
-                entryB = 0;
+                entryB = F64.C0;
 
             //Compute the inverse mass matrix
-            velocityToImpulse = 1 / (usedSoftness + entryA + entryB);
+            velocityToImpulse = F64.C1 / (usedSoftness + entryA + entryB);
 
             
         }
@@ -363,11 +363,11 @@ namespace BEPUphysics.Constraints.TwoEntity.Motors
         {
             Fix64 forwardDistance;
             Fix64 goalAngle = MathHelper.WrapAngle(settings.servo.goal);
-            if (goalAngle > 0)
+            if (goalAngle > F64.C0)
             {
                 if (angle > goalAngle)
                     forwardDistance = angle - goalAngle;
-                else if (angle > 0)
+                else if (angle > F64.C0)
                     forwardDistance = MathHelper.TwoPi - goalAngle + angle;
                 else //if (angle <= 0)
                     forwardDistance = MathHelper.TwoPi - goalAngle + angle;

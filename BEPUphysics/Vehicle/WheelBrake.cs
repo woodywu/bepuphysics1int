@@ -54,7 +54,7 @@ namespace BEPUphysics.Vehicle
         private Fix64 rollingFrictionCoefficient;
         internal SolverSettings solverSettings = new SolverSettings();
         private Fix64 staticBrakingFrictionCoefficient;
-        private Fix64 staticFrictionVelocityThreshold = 5;
+        private Fix64 staticFrictionVelocityThreshold = F64.C5;
         private Wheel wheel;
         internal int numIterationsAtZeroImpulse;
         private Entity vehicleEntity, supportEntity;
@@ -101,7 +101,7 @@ namespace BEPUphysics.Vehicle
         public Fix64 KineticBrakingFrictionCoefficient
         {
             get { return kineticBrakingFrictionCoefficient; }
-            set { kineticBrakingFrictionCoefficient = MathHelper.Max(value, 0); }
+            set { kineticBrakingFrictionCoefficient = MathHelper.Max(value, F64.C0); }
         }
 
         /// <summary>
@@ -142,7 +142,7 @@ namespace BEPUphysics.Vehicle
         public Fix64 RollingFrictionCoefficient
         {
             get { return rollingFrictionCoefficient; }
-            set { rollingFrictionCoefficient = MathHelper.Max(value, 0); }
+            set { rollingFrictionCoefficient = MathHelper.Max(value, F64.C0); }
         }
 
         /// <summary>
@@ -155,7 +155,7 @@ namespace BEPUphysics.Vehicle
         public Fix64 StaticBrakingFrictionCoefficient
         {
             get { return staticBrakingFrictionCoefficient; }
-            set { staticBrakingFrictionCoefficient = MathHelper.Max(value, 0); }
+            set { staticBrakingFrictionCoefficient = MathHelper.Max(value, F64.C0); }
         }
 
         /// <summary>

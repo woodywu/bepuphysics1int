@@ -296,7 +296,7 @@ namespace BEPUphysics.CollisionShapes.ConvexShapes
         public Fix64 ComputeMaximumRadius()
         {
             //This can overestimate the actual maximum radius, but such is the defined behavior of the ComputeMaximumRadius function.  It's not exact; it's an upper bound on the actual maximum.
-            Fix64 maxRadius = 0;
+            Fix64 maxRadius = F64.C0;
             for (int i = 0; i < shapes.Count; i++)
             {
                 Fix64 radius = shapes.WrappedList.Elements[i].CollisionShape.MaximumRadius +
@@ -315,7 +315,7 @@ namespace BEPUphysics.CollisionShapes.ConvexShapes
         public Fix64 ComputeMinimumRadius()
         {
             //Could also use the tetrahedron approximation approach.
-            Fix64 minRadius = 0;
+            Fix64 minRadius = F64.C0;
             for (int i = 0; i < shapes.Count; i++)
             {
                 Fix64 radius = shapes.WrappedList.Elements[i].CollisionShape.MinimumRadius;

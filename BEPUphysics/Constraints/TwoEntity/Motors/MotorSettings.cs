@@ -47,15 +47,15 @@ namespace BEPUphysics.Constraints.TwoEntity.Motors
         {
             get
             {
-                if (maximumForce > 0)
+                if (maximumForce > F64.C0)
                 {
                     return maximumForce;
                 }
-                return 0;
+                return F64.C0;
             }
             set
             {
-                value = value >= 0 ? value : 0;
+                value = value >= F64.C0 ? value : F64.C0;
                 if (value != maximumForce)
                 {
                     maximumForce = value;
@@ -223,7 +223,7 @@ namespace BEPUphysics.Constraints.TwoEntity.Motors
             get { return baseCorrectiveSpeed; }
             set
             {
-                value = value < 0 ? 0 : value;
+                value = value < F64.C0 ? F64.C0 : value;
                 if (value != baseCorrectiveSpeed)
                 {
                     baseCorrectiveSpeed = value;
@@ -240,7 +240,7 @@ namespace BEPUphysics.Constraints.TwoEntity.Motors
             get { return maxCorrectiveVelocity; }
             set
             {
-                value = MathHelper.Max(0, value);
+                value = MathHelper.Max(F64.C0, value);
                 if (maxCorrectiveVelocity != value)
                 {
                     maxCorrectiveVelocity = value;
@@ -398,7 +398,7 @@ namespace BEPUphysics.Constraints.TwoEntity.Motors
             get { return softness; }
             set
             {
-                value = value < 0 ? 0 : value;
+                value = value < F64.C0 ? F64.C0 : value;
                 if (softness != value)
                 {
                     softness = value;

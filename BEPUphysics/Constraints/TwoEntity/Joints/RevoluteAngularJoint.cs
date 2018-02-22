@@ -112,7 +112,7 @@ namespace BEPUphysics.Constraints.TwoEntity.Joints
         private void UpdateRestrictedAxes()
         {
             localConstrainedAxis1 = Vector3.Cross(Vector3.Up, localAxisA);
-            if (localConstrainedAxis1.LengthSquared() < Fix64Utils.PointZeroZeroOne)
+            if (localConstrainedAxis1.LengthSquared() < F64.C0p001)
             {
                 localConstrainedAxis1 = Vector3.Cross(Vector3.Right, localAxisA);
             }
@@ -238,7 +238,7 @@ namespace BEPUphysics.Constraints.TwoEntity.Joints
             Vector3.Dot(ref error, ref worldConstrainedAxis1, out this.error.X);
             Vector3.Dot(ref error, ref worldConstrainedAxis2, out this.error.Y);
             Fix64 errorReduction;
-            springSettings.ComputeErrorReductionAndSoftness(dt, 1 / dt, out errorReduction, out softness);
+            springSettings.ComputeErrorReductionAndSoftness(dt, F64.C1 / dt, out errorReduction, out softness);
             errorReduction = -errorReduction;
             biasVelocity.X = errorReduction * this.error.X;
             biasVelocity.Y = errorReduction * this.error.Y;

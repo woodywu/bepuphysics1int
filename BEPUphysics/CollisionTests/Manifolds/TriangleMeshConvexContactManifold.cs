@@ -252,7 +252,7 @@ namespace BEPUphysics.CollisionTests.Manifolds
                     boundarySets.EdgeContacts.Elements[0].CorrectedNormal.Normalize();
                     Fix64 dot;
                     Vector3.Dot(ref firstNormal, ref boundarySets.EdgeContacts.Elements[0].CorrectedNormal, out dot);
-                    if (Fix64.Abs(dot) > Fix64Utils.PointZeroOne)
+                    if (Fix64.Abs(dot) > F64.C0p01)
                     {
                         //Go ahead and test the first contact separately, since we're using its contact normal to determine coplanarity.
                         allNormalsInSamePlane = false;
@@ -265,14 +265,14 @@ namespace BEPUphysics.CollisionTests.Manifolds
                         for (int i = 1; i < boundarySets.EdgeContacts.Count; i++)
                         {
                             Vector3.Dot(ref boundarySets.EdgeContacts.Elements[i].ContactData.Normal, ref firstNormal, out dot);
-                            if (dot < 0)
+                            if (dot < F64.C0)
                             {
                                 atLeastOneNormalAgainst = true;
                             }
                             //Check to see if the normal is outside the plane.
                             Vector3.Dot(ref boundarySets.EdgeContacts.Elements[i].ContactData.Normal, ref boundarySets.EdgeContacts.Elements[0].CorrectedNormal, out dot);
 
-                            if (Fix64.Abs(dot) > Fix64Utils.PointZeroOne)
+                            if (Fix64.Abs(dot) > F64.C0p01)
                             {
 
                                 //We are not stuck!
@@ -297,7 +297,7 @@ namespace BEPUphysics.CollisionTests.Manifolds
                             //Must normalize the corrected normal before using it.
                             boundarySets.EdgeContacts.Elements[i].CorrectedNormal.Normalize();
                             Vector3.Dot(ref boundarySets.EdgeContacts.Elements[i].CorrectedNormal, ref boundarySets.EdgeContacts.Elements[i].ContactData.Normal, out dot);
-                            if (dot < Fix64Utils.PointZeroOne)
+                            if (dot < F64.C0p01)
                             {
                                 //Only bother doing the correction if the normal appears to be pointing nearly horizontally- implying that it's a contributor to the stuckness!
                                 //If it's blocked, the next section will use the corrected normal- if it's not blocked, the next section will use the direct normal.
@@ -340,7 +340,7 @@ namespace BEPUphysics.CollisionTests.Manifolds
                         boundarySets.EdgeContacts.Elements[i].CorrectedNormal.Normalize();
                         Vector3.Dot(ref boundarySets.EdgeContacts.Elements[i].CorrectedNormal, ref boundarySets.EdgeContacts.Elements[i].ContactData.Normal, out dot);
                         boundarySets.EdgeContacts.Elements[i].ContactData.Normal = boundarySets.EdgeContacts.Elements[i].CorrectedNormal;
-                        boundarySets.EdgeContacts.Elements[i].ContactData.PenetrationDepth *= MathHelper.Max(0, dot); //Never cause a negative penetration depth.
+                        boundarySets.EdgeContacts.Elements[i].ContactData.PenetrationDepth *= MathHelper.Max(F64.C0, dot); //Never cause a negative penetration depth.
                         AddLocalContact(ref boundarySets.EdgeContacts.Elements[i].ContactData, ref orientation, ref candidatesToAdd);
                     }
                     //If it's blocked AND it doesn't allow correction, ignore its existence.
@@ -368,7 +368,7 @@ namespace BEPUphysics.CollisionTests.Manifolds
                         boundarySets.VertexContacts.Elements[i].CorrectedNormal.Normalize();
                         Vector3.Dot(ref boundarySets.VertexContacts.Elements[i].CorrectedNormal, ref boundarySets.VertexContacts.Elements[i].ContactData.Normal, out dot);
                         boundarySets.VertexContacts.Elements[i].ContactData.Normal = boundarySets.VertexContacts.Elements[i].CorrectedNormal;
-                        boundarySets.VertexContacts.Elements[i].ContactData.PenetrationDepth *= MathHelper.Max(0, dot); //Never cause a negative penetration depth.
+                        boundarySets.VertexContacts.Elements[i].ContactData.PenetrationDepth *= MathHelper.Max(F64.C0, dot); //Never cause a negative penetration depth.
                         AddLocalContact(ref boundarySets.VertexContacts.Elements[i].ContactData, ref orientation, ref candidatesToAdd);
                     }
                     //If it's blocked AND it doesn't allow correction, ignore its existence.
@@ -464,7 +464,7 @@ namespace BEPUphysics.CollisionTests.Manifolds
                     Fix64 dot;
                     Vector3.Cross(ref AB, ref AC, out normal);
                     Vector3.Dot(ref normal, ref uncorrectedNormal, out dot);
-                    if (dot < 0)
+                    if (dot < F64.C0)
                         Vector3.Negate(ref normal, out normal);
                     break;
                 case TriangleSidedness.Clockwise:

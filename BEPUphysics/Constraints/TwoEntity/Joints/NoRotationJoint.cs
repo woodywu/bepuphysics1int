@@ -214,7 +214,7 @@ namespace BEPUphysics.Constraints.TwoEntity.Joints
             error.Z = axis.Z * angle;
 
             Fix64 errorReduction;
-            springSettings.ComputeErrorReductionAndSoftness(dt, 1 / dt, out errorReduction, out softness);
+            springSettings.ComputeErrorReductionAndSoftness(dt, F64.C1 / dt, out errorReduction, out softness);
             errorReduction = -errorReduction;
             biasVelocity.X = errorReduction * error.X;
             biasVelocity.Y = errorReduction * error.Y;

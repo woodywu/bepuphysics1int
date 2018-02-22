@@ -144,7 +144,7 @@ namespace BEPUphysics.Paths
 
                 Fix64 intervalTime;
                 if (denominator < Toolbox.Epsilon)
-                    intervalTime = 0;
+                    intervalTime = F64.C0;
                 else
                     intervalTime = (time - ControlPoints[index].Time) / denominator;
 
@@ -183,8 +183,8 @@ namespace BEPUphysics.Paths
             }
             else
             {
-                firstIndexTime = 0;
-                lastIndexTime = 0;
+                firstIndexTime = F64.C0;
+                lastIndexTime = F64.C0;
             }
         }
 

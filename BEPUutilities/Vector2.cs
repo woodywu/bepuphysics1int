@@ -111,7 +111,7 @@ namespace BEPUutilities
         /// <param name="result">Result of the division.</param>
         public static void Divide(ref Vector2 v, Fix64 divisor, out Vector2 result)
         {
-            Fix64 inverse = 1 / divisor;
+            Fix64 inverse = F64.C1 / divisor;
             result.X = v.X * inverse;
             result.Y = v.Y * inverse;
         }
@@ -154,7 +154,7 @@ namespace BEPUutilities
         /// </summary>
         public static Vector2 UnitX
         {
-            get { return new Vector2 { X = 1 }; }
+            get { return new Vector2 { X = F64.C1 }; }
         }
 
         /// <summary>
@@ -162,7 +162,7 @@ namespace BEPUutilities
         /// </summary>
         public static Vector2 UnitY
         {
-            get { return new Vector2 { Y = 1 }; }
+            get { return new Vector2 { Y = F64.C1 }; }
         }
 
 
@@ -185,7 +185,7 @@ namespace BEPUutilities
         /// <param name="result">Normalized vector.</param>
         public static void Normalize(ref Vector2 v, out Vector2 result)
         {
-            Fix64 inverse = 1 / Fix64.Sqrt(v.X * v.X + v.Y * v.Y);
+            Fix64 inverse = F64.C1 / Fix64.Sqrt(v.X * v.X + v.Y * v.Y);
             result.X = v.X * inverse;
             result.Y = v.Y * inverse;
         }
@@ -208,11 +208,11 @@ namespace BEPUutilities
         /// <param name="result">Vector with nonnegative elements.</param>
         public static void Abs(ref Vector2 v, out Vector2 result)
         {
-            if (v.X < 0)
+            if (v.X < F64.C0)
                 result.X = -v.X;
             else
                 result.X = v.X;
-            if (v.Y < 0)
+            if (v.Y < F64.C0)
                 result.Y = -v.Y;
             else
                 result.Y = v.Y;
@@ -286,7 +286,7 @@ namespace BEPUutilities
         /// </summary>
         public void Normalize()
         {
-            Fix64 inverse = 1 / Fix64.Sqrt(X * X + Y * Y);
+            Fix64 inverse = F64.C1 / Fix64.Sqrt(X * X + Y * Y);
             X *= inverse;
             Y *= inverse;
         }
@@ -340,7 +340,7 @@ namespace BEPUutilities
         public static Vector2 operator /(Vector2 v, Fix64 f)
         {
             Vector2 toReturn;
-            f = 1 / f;
+            f = F64.C1 / f;
             toReturn.X = v.X * f;
             toReturn.Y = v.Y * f;
             return toReturn;

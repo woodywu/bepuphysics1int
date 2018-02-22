@@ -51,7 +51,7 @@ namespace BEPUphysics.Character
             get { return standingHeight; }
             set
             {
-                if (value <= 0 || value < CrouchingHeight)
+                if (value <= F64.C0 || value < CrouchingHeight)
                     throw new ArgumentException("Standing height must be positive and greater than the crouching height.");
                 standingHeight = value;
                 UpdateQueryShapes();
@@ -73,7 +73,7 @@ namespace BEPUphysics.Character
             get { return crouchingHeight; }
             set
             {
-                if (value <= 0 || value > StandingHeight)
+                if (value <= F64.C0 || value > StandingHeight)
                     throw new ArgumentException("Crouching height must be positive and less than the standing height.");
                 crouchingHeight = value;
                 UpdateQueryShapes();
@@ -96,7 +96,7 @@ namespace BEPUphysics.Character
             get { return proneHeight; }
             set
             {
-                if (value <= 0 || value > CrouchingHeight)
+                if (value <= F64.C0 || value > CrouchingHeight)
                     throw new ArgumentException("Crouching height must be positive and less than the crouching height.");
                 proneHeight = value;
                 UpdateQueryShapes();
@@ -171,7 +171,7 @@ namespace BEPUphysics.Character
             RigidTransform transform;
             transform.Position = position;
             transform.Orientation = characterBody.Orientation;
-            queryObject.UpdateBoundingBoxForTransform(ref transform, 0);
+            queryObject.UpdateBoundingBoxForTransform(ref transform, F64.C0);
         }
 
         /// <summary>
@@ -186,7 +186,7 @@ namespace BEPUphysics.Character
             var currentPosition = characterBody.position;
             var down = characterBody.orientationMatrix.Down;
             newPosition = new Vector3();
-            newHeight = 0;
+            newHeight = F64.C0;
 
             if (CurrentStance != targetStance)
             {
@@ -225,7 +225,7 @@ namespace BEPUphysics.Character
                     if (SupportFinder.HasSupport)
                     {
                         //On the ground, so need to move the position down.
-                        newPosition = currentPosition + down * ((currentHeight - targetHeight) * Fix64Utils.PointFive);
+                        newPosition = currentPosition + down * ((currentHeight - targetHeight) * F64.C0p5);
                     }
                     else
                     {
@@ -262,7 +262,7 @@ namespace BEPUphysics.Character
                         //TODO: State queries can be expensive if the character is crouching beneath something really detailed.
                         //There are some situations where you may want to do an upwards-pointing ray cast first.  If it hits something,
                         //there's no need to do the full query.
-                        newPosition = currentPosition - down * ((targetHeight - currentHeight) * Fix64Utils.PointFive);
+                        newPosition = currentPosition - down * ((targetHeight - currentHeight) * F64.C0p5);
                         PrepareQueryObject(queryObject, ref newPosition);
                         QueryManager.QueryContacts(queryObject, ref tractionContacts, ref supportContacts, ref sideContacts, ref headContacts, true);
                         if (IsObstructed(ref supportContacts, ref sideContacts, ref headContacts))
@@ -280,10 +280,10 @@ namespace BEPUphysics.Character
                         //In this, while the bottom of the character is extending downward, the character position actually either stays the same or goes up. 
                         //(We arbitrarily ignore the case where the character could push off a ceiling.)
                         //The goal is to put the feet of the character on any support that can be found, and then verify that the rest of its body fits in that location.
-                        Fix64 lowestBound = 0;
-                        Fix64 originalHighestBound = (targetHeight - currentHeight) * -Fix64Utils.PointFive;
+                        Fix64 lowestBound = F64.C0;
+                        Fix64 originalHighestBound = (targetHeight - currentHeight) * -F64.C0p5;
                         Fix64 highestBound = originalHighestBound;
-                        Fix64 currentOffset = 0;
+                        Fix64 currentOffset = F64.C0;
 
                         int attempts = 0;
                         //Don't keep querying indefinitely.  If we fail to reach it in a few informed steps, it's probably not worth continuing.
@@ -298,7 +298,7 @@ namespace BEPUphysics.Character
                                 case CharacterContactPositionState.Accepted:
                                     currentOffset += hintOffset;
                                     //Only use the new position location if the movement distance was the right size.
-                                    if (currentOffset <= 0 && currentOffset >= originalHighestBound)
+                                    if (currentOffset <= F64.C0 && currentOffset >= originalHighestBound)
                                     {
                                         newPosition = currentPosition + currentOffset * down;
                                         newHeight = targetHeight;
@@ -310,11 +310,11 @@ namespace BEPUphysics.Character
                                     }
                                 case CharacterContactPositionState.NoHit:
                                     highestBound = currentOffset + hintOffset;
-                                    currentOffset = (lowestBound + highestBound) * Fix64Utils.PointFive;
+                                    currentOffset = (lowestBound + highestBound) * F64.C0p5;
                                     break;
                                 case CharacterContactPositionState.Obstructed:
                                     lowestBound = currentOffset;
-                                    currentOffset = (highestBound + lowestBound) * Fix64Utils.PointFive;
+                                    currentOffset = (highestBound + lowestBound) * F64.C0p5;
                                     break;
                                 case CharacterContactPositionState.TooDeep:
                                     currentOffset += hintOffset;
@@ -412,7 +412,7 @@ namespace BEPUphysics.Character
         CharacterContactPositionState TrySupportLocation(ConvexCollidable<CylinderShape> queryObject, ref Vector3 position, out Fix64 hintOffset,
             ref QuickList<CharacterContact> tractionContacts, ref QuickList<CharacterContact> supportContacts, ref QuickList<CharacterContact> sideContacts, ref QuickList<CharacterContact> headContacts)
         {
-            hintOffset = 0;
+            hintOffset = F64.C0;
             PrepareQueryObject(queryObject, ref position);
             QueryManager.QueryContacts(queryObject, ref tractionContacts, ref supportContacts, ref sideContacts, ref headContacts, true);
 
@@ -432,13 +432,13 @@ namespace BEPUphysics.Character
                 {
                     //We're done! The guess found a good spot to stand on.
                     //We need to have fairly good contacts after this process, so only push it up a bit.
-                    hintOffset = MathHelper.Min(0, Vector3.Dot(supportContact.Contact.Normal, down) * (CollisionDetectionSettings.AllowedPenetration * Fix64Utils.PointFive - supportContact.Contact.PenetrationDepth));
+                    hintOffset = MathHelper.Min(F64.C0, Vector3.Dot(supportContact.Contact.Normal, down) * (CollisionDetectionSettings.AllowedPenetration * F64.C0p5 - supportContact.Contact.PenetrationDepth));
                     return CharacterContactPositionState.Accepted;
                 }
                 else if (supportState == CharacterContactPositionState.TooDeep)
                 {
                     //Looks like we have to keep trying, but at least we found a good hint.
-                    hintOffset = MathHelper.Min(0, Vector3.Dot(supportContact.Contact.Normal, down) * (CollisionDetectionSettings.AllowedPenetration * Fix64Utils.PointFive - supportContact.Contact.PenetrationDepth));
+                    hintOffset = MathHelper.Min(F64.C0, Vector3.Dot(supportContact.Contact.Normal, down) * (CollisionDetectionSettings.AllowedPenetration * F64.C0p5 - supportContact.Contact.PenetrationDepth));
                     return CharacterContactPositionState.TooDeep;
                 }
                 else //if (supportState == SupportState.Separated)
@@ -446,7 +446,7 @@ namespace BEPUphysics.Character
                     //It's not obstructed, but the support isn't quite right.
                     //It's got a negative penetration depth.
                     //We can use that as a hint.
-                    hintOffset = -Fix64Utils.PointZeroZeroOne - Vector3.Dot(supportContact.Contact.Normal, down) * supportContact.Contact.PenetrationDepth;
+                    hintOffset = -F64.C0p001 - Vector3.Dot(supportContact.Contact.Normal, down) * supportContact.Contact.PenetrationDepth;
                     return CharacterContactPositionState.NoHit;
                 }
             }

@@ -184,7 +184,7 @@ namespace BEPUphysics.CollisionShapes.ConvexShapes
         /// <returns>Maximum radius of the convex hull.</returns>
         public static Fix64 ComputeMaximumRadius(IList<Vector3> localSurfaceVertices, Fix64 collisionMargin)
         {
-            Fix64 longestLengthSquared = 0;
+            Fix64 longestLengthSquared = F64.C0;
             for (int i = 0; i < localSurfaceVertices.Count; ++i)
             {
                 Fix64 lengthCandidate = localSurfaceVertices[i].LengthSquared();

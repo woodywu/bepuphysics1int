@@ -196,7 +196,7 @@ namespace BEPUphysics.CollisionShapes.ConvexShapes
             CommonResources.GiveBack(triangles);
 
             //Compute the radii.
-            Fix64 minRadius = 0, maxRadius = 0;
+            Fix64 minRadius = F64.C0, maxRadius = F64.C0;
             for (int i = 0; i < shapes.Count; i++)
             {
                 minRadius += shapes.WrappedList.Elements[i].CollisionShape.MinimumRadius;

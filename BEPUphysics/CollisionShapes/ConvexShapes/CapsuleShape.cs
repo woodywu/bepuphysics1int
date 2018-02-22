@@ -19,11 +19,11 @@ namespace BEPUphysics.CollisionShapes.ConvexShapes
         {
             get
             {
-                return halfLength * 2;
+                return halfLength * F64.C2;
             }
             set
             {
-                halfLength = value * Fix64Utils.PointFive;
+                halfLength = value * F64.C0p5;
                 OnShapeChanged();
             }
         }
@@ -42,7 +42,7 @@ namespace BEPUphysics.CollisionShapes.ConvexShapes
         ///<param name="radius">Radius to expand the line segment width.</param>
         public CapsuleShape(Fix64 length, Fix64 radius)
         {
-            halfLength = length * Fix64Utils.PointFive;
+            halfLength = length * F64.C0p5;
 
             UpdateConvexShapeInfo(ComputeDescription(length, radius));
         }
@@ -54,7 +54,7 @@ namespace BEPUphysics.CollisionShapes.ConvexShapes
         /// <param name="description">Cached information about the shape. Assumed to be correct; no extra processing or validation is performed.</param>
         public CapsuleShape(Fix64 length, ConvexShapeDescription description)
         {
-            halfLength = length * Fix64Utils.PointFive;
+            halfLength = length * F64.C0p5;
 
             UpdateConvexShapeInfo(description);
         }
@@ -63,7 +63,7 @@ namespace BEPUphysics.CollisionShapes.ConvexShapes
 
         protected override void OnShapeChanged()
         {
-            UpdateConvexShapeInfo(ComputeDescription(halfLength * 2, Radius));
+            UpdateConvexShapeInfo(ComputeDescription(halfLength * F64.C2, Radius));
             base.OnShapeChanged();
         }
 
@@ -77,16 +77,16 @@ namespace BEPUphysics.CollisionShapes.ConvexShapes
         public static ConvexShapeDescription ComputeDescription(Fix64 length, Fix64 radius)
         {
             ConvexShapeDescription description;
-            description.EntityShapeVolume.Volume = MathHelper.Pi * radius * radius * length + Fix64Utils.FourThirds * MathHelper.Pi * radius * radius * radius;
+            description.EntityShapeVolume.Volume = MathHelper.Pi * radius * radius * length + F64.FourThirds * MathHelper.Pi * radius * radius * radius;
 
             description.EntityShapeVolume.VolumeDistribution = new Matrix3x3();
-            Fix64 effectiveLength = length + radius / 2; //This is a cylindrical inertia tensor. Approximate.
-            Fix64 diagValue = Fix64Utils.PointZeroEightThrees * effectiveLength * effectiveLength + Fix64Utils.PointTwoFive * radius * radius;
+            Fix64 effectiveLength = length + radius / F64.C2; //This is a cylindrical inertia tensor. Approximate.
+            Fix64 diagValue = F64.C0p0833333333 * effectiveLength * effectiveLength + F64.C0p25 * radius * radius;
             description.EntityShapeVolume.VolumeDistribution.M11 = diagValue;
-            description.EntityShapeVolume.VolumeDistribution.M22 = Fix64Utils.PointFive * radius * radius;
+            description.EntityShapeVolume.VolumeDistribution.M22 = F64.C0p5 * radius * radius;
             description.EntityShapeVolume.VolumeDistribution.M33 = diagValue;
 
-            description.MaximumRadius = length * Fix64Utils.PointFive + radius;
+            description.MaximumRadius = length * F64.C0p5 + radius;
             description.MinimumRadius = radius;
 
             description.CollisionMargin = radius;
@@ -101,7 +101,7 @@ namespace BEPUphysics.CollisionShapes.ConvexShapes
             Vector3 upExtreme;
             Quaternion.TransformY(halfLength, ref shapeTransform.Orientation, out upExtreme);
 
-            if (upExtreme.X > 0)
+            if (upExtreme.X > F64.C0)
             {
                 boundingBox.Max.X = upExtreme.X + collisionMargin;
                 boundingBox.Min.X = -upExtreme.X - collisionMargin;
@@ -112,7 +112,7 @@ namespace BEPUphysics.CollisionShapes.ConvexShapes
                 boundingBox.Min.X = upExtreme.X - collisionMargin;
             }
 
-            if (upExtreme.Y > 0)
+            if (upExtreme.Y > F64.C0)
             {
                 boundingBox.Max.Y = upExtreme.Y + collisionMargin;
                 boundingBox.Min.Y = -upExtreme.Y - collisionMargin;
@@ -123,7 +123,7 @@ namespace BEPUphysics.CollisionShapes.ConvexShapes
                 boundingBox.Min.Y = upExtreme.Y - collisionMargin;
             }
 
-            if (upExtreme.Z > 0)
+            if (upExtreme.Z > F64.C0)
             {
                 boundingBox.Max.Z = upExtreme.Z + collisionMargin;
                 boundingBox.Min.Z = -upExtreme.Z - collisionMargin;
@@ -146,10 +146,10 @@ namespace BEPUphysics.CollisionShapes.ConvexShapes
         ///<param name="extremePoint">Extreme point on the shape.</param>
         public override void GetLocalExtremePointWithoutMargin(ref Vector3 direction, out Vector3 extremePoint)
         {
-            if (direction.Y > 0)
-                extremePoint = new Vector3(0, halfLength, 0);
-            else if (direction.Y < 0)
-                extremePoint = new Vector3(0, -halfLength, 0);
+            if (direction.Y > F64.C0)
+                extremePoint = new Vector3(F64.C0, halfLength, F64.C0);
+            else if (direction.Y < F64.C0)
+                extremePoint = new Vector3(F64.C0, -halfLength, F64.C0);
             else
                 extremePoint = Toolbox.ZeroVector;
         }
@@ -188,11 +188,11 @@ namespace BEPUphysics.CollisionShapes.ConvexShapes
             if (localRay.Position.Y >= -halfLength && localRay.Position.Y <= halfLength && localRay.Position.X * localRay.Position.X + localRay.Position.Z * localRay.Position.Z <= collisionMargin * collisionMargin)
             {
                 //It's inside!
-                hit.T = 0;
+                hit.T = F64.C0;
                 hit.Location = localRay.Position;
-                hit.Normal = new Vector3(hit.Location.X, 0, hit.Location.Z);
+                hit.Normal = new Vector3(hit.Location.X, F64.C0, hit.Location.Z);
                 Fix64 normalLengthSquared = hit.Normal.LengthSquared();
-                if (normalLengthSquared > Fix64Utils.EMinusNine)
+                if (normalLengthSquared > F64.C1em9)
                     Vector3.Divide(ref hit.Normal, Fix64.Sqrt(normalLengthSquared), out hit.Normal);
                 else
                     hit.Normal = new Vector3();
@@ -243,7 +243,7 @@ namespace BEPUphysics.CollisionShapes.ConvexShapes
 
 
             //With the squared distance, compute the distance backward along the ray from the closest point on the ray to the axis.
-            Fix64 backwardsDistance = collisionMargin * Fix64.Sqrt(1 - squaredDistance / (collisionMargin * collisionMargin));
+            Fix64 backwardsDistance = collisionMargin * Fix64.Sqrt(F64.C1 - squaredDistance / (collisionMargin * collisionMargin));
             Fix64 tOffset = backwardsDistance / Fix64.Sqrt(planeDirectionLengthSquared);
 
             hit.T = closestToCenterT - tOffset;
@@ -256,9 +256,9 @@ namespace BEPUphysics.CollisionShapes.ConvexShapes
             if (hit.Location.Y <= halfLength && hit.Location.Y >= -halfLength && hit.T < maximumLength)
             {
                 //Yup!
-                hit.Normal = new Vector3(hit.Location.X, 0, hit.Location.Z);
+                hit.Normal = new Vector3(hit.Location.X, F64.C0, hit.Location.Z);
                 Fix64 normalLengthSquared = hit.Normal.LengthSquared();
-                if (normalLengthSquared > Fix64Utils.EMinusNine)
+                if (normalLengthSquared > F64.C1em9)
                     Vector3.Divide(ref hit.Normal, Fix64.Sqrt(normalLengthSquared), out hit.Normal);
                 else
                     hit.Normal = new Vector3();
@@ -274,7 +274,7 @@ namespace BEPUphysics.CollisionShapes.ConvexShapes
             //Nope! It may be intersecting the ends of the capsule though.
             //We're above the capsule, so cast a ray against the upper sphere.
             //We don't have to worry about it hitting the bottom of the sphere since it would have hit the cylinder portion first.
-            var spherePosition = new Vector3(0, halfLength, 0);
+            var spherePosition = new Vector3(F64.C0, halfLength, F64.C0);
             if (Toolbox.RayCastSphere(ref localRay, ref spherePosition, collisionMargin, maximumLength, out hit))
             {
                 //Pull the hit into world space.
@@ -290,7 +290,7 @@ namespace BEPUphysics.CollisionShapes.ConvexShapes
             //Okay, what about the bottom sphere?
             //We're above the capsule, so cast a ray against the upper sphere.
             //We don't have to worry about it hitting the bottom of the sphere since it would have hit the cylinder portion first.
-            spherePosition = new Vector3(0, -halfLength, 0);
+            spherePosition = new Vector3(F64.C0, -halfLength, F64.C0);
             if (Toolbox.RayCastSphere(ref localRay, ref spherePosition, collisionMargin, maximumLength, out hit))
             {
                 //Pull the hit into world space.

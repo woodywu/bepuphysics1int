@@ -59,22 +59,22 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             {
                 //Inside of the box.
                 Vector3 penetrationDepths;
-                penetrationDepths.X = localClosestPoint.X < 0 ? localClosestPoint.X + box.halfWidth : box.halfWidth - localClosestPoint.X;
-                penetrationDepths.Y = localClosestPoint.Y < 0 ? localClosestPoint.Y + box.halfHeight : box.halfHeight - localClosestPoint.Y;
-                penetrationDepths.Z = localClosestPoint.Z < 0 ? localClosestPoint.Z + box.halfLength : box.halfLength - localClosestPoint.Z;
+                penetrationDepths.X = localClosestPoint.X < F64.C0 ? localClosestPoint.X + box.halfWidth : box.halfWidth - localClosestPoint.X;
+                penetrationDepths.Y = localClosestPoint.Y < F64.C0 ? localClosestPoint.Y + box.halfHeight : box.halfHeight - localClosestPoint.Y;
+                penetrationDepths.Z = localClosestPoint.Z < F64.C0 ? localClosestPoint.Z + box.halfLength : box.halfLength - localClosestPoint.Z;
                 if (penetrationDepths.X < penetrationDepths.Y && penetrationDepths.X < penetrationDepths.Z)
                 {
-                    contact.Normal = localClosestPoint.X > 0 ? Toolbox.RightVector : Toolbox.LeftVector; 
+                    contact.Normal = localClosestPoint.X > F64.C0 ? Toolbox.RightVector : Toolbox.LeftVector; 
                     contact.PenetrationDepth = penetrationDepths.X;
                 }
                 else if (penetrationDepths.Y < penetrationDepths.Z)
                 {
-                    contact.Normal = localClosestPoint.Y > 0 ? Toolbox.UpVector : Toolbox.DownVector; 
+                    contact.Normal = localClosestPoint.Y > F64.C0 ? Toolbox.UpVector : Toolbox.DownVector; 
                     contact.PenetrationDepth = penetrationDepths.Y;
                 }
                 else
                 {
-                    contact.Normal = localClosestPoint.Z > 0 ? Toolbox.BackVector : Toolbox.ForwardVector; 
+                    contact.Normal = localClosestPoint.Z > F64.C0 ? Toolbox.BackVector : Toolbox.ForwardVector; 
                     contact.PenetrationDepth = penetrationDepths.Z;
                 }
                 contact.PenetrationDepth += sphere.collisionMargin;

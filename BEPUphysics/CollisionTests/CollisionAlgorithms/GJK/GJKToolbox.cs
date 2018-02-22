@@ -76,7 +76,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms.GJK
                 //If the most extreme point at any given time does not go past the origin, then we can quit immediately.
                 Fix64 dot;
                 Vector3.Dot(ref extremePoint, ref closestPoint, out dot); //extreme point dotted against the direction pointing backwards towards the CSO. 
-                if (dot > 0)
+                if (dot > F64.C0)
                 {
                     // If it's positive, that means that the direction pointing towards the origin produced an extreme point 'in front of' the origin, eliminating the possibility of any intersection.
                     localSeparatingAxis = direction;
@@ -204,7 +204,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms.GJK
             Quaternion.Transform(ref ray.Direction, ref conjugate, out ray.Direction);
 
             Vector3 extremePointToRayOrigin, extremePoint;
-            hit.T = 0;
+            hit.T = F64.C0;
             hit.Location = ray.Position;
             hit.Normal = Toolbox.ZeroVector;
             Vector3 closestOffset = hit.Location;
@@ -229,11 +229,11 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms.GJK
                 Vector3.Dot(ref closestOffset, ref extremePointToRayOrigin, out vw);
                 //If the closest offset and the extreme point->ray origin direction point the same way,
                 //then we might be able to conservatively advance the point towards the surface.
-                if (vw > 0)
+                if (vw > F64.C0)
                 {
                     
                     Vector3.Dot(ref closestOffset, ref ray.Direction, out closestPointDotDirection);
-                    if (closestPointDotDirection >= 0)
+                    if (closestPointDotDirection >= F64.C0)
                     {
                         hit = new RayHit();
                         return false;
@@ -311,7 +311,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms.GJK
             
 
             Vector3 w, p;
-            hit.T = 0;
+            hit.T = F64.C0;
             hit.Location = Vector3.Zero; //The ray starts at the origin.
             hit.Normal = Toolbox.ZeroVector;
             Vector3 v = hit.Location;
@@ -336,16 +336,16 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms.GJK
 
                 Vector3.Subtract(ref hit.Location, ref p, out w);
                 Vector3.Dot(ref v, ref w, out vw);
-                if (vw > 0)
+                if (vw > F64.C0)
                 {
                     Vector3.Dot(ref v, ref rayDirection, out vdir);
-                    if (vdir >= 0)
+                    if (vdir >= F64.C0)
                     {
                         hit = new RayHit();
                         return false;
                     }
                     hit.T = hit.T - vw / vdir;
-                    if (hit.T > 1)
+                    if (hit.T > F64.C1)
                     {
                         //If we've gone beyond where the ray can reach, there's obviously no hit.
                         hit = new RayHit();
@@ -396,7 +396,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms.GJK
             Quaternion.Transform(ref ray.Direction, ref conjugate, out ray.Direction);
 
             Vector3 w, p;
-            hit.T = 0;
+            hit.T = F64.C0;
             hit.Location = ray.Position;
             hit.Normal = Toolbox.ZeroVector;
             Vector3 v = hit.Location;
@@ -423,11 +423,11 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms.GJK
 
                 Vector3.Subtract(ref hit.Location, ref p, out w);
                 Vector3.Dot(ref v, ref w, out vw);
-                if (vw > 0)
+                if (vw > F64.C0)
                 {
                     Vector3.Dot(ref v, ref ray.Direction, out vdir);
                     hit.T = hit.T - vw / vdir;
-                    if (vdir >= 0)
+                    if (vdir >= F64.C0)
                     {
                         //We would have to back up!
                         return false;
@@ -475,12 +475,12 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms.GJK
             while (true)
             {
                 if (GJKToolbox.SphereCast(ray, radius, target, ref shapeTransform, maximumLength, out hit) &&
-                    hit.T > 0)
+                    hit.T > F64.C0)
                 {
                     //The ray cast isn't embedded in the shape, and it's less than maximum length away!
                     return true;
                 }
-                if (hit.T > maximumLength || hit.T < 0)
+                if (hit.T > maximumLength || hit.T < F64.C0)
                     return false; //Failure showed it was too far, or behind.
 
                 radius *= MotionSettings.CoreShapeScaling;
@@ -488,7 +488,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms.GJK
                 if (iterations > 3) //Limit could be configurable.
                 {
                     //It's iterated too much, let's just do a last ditch attempt using a raycast and hope that can help.
-                    return GJKToolbox.RayCast(ray, target, ref shapeTransform, maximumLength, out hit) && hit.T > 0;
+                    return GJKToolbox.RayCast(ray, target, ref shapeTransform, maximumLength, out hit) && hit.T > F64.C0;
                         
                 }
             }

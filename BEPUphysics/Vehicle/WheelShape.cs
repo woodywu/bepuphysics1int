@@ -26,7 +26,7 @@ namespace BEPUphysics.Vehicle
         /// <summary>
         /// Collects collision pairs from the environment.
         /// </summary>
-        protected internal Box detector = new Box(Vector3.Zero, 0, 0, 0);
+        protected internal Box detector = new Box(Vector3.Zero, F64.C0, F64.C0, F64.C0);
 
         protected internal Matrix localGraphicTransform;
         protected Fix64 spinAngle;
@@ -197,38 +197,38 @@ namespace BEPUphysics.Vehicle
             else if (wheel.HasSupport && wheel.brake.IsBraking && FreezeWheelsWhileBraking)
             {
                 //On the ground, braking
-                Fix64 deceleratedValue = 0;
-                if (spinVelocity > 0)
-                    deceleratedValue = MathHelper.Max(spinVelocity - brakeFreezeWheelDeceleration * dt, 0);
-                else if (spinVelocity < 0)
-                    deceleratedValue = MathHelper.Min(spinVelocity + brakeFreezeWheelDeceleration * dt, 0);
+                Fix64 deceleratedValue = F64.C0;
+                if (spinVelocity > F64.C0)
+                    deceleratedValue = MathHelper.Max(spinVelocity - brakeFreezeWheelDeceleration * dt, F64.C0);
+                else if (spinVelocity < F64.C0)
+                    deceleratedValue = MathHelper.Min(spinVelocity + brakeFreezeWheelDeceleration * dt, F64.C0);
 
                 spinVelocity = wheel.drivingMotor.RelativeVelocity / Radius;
 
                 if (Fix64.Abs(deceleratedValue) < Fix64.Abs(spinVelocity))
                     spinVelocity = deceleratedValue;
             }
-            else if (!wheel.HasSupport && wheel.drivingMotor.TargetSpeed != 0)
+            else if (!wheel.HasSupport && wheel.drivingMotor.TargetSpeed != F64.C0)
             {
                 //Airborne and accelerating, increase spin velocity.
                 Fix64 maxSpeed = Fix64.Abs(wheel.drivingMotor.TargetSpeed) / Radius;
-                spinVelocity = MathHelper.Clamp(spinVelocity + Fix64Utils.Sign(wheel.drivingMotor.TargetSpeed) * airborneWheelAcceleration * dt, -maxSpeed, maxSpeed);
+                spinVelocity = MathHelper.Clamp(spinVelocity + Fix64.Sign(wheel.drivingMotor.TargetSpeed) * airborneWheelAcceleration * dt, -maxSpeed, maxSpeed);
             }
             else if (!wheel.HasSupport && wheel.Brake.IsBraking)
             {
                 //Airborne and braking
-                if (spinVelocity > 0)
-                    spinVelocity = MathHelper.Max(spinVelocity - brakeFreezeWheelDeceleration * dt, 0);
-                else if (spinVelocity < 0)
-                    spinVelocity = MathHelper.Min(spinVelocity + brakeFreezeWheelDeceleration * dt, 0);
+                if (spinVelocity > F64.C0)
+                    spinVelocity = MathHelper.Max(spinVelocity - brakeFreezeWheelDeceleration * dt, F64.C0);
+                else if (spinVelocity < F64.C0)
+                    spinVelocity = MathHelper.Min(spinVelocity + brakeFreezeWheelDeceleration * dt, F64.C0);
             }
             else if (!wheel.HasSupport)
             {
                 //Just idly slowing down.
-                if (spinVelocity > 0)
-                    spinVelocity = MathHelper.Max(spinVelocity - airborneWheelDeceleration * dt, 0);
-                else if (spinVelocity < 0)
-                    spinVelocity = MathHelper.Min(spinVelocity + airborneWheelDeceleration * dt, 0);
+                if (spinVelocity > F64.C0)
+                    spinVelocity = MathHelper.Max(spinVelocity - airborneWheelDeceleration * dt, F64.C0);
+                else if (spinVelocity < F64.C0)
+                    spinVelocity = MathHelper.Min(spinVelocity + airborneWheelDeceleration * dt, F64.C0);
             }
             spinAngle += spinVelocity * dt;
         }

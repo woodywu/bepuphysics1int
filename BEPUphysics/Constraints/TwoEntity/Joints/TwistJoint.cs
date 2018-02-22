@@ -278,7 +278,7 @@ namespace BEPUphysics.Constraints.TwoEntity.Joints
             //****** VELOCITY BIAS ******//
             //Compute the correction velocity.
             Fix64 errorReduction;
-            springSettings.ComputeErrorReductionAndSoftness(dt, 1 / dt, out errorReduction, out softness);
+            springSettings.ComputeErrorReductionAndSoftness(dt, F64.C1 / dt, out errorReduction, out softness);
             biasVelocity = MathHelper.Clamp(-error * errorReduction, -maxCorrectiveVelocity, maxCorrectiveVelocity);
 
             //****** EFFECTIVE MASS MATRIX ******//
@@ -291,7 +291,7 @@ namespace BEPUphysics.Constraints.TwoEntity.Joints
                 Vector3.Dot(ref transformedAxis, ref jacobianA, out entryA);
             }
             else
-                entryA = 0;
+                entryA = F64.C0;
 
             //Connection B's contribution to the mass matrix
             Fix64 entryB;
@@ -301,10 +301,10 @@ namespace BEPUphysics.Constraints.TwoEntity.Joints
                 Vector3.Dot(ref transformedAxis, ref jacobianB, out entryB);
             }
             else
-                entryB = 0;
+                entryB = F64.C0;
 
             //Compute the inverse mass matrix
-            velocityToImpulse = 1 / (softness + entryA + entryB);
+            velocityToImpulse = F64.C1 / (softness + entryA + entryB);
 
             
         }

@@ -85,7 +85,7 @@ namespace BEPUutilities
         /// </summary>
         public static Matrix3x3 Identity
         {
-            get { return new Matrix3x3(1, 0, 0, 0, 1, 0, 0, 0, 1); }
+            get { return new Matrix3x3(F64.C1, F64.C0, F64.C0, F64.C0, F64.C1, F64.C0, F64.C0, F64.C0, F64.C1); }
         }
 
 
@@ -378,15 +378,15 @@ namespace BEPUutilities
         /// <param name="result">Skew-symmetric matrix result.</param>
         public static void CreateCrossProduct(ref Vector3 v, out Matrix3x3 result)
         {
-            result.M11 = 0;
+            result.M11 = F64.C0;
             result.M12 = -v.Z;
             result.M13 = v.Y;
             result.M21 = v.Z;
-            result.M22 = 0;
+            result.M22 = F64.C0;
             result.M23 = -v.X;
             result.M31 = -v.Y;
             result.M32 = v.X;
-            result.M33 = 0;
+            result.M33 = F64.C0;
         }
 
         /// <summary>
@@ -533,90 +533,90 @@ namespace BEPUutilities
 				return;
 
 			int submatrix;
-            Fix64 determinantInverse = 1 / matrix.AdaptiveDeterminant(out submatrix);
+            Fix64 determinantInverse = F64.C1 / matrix.AdaptiveDeterminant(out submatrix);
             Fix64 m11, m12, m13, m21, m22, m23, m31, m32, m33;
             switch (submatrix)
             {
                 case 1: //Upper left matrix, m11, m12, m21, m22.
                     m11 = matrix.M22 * determinantInverse;
                     m12 = -matrix.M12 * determinantInverse;
-                    m13 = 0;
+                    m13 = F64.C0;
 
                     m21 = -matrix.M21 * determinantInverse;
                     m22 = matrix.M11 * determinantInverse;
-                    m23 = 0;
+                    m23 = F64.C0;
 
-                    m31 = 0;
-                    m32 = 0;
-                    m33 = 0;
+                    m31 = F64.C0;
+                    m32 = F64.C0;
+                    m33 = F64.C0;
                     break;
                 case 2: //Lower right matrix, m22, m23, m32, m33.
-                    m11 = 0;
-                    m12 = 0;
-                    m13 = 0;
+                    m11 = F64.C0;
+                    m12 = F64.C0;
+                    m13 = F64.C0;
 
-                    m21 = 0;
+                    m21 = F64.C0;
                     m22 = matrix.M33 * determinantInverse;
                     m23 = -matrix.M23 * determinantInverse;
 
-                    m31 = 0;
+                    m31 = F64.C0;
                     m32 = -matrix.M32 * determinantInverse;
                     m33 = matrix.M22 * determinantInverse;
                     break;
                 case 3: //Corners, m11, m31, m13, m33.
                     m11 = matrix.M33 * determinantInverse;
-                    m12 = 0;
+                    m12 = F64.C0;
                     m13 = -matrix.M13 * determinantInverse;
 
-                    m21 = 0;
-                    m22 = 0;
-                    m23 = 0;
+                    m21 = F64.C0;
+                    m22 = F64.C0;
+                    m23 = F64.C0;
 
                     m31 = -matrix.M31 * determinantInverse;
-                    m32 = 0;
+                    m32 = F64.C0;
                     m33 = matrix.M11 * determinantInverse;
                     break;
                 case 4: //M11
-                    m11 = 1 / matrix.M11;
-                    m12 = 0;
-                    m13 = 0;
+                    m11 = F64.C1 / matrix.M11;
+                    m12 = F64.C0;
+                    m13 = F64.C0;
 
-                    m21 = 0;
-                    m22 = 0;
-                    m23 = 0;
+                    m21 = F64.C0;
+                    m22 = F64.C0;
+                    m23 = F64.C0;
 
-                    m31 = 0;
-                    m32 = 0;
-                    m33 = 0;
+                    m31 = F64.C0;
+                    m32 = F64.C0;
+                    m33 = F64.C0;
                     break;
                 case 5: //M22
-                    m11 = 0;
-                    m12 = 0;
-                    m13 = 0;
+                    m11 = F64.C0;
+                    m12 = F64.C0;
+                    m13 = F64.C0;
 
-                    m21 = 0;
-                    m22 = 1 / matrix.M22;
-                    m23 = 0;
+                    m21 = F64.C0;
+                    m22 = F64.C1 / matrix.M22;
+                    m23 = F64.C0;
 
-                    m31 = 0;
-                    m32 = 0;
-                    m33 = 0;
+                    m31 = F64.C0;
+                    m32 = F64.C0;
+                    m33 = F64.C0;
                     break;
                 case 6: //M33
-                    m11 = 0;
-                    m12 = 0;
-                    m13 = 0;
+                    m11 = F64.C0;
+                    m12 = F64.C0;
+                    m13 = F64.C0;
 
-                    m21 = 0;
-                    m22 = 0;
-                    m23 = 0;
+                    m21 = F64.C0;
+                    m22 = F64.C0;
+                    m23 = F64.C0;
 
-                    m31 = 0;
-                    m32 = 0;
-                    m33 = 1 / matrix.M33;
+                    m31 = F64.C0;
+                    m32 = F64.C0;
+                    m33 = F64.C1 / matrix.M33;
                     break;
                 default: //Completely singular.
-                    m11 = 0; m12 = 0; m13 = 0; m21 = 0; m22 = 0; m23 = 0; m31 = 0; m32 = 0; m33 = 0;
+                    m11 = F64.C0; m12 = F64.C0; m13 = F64.C0; m21 = F64.C0; m22 = F64.C0; m23 = F64.C0; m31 = F64.C0; m32 = F64.C0; m33 = F64.C0;
                     break;
             }
 
@@ -989,13 +989,13 @@ namespace BEPUutilities
             b.M32 = a.M32;
             b.M33 = a.M33;
 
-            b.M44 = 1;
-            b.M14 = 0;
-            b.M24 = 0;
-            b.M34 = 0;
-            b.M41 = 0;
-            b.M42 = 0;
-            b.M43 = 0;
+            b.M44 = F64.C1;
+            b.M14 = F64.C0;
+            b.M24 = F64.C0;
+            b.M34 = F64.C0;
+            b.M41 = F64.C0;
+            b.M42 = F64.C0;
+            b.M43 = F64.C0;
         }
 
         /// <summary>
@@ -1022,13 +1022,13 @@ namespace BEPUutilities
             b.M32 = a.M32;
             b.M33 = a.M33;
 
-            b.M44 = 1;
-            b.M14 = 0;
-            b.M24 = 0;
-            b.M34 = 0;
-            b.M41 = 0;
-            b.M42 = 0;
-            b.M43 = 0;
+            b.M44 = F64.C1;
+            b.M14 = F64.C0;
+            b.M24 = F64.C0;
+            b.M34 = F64.C0;
+            b.M41 = F64.C0;
+            b.M42 = F64.C0;
+            b.M43 = F64.C0;
             return b;
         }
         
@@ -1208,46 +1208,46 @@ namespace BEPUutilities
 			// We'll play it fast and loose here and assume the following won't overflow
             //Try m11, m12, m21, m22.
             Fix64 determinant = M11 * M22 - M12 * M21;
-            if (determinant != 0)
+            if (determinant != F64.C0)
             {
                 subMatrixCode = 1;
                 return determinant;
             }
             //Try m22, m23, m32, m33.
             determinant = M22 * M33 - M23 * M32;
-            if (determinant != 0)
+            if (determinant != F64.C0)
             {
                 subMatrixCode = 2;
                 return determinant;
             }
             //Try m11, m13, m31, m33.
             determinant = M11 * M33 - M13 * M12;
-            if (determinant != 0)
+            if (determinant != F64.C0)
             {
                 subMatrixCode = 3;
                 return determinant;
             }
             //Try m11.
-            if (M11 != 0)
+            if (M11 != F64.C0)
             {
                 subMatrixCode = 4;
                 return M11;
             }
             //Try m22.
-            if (M22 != 0)
+            if (M22 != F64.C0)
             {
                 subMatrixCode = 5;
                 return M22;
             }
             //Try m33.
-            if (M33 != 0)
+            if (M33 != F64.C0)
             {
                 subMatrixCode = 6;
                 return M33;
             }
             //It's completely singular!
             subMatrixCode = -1;
-            return 0;
+            return F64.C0;
         }
         
         /// <summary>
@@ -1270,17 +1270,17 @@ namespace BEPUutilities
             Fix64 YW = qY2 * quaternion.W;
             Fix64 ZW = qZ2 * quaternion.W;
 
-            result.M11 = 1 - YY - ZZ;
+            result.M11 = F64.C1 - YY - ZZ;
             result.M21 = XY - ZW;
             result.M31 = XZ + YW;
 
             result.M12 = XY + ZW;
-            result.M22 = 1 - XX - ZZ;
+            result.M22 = F64.C1 - XX - ZZ;
             result.M32 = YZ - XW;
 
             result.M13 = XZ - YW;
             result.M23 = YZ + XW;
-            result.M33 = 1 - XX - YY;
+            result.M33 = F64.C1 - XX - YY;
         }
 
         /// <summary>
@@ -1345,19 +1345,19 @@ namespace BEPUutilities
             Fix64 yz = axis.Y * axis.Z;
 
             Fix64 sinAngle = Fix64.Sin(angle);
-            Fix64 oneMinusCosAngle = 1 - Fix64.Cos(angle);
+            Fix64 oneMinusCosAngle = F64.C1 - Fix64.Cos(angle);
 
-            result.M11 = 1 + oneMinusCosAngle * (xx - 1);
+            result.M11 = F64.C1 + oneMinusCosAngle * (xx - F64.C1);
             result.M21 = -axis.Z * sinAngle + oneMinusCosAngle * xy;
             result.M31 = axis.Y * sinAngle + oneMinusCosAngle * xz;
 
             result.M12 = axis.Z * sinAngle + oneMinusCosAngle * xy;
-            result.M22 = 1 + oneMinusCosAngle * (yy - 1);
+            result.M22 = F64.C1 + oneMinusCosAngle * (yy - F64.C1);
             result.M32 = -axis.X * sinAngle + oneMinusCosAngle * yz;
 
             result.M13 = -axis.Y * sinAngle + oneMinusCosAngle * xz;
             result.M23 = axis.X * sinAngle + oneMinusCosAngle * yz;
-            result.M33 = 1 + oneMinusCosAngle * (zz - 1);
+            result.M33 = F64.C1 + oneMinusCosAngle * (zz - F64.C1);
         }
 
 

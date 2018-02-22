@@ -924,7 +924,7 @@ namespace FixMath.NET
 			return atan;
 		}
 
-		public static explicit operator Fix64(int value)
+		public static implicit operator Fix64(int value)
 		{
 			return new Fix64(value);
 		}
@@ -934,19 +934,19 @@ namespace FixMath.NET
         public static explicit operator long(Fix64 value) {
             return value.m_rawValue >> FRACTIONAL_PLACES;
         }
-        public static explicit operator Fix64(float value) {
+        public static implicit operator Fix64(float value) {
             return new Fix64((long)(value * ONE));
         }
         public static explicit operator float(Fix64 value) {
             return (float)value.m_rawValue / ONE;
         }
-        public static explicit operator Fix64(double value) {
+        public static implicit operator Fix64(double value) {
             return new Fix64((long)(value * ONE));
         }
         public static explicit operator double(Fix64 value) {
             return (double)value.m_rawValue / ONE;
         }
-        public static explicit operator Fix64(decimal value) {
+        public static implicit operator Fix64(decimal value) {
             return new Fix64((long)(value * ONE));
         }
         public static explicit operator decimal(Fix64 value) {

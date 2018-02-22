@@ -43,7 +43,7 @@ namespace BEPUik
         public Fix64 MinimumDistance
         {
             get { return minimumDistance; }
-            set { minimumDistance = MathHelper.Max(0, value); }
+            set { minimumDistance = MathHelper.Max(F64.C0, value); }
         }
 
          private Fix64 maximumDistance;
@@ -53,7 +53,7 @@ namespace BEPUik
         public Fix64 MaximumDistance
         {
             get { return maximumDistance; }
-            set { maximumDistance = MathHelper.Max(0, value); }
+            set { maximumDistance = MathHelper.Max(F64.C0, value); }
         }
 
         /// <summary>
@@ -103,24 +103,24 @@ namespace BEPUik
                 if (currentDistance > maximumDistance)
                 {
                     //We are exceeding the maximum limit.
-                    velocityBias = new Vector3(errorCorrectionFactor * (currentDistance - maximumDistance), 0, 0);
+                    velocityBias = new Vector3(errorCorrectionFactor * (currentDistance - maximumDistance), F64.C0, F64.C0);
                 }
                 else if (currentDistance < minimumDistance)
                 {
                     //We are exceeding the minimum limit.
-                    velocityBias = new Vector3(errorCorrectionFactor * (minimumDistance - currentDistance), 0, 0);
+                    velocityBias = new Vector3(errorCorrectionFactor * (minimumDistance - currentDistance), F64.C0, F64.C0);
                     //The limit can only push in one direction. Flip the jacobian!
                     Vector3.Negate(ref linearA, out linearA);
                 }
-                else if (currentDistance - minimumDistance > (maximumDistance - minimumDistance) * Fix64Utils.PointFive)
+                else if (currentDistance - minimumDistance > (maximumDistance - minimumDistance) * F64.C0p5)
                 {
                     //The objects are closer to hitting the maximum limit.
-                    velocityBias = new Vector3(currentDistance - maximumDistance, 0, 0);
+                    velocityBias = new Vector3(currentDistance - maximumDistance, F64.C0, F64.C0);
                 }
                 else
                 {
                     //The objects are closer to hitting the minimum limit.
-                    velocityBias = new Vector3(minimumDistance - currentDistance, 0, 0);
+                    velocityBias = new Vector3(minimumDistance - currentDistance, F64.C0, F64.C0);
                     //The limit can only push in one direction. Flip the jacobian!
                     Vector3.Negate(ref linearA, out linearA);
                 }

@@ -138,7 +138,7 @@ namespace BEPUutilities
         {
             get
             {
-                return new Quaternion(0, 0, 0, 1);
+                return new Quaternion(F64.C0, F64.C0, F64.C0, F64.C1);
             }
         }
 
@@ -156,41 +156,41 @@ namespace BEPUutilities
 #if !WINDOWS
             q = new Quaternion();
 #endif
-            if (trace >= 0)
+            if (trace >= F64.C0)
             {
-                var S = Fix64.Sqrt(trace + 1) * 2; // S=4*qw 
-                var inverseS = 1 / S;
-                q.W = Fix64Utils.PointTwoFive * S;
+                var S = Fix64.Sqrt(trace + F64.C1) * F64.C2; // S=4*qw 
+                var inverseS = F64.C1 / S;
+                q.W = F64.C0p25 * S;
                 q.X = (r.M23 - r.M32) * inverseS;
                 q.Y = (r.M31 - r.M13) * inverseS;
                 q.Z = (r.M12 - r.M21) * inverseS;
             }
             else if ((r.M11 > r.M22) & (r.M11 > r.M33))
             {
-                var S = Fix64.Sqrt(1 + r.M11 - r.M22 - r.M33) * 2; // S=4*qx 
-                var inverseS = 1 / S;
+                var S = Fix64.Sqrt(F64.C1 + r.M11 - r.M22 - r.M33) * F64.C2; // S=4*qx 
+                var inverseS = F64.C1 / S;
                 q.W = (r.M23 - r.M32) * inverseS;
-                q.X = Fix64Utils.PointTwoFive * S;
+                q.X = F64.C0p25 * S;
                 q.Y = (r.M21 + r.M12) * inverseS;
                 q.Z = (r.M31 + r.M13) * inverseS;
             }
             else if (r.M22 > r.M33)
             {
-                var S = Fix64.Sqrt(1 + r.M22 - r.M11 - r.M33) * 2; // S=4*qy
-                var inverseS = 1 / S;
+                var S = Fix64.Sqrt(F64.C1 + r.M22 - r.M11 - r.M33) * F64.C2; // S=4*qy
+                var inverseS = F64.C1 / S;
                 q.W = (r.M31 - r.M13) * inverseS;
                 q.X = (r.M21 + r.M12) * inverseS;
-                q.Y = Fix64Utils.PointTwoFive * S;
+                q.Y = F64.C0p25 * S;
                 q.Z = (r.M32 + r.M23) * inverseS;
             }
             else
             {
-                var S = Fix64.Sqrt(1 + r.M33 - r.M11 - r.M22) * 2; // S=4*qz
-                var inverseS = 1 / S;
+                var S = Fix64.Sqrt(F64.C1 + r.M33 - r.M11 - r.M22) * F64.C2; // S=4*qz
+                var inverseS = F64.C1 / S;
                 q.W = (r.M12 - r.M21) * inverseS;
                 q.X = (r.M31 + r.M13) * inverseS;
                 q.Y = (r.M32 + r.M23) * inverseS;
-                q.Z = Fix64Utils.PointTwoFive * S;
+                q.Z = F64.C0p25 * S;
             }
         }
 
@@ -250,7 +250,7 @@ namespace BEPUutilities
         /// <param name="toReturn">Normalized quaternion.</param>
         public static void Normalize(ref Quaternion quaternion, out Quaternion toReturn)
         {
-            Fix64 inverse = 1 / Fix64.Sqrt(quaternion.X * quaternion.X + quaternion.Y * quaternion.Y + quaternion.Z * quaternion.Z + quaternion.W * quaternion.W);
+            Fix64 inverse = F64.C1 / Fix64.Sqrt(quaternion.X * quaternion.X + quaternion.Y * quaternion.Y + quaternion.Z * quaternion.Z + quaternion.W * quaternion.W);
             toReturn.X = quaternion.X * inverse;
             toReturn.Y = quaternion.Y * inverse;
             toReturn.Z = quaternion.Z * inverse;
@@ -262,7 +262,7 @@ namespace BEPUutilities
         /// </summary>
         public void Normalize()
         {
-            Fix64 inverse = 1 / Fix64.Sqrt(X * X + Y * Y + Z * Z + W * W);
+            Fix64 inverse = F64.C1 / Fix64.Sqrt(X * X + Y * Y + Z * Z + W * W);
             X *= inverse;
             Y *= inverse;
             Z *= inverse;
@@ -298,7 +298,7 @@ namespace BEPUutilities
         public static void Slerp(ref Quaternion start, ref Quaternion end, Fix64 interpolationAmount, out Quaternion result)
         {
 			Fix64 cosHalfTheta = start.W * end.W + start.X * end.X + start.Y * end.Y + start.Z * end.Z;
-            if (cosHalfTheta < 0)
+            if (cosHalfTheta < F64.C0)
             {
                 //Negating a quaternion results in the same orientation, 
                 //but we need cosHalfTheta to be positive to get the shortest path.
@@ -309,7 +309,7 @@ namespace BEPUutilities
                 cosHalfTheta = -cosHalfTheta;
             }
             // If the orientations are similar enough, then just pick one of the inputs.
-            if (cosHalfTheta > Fix64Utils.OneMinusEMinus12)
+            if (cosHalfTheta > 1 - 1e-12f)
             {
                 result.W = start.W;
                 result.X = start.X;
@@ -319,9 +319,9 @@ namespace BEPUutilities
             }
             // Calculate temporary values.
             Fix64 halfTheta = Fix64.Acos(cosHalfTheta);
-			Fix64 sinHalfTheta = Fix64.Sqrt(1 - cosHalfTheta * cosHalfTheta);
+			Fix64 sinHalfTheta = Fix64.Sqrt(F64.C1 - cosHalfTheta * cosHalfTheta);
 
-			Fix64 aFraction = Fix64.Sin((1 - interpolationAmount) * halfTheta) / sinHalfTheta;
+			Fix64 aFraction = Fix64.Sin((F64.C1 - interpolationAmount) * halfTheta) / sinHalfTheta;
 			Fix64 bFraction = Fix64.Sin(interpolationAmount * halfTheta) / sinHalfTheta;
 
             //Blend the two quaternions to get the result!
@@ -526,9 +526,9 @@ namespace BEPUutilities
             Fix64 wy2 = rotation.W * y2;
             Fix64 wz2 = rotation.W * z2;
             //Defer the component setting since they're used in computation.
-            Fix64 transformedX = v.X * (1 - yy2 - zz2) + v.Y * (xy2 - wz2) + v.Z * (xz2 + wy2);
-            Fix64 transformedY = v.X * (xy2 + wz2) + v.Y * (1 - xx2 - zz2) + v.Z * (yz2 - wx2);
-            Fix64 transformedZ = v.X * (xz2 - wy2) + v.Y * (yz2 + wx2) + v.Z * (1 - xx2 - yy2);
+            Fix64 transformedX = v.X * (F64.C1 - yy2 - zz2) + v.Y * (xy2 - wz2) + v.Z * (xz2 + wy2);
+            Fix64 transformedY = v.X * (xy2 + wz2) + v.Y * (F64.C1 - xx2 - zz2) + v.Z * (yz2 - wx2);
+            Fix64 transformedZ = v.X * (xz2 - wy2) + v.Y * (yz2 + wx2) + v.Z * (F64.C1 - xx2 - yy2);
             result.X = transformedX;
             result.Y = transformedY;
             result.Z = transformedZ;
@@ -569,7 +569,7 @@ namespace BEPUutilities
             Fix64 wy2 = rotation.W * y2;
             Fix64 wz2 = rotation.W * z2;
             //Defer the component setting since they're used in computation.
-            Fix64 transformedX = x * (1 - yy2 - zz2);
+            Fix64 transformedX = x * (F64.C1 - yy2 - zz2);
             Fix64 transformedY = x * (xy2 + wz2);
             Fix64 transformedZ = x * (xz2 - wy2);
             result.X = transformedX;
@@ -601,7 +601,7 @@ namespace BEPUutilities
             Fix64 wz2 = rotation.W * z2;
             //Defer the component setting since they're used in computation.
             Fix64 transformedX = y * (xy2 - wz2);
-            Fix64 transformedY = y * (1 - xx2 - zz2);
+            Fix64 transformedY = y * (F64.C1 - xx2 - zz2);
             Fix64 transformedZ = y * (yz2 + wx2);
             result.X = transformedX;
             result.Y = transformedY;
@@ -633,7 +633,7 @@ namespace BEPUutilities
             //Defer the component setting since they're used in computation.
             Fix64 transformedX = z * (xz2 + wy2);
             Fix64 transformedY = z * (yz2 - wx2);
-            Fix64 transformedZ = z * (1 - xx2 - yy2);
+            Fix64 transformedZ = z * (F64.C1 - xx2 - yy2);
             result.X = transformedX;
             result.Y = transformedY;
             result.Z = transformedZ;
@@ -662,7 +662,7 @@ namespace BEPUutilities
         /// <returns>Quaternion representing the axis and angle rotation.</returns>
         public static Quaternion CreateFromAxisAngle(Vector3 axis, Fix64 angle)
         {
-			Fix64 halfAngle = angle * Fix64Utils.PointFive;
+			Fix64 halfAngle = angle * F64.C0p5;
 			Fix64 s = Fix64.Sin(halfAngle);
             Quaternion q;
             q.X = axis.X * s;
@@ -680,7 +680,7 @@ namespace BEPUutilities
         /// <param name="q">Quaternion representing the axis and angle rotation.</param>
         public static void CreateFromAxisAngle(ref Vector3 axis, Fix64 angle, out Quaternion q)
         {
-			Fix64 halfAngle = angle * Fix64Utils.PointFive;
+			Fix64 halfAngle = angle * F64.C0p5;
 			Fix64 s = Fix64.Sin(halfAngle);
             q.X = axis.X * s;
             q.Y = axis.Y * s;
@@ -711,9 +711,9 @@ namespace BEPUutilities
         /// <param name="q">Quaternion representing the yaw, pitch, and roll.</param>
         public static void CreateFromYawPitchRoll(Fix64 yaw, Fix64 pitch, Fix64 roll, out Quaternion q)
         {
-			Fix64 halfRoll = roll * Fix64Utils.PointFive;
-			Fix64 halfPitch = pitch * Fix64Utils.PointFive;
-			Fix64 halfYaw = yaw * Fix64Utils.PointFive;
+			Fix64 halfRoll = roll * F64.C0p5;
+			Fix64 halfPitch = pitch * F64.C0p5;
+			Fix64 halfYaw = yaw * F64.C0p5;
 
 			Fix64 sinRoll = Fix64.Sin(halfRoll);
 			Fix64 sinPitch = Fix64.Sin(halfPitch);
@@ -743,9 +743,9 @@ namespace BEPUutilities
         public static Fix64 GetAngleFromQuaternion(ref Quaternion q)
         {
             Fix64 qw = Fix64.Abs(q.W);
-            if (qw > 1)
-                return 0;
-            return 2 * Fix64.Acos(qw);
+            if (qw > F64.C1)
+                return F64.C0;
+            return F64.C2 * Fix64.Acos(qw);
         }
 
         /// <summary>
@@ -760,7 +760,7 @@ namespace BEPUutilities
             axis = new Vector3();
 #endif
             Fix64 qw = q.W;
-            if (qw > 0)
+            if (qw > F64.C0)
             {
                 axis.X = q.X;
                 axis.Y = q.Y;
@@ -775,15 +775,15 @@ namespace BEPUutilities
             }
 
             Fix64 lengthSquared = axis.LengthSquared();
-            if (lengthSquared > Fix64Utils.EMinusFourteen)
+            if (lengthSquared > F64.C1em14)
             {
                 Vector3.Divide(ref axis, Fix64.Sqrt(lengthSquared), out axis);
-                angle = 2 * Fix64.Acos(MathHelper.Clamp(qw, -1, 1));
+                angle = F64.C2 * Fix64.Acos(MathHelper.Clamp(qw, -1, F64.C1));
             }
             else
             {
                 axis = Toolbox.UpVector;
-                angle = 0;
+                angle = F64.C0;
             }
         }
 
@@ -799,7 +799,7 @@ namespace BEPUutilities
             Vector3.Dot(ref v1, ref v2, out dot);
             //For non-normal vectors, the multiplying the axes length squared would be necessary:
             //Fix64 w = dot + (Fix64)Math.Sqrt(v1.LengthSquared() * v2.LengthSquared());
-            if (dot < Fix64Utils.MinusPointNineNineNineNine) //parallel, opposing direction
+            if (dot < -0.9999f) //parallel, opposing direction
             {
                 //If this occurs, the rotation required is ~180 degrees.
                 //The problem is that we could choose any perpendicular axis for the rotation. It's not uniquely defined.
@@ -810,17 +810,17 @@ namespace BEPUutilities
                 Fix64 absY = Fix64.Abs(v1.Y);
                 Fix64 absZ = Fix64.Abs(v1.Z);
                 if (absX < absY && absX < absZ)
-                    q = new Quaternion(0, -v1.Z, v1.Y, 0);
+                    q = new Quaternion(F64.C0, -v1.Z, v1.Y, F64.C0);
                 else if (absY < absZ)
-                    q = new Quaternion(-v1.Z, 0, v1.X, 0);
+                    q = new Quaternion(-v1.Z, F64.C0, v1.X, F64.C0);
                 else
-                    q = new Quaternion(-v1.Y, v1.X, 0, 0);
+                    q = new Quaternion(-v1.Y, v1.X, F64.C0, F64.C0);
             }
             else
             {
                 Vector3 axis;
                 Vector3.Cross(ref v1, ref v2, out axis);
-                q = new Quaternion(axis.X, axis.Y, axis.Z, dot + 1);
+                q = new Quaternion(axis.X, axis.Y, axis.Z, dot + F64.C1);
             }
             q.Normalize();
         }

@@ -325,7 +325,7 @@ namespace BEPUphysics.Constraints.TwoEntity.Joints
             Vector3.Subtract(ref worldPointAnchor, ref closestPointOnPlane, out offset);
             Vector3.Dot(ref offset, ref worldPlaneNormal, out error);
             Fix64 errorReduction;
-            springSettings.ComputeErrorReductionAndSoftness(dt, 1 / dt, out errorReduction, out softness);
+            springSettings.ComputeErrorReductionAndSoftness(dt, F64.C1 / dt, out errorReduction, out softness);
             biasVelocity = MathHelper.Clamp(-errorReduction * error, -maxCorrectiveVelocity, maxCorrectiveVelocity);
 
             if (connectionA.IsDynamic && connectionB.IsDynamic)
@@ -358,7 +358,7 @@ namespace BEPUphysics.Constraints.TwoEntity.Joints
                 negativeEffectiveMass = -1 / (negativeEffectiveMass + softness);
             }
             else
-                negativeEffectiveMass = 0;
+                negativeEffectiveMass = F64.C0;
 
 
         }

@@ -23,7 +23,7 @@ namespace BEPUphysics.Constraints
         public Fix64 ErrorReductionFactor
         {
             get { return errorReductionFactor; }
-            set { errorReductionFactor = MathHelper.Clamp(value, 0, 1); }
+            set { errorReductionFactor = MathHelper.Clamp(value, F64.C0, F64.C1); }
         }
 
         /// <summary>
@@ -32,7 +32,7 @@ namespace BEPUphysics.Constraints
         public Fix64 Softness
         {
             get { return softness; }
-            set { softness = MathHelper.Max(0, value); }
+            set { softness = MathHelper.Max(F64.C0, value); }
         }
 
         /// <summary>
@@ -55,8 +55,8 @@ namespace BEPUphysics.Constraints
     {
         private readonly SpringAdvancedSettings advanced = new SpringAdvancedSettings();
 
-        internal Fix64 damping = 90000;
-        internal Fix64 stiffness = 600000;
+        internal Fix64 damping = F64.C90000;
+        internal Fix64 stiffness = F64.C600000;
 
         /// <summary>
         /// Gets an object containing the solver's direct view of the spring behavior.
@@ -72,7 +72,7 @@ namespace BEPUphysics.Constraints
         public Fix64 Damping
         {
             get { return damping; }
-            set { damping = MathHelper.Max(0, value); }
+            set { damping = MathHelper.Max(F64.C0, value); }
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace BEPUphysics.Constraints
         public Fix64 Stiffness
         {
             get { return stiffness; }
-            set { stiffness = MathHelper.Max(0, value); }
+            set { stiffness = MathHelper.Max(F64.C0, value); }
         }
 
         /// <summary>
@@ -101,9 +101,9 @@ namespace BEPUphysics.Constraints
             }
             else
             {
-                if (stiffness == 0 && damping == 0)
+                if (stiffness == F64.C0 && damping == F64.C0)
                     throw new InvalidOperationException("Constraints cannot have both 0 stiffness and 0 damping.");
-                Fix64 multiplier = 1 / (dt * stiffness + damping);
+                Fix64 multiplier = F64.C1 / (dt * stiffness + damping);
                 errorReduction = stiffness * multiplier;
                 softness = updateRate * multiplier;
             }

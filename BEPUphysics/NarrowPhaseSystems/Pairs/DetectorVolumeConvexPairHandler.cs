@@ -55,7 +55,7 @@ namespace BEPUphysics.NarrowPhaseSystems.Pairs
         }
 
         RawList<int> overlaps = new RawList<int>(8);
-        private TriangleShape triangle = new TriangleShape { collisionMargin = 0 };
+        private TriangleShape triangle = new TriangleShape { collisionMargin = F64.C0 };
         public override void UpdateCollision(Fix64 dt)
         {
             WasContaining = Containing;
@@ -69,7 +69,7 @@ namespace BEPUphysics.NarrowPhaseSystems.Pairs
                 DetectorVolume.TriangleMesh.Data.GetTriangle(overlaps.Elements[i], out triangle.vA, out triangle.vB, out triangle.vC);
                 Vector3.Add(ref triangle.vA, ref triangle.vB, out transform.Position);
                 Vector3.Add(ref triangle.vC, ref transform.Position, out transform.Position);
-                Vector3.Multiply(ref transform.Position, Fix64Utils.OneThird, out transform.Position);
+                Vector3.Multiply(ref transform.Position, F64.OneThird, out transform.Position);
                 Vector3.Subtract(ref triangle.vA, ref transform.Position, out triangle.vA);
                 Vector3.Subtract(ref triangle.vB, ref transform.Position, out triangle.vB);
                 Vector3.Subtract(ref triangle.vC, ref transform.Position, out triangle.vC);

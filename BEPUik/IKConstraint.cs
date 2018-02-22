@@ -19,7 +19,7 @@ namespace BEPUik
         /// </remarks>
         private readonly Fix64 StiffnessOverDamping = (Fix64)0.25m;
 
-        private Fix64 rigidity = 16;
+        private Fix64 rigidity = F64.C16;
         /// <summary>
         /// Gets the rigidity of the constraint. Higher values correspond to more rigid constraints, lower values to less rigid constraints. Must be positive.
         /// </summary>
@@ -37,7 +37,7 @@ namespace BEPUik
             }
             set
             {
-                if (value <= 0)
+                if (value <= F64.C0)
                     throw new ArgumentException("Rigidity must be positive.");
                 rigidity = value;
             }
@@ -55,7 +55,7 @@ namespace BEPUik
             get { return maximumForce; }
             set
             {
-                maximumForce = MathHelper.Max(value, 0);
+                maximumForce = MathHelper.Max(value, F64.C0);
             }
         }
 
@@ -68,7 +68,7 @@ namespace BEPUik
         {
             Fix64 stiffness = StiffnessOverDamping * rigidity;
             Fix64 damping = rigidity;
-            Fix64 multiplier = 1 / (dt * stiffness + damping);
+            Fix64 multiplier = F64.C1 / (dt * stiffness + damping);
             errorCorrectionFactor = stiffness * multiplier;
             softness = updateRate * multiplier;
             maximumImpulse = maximumForce * dt;

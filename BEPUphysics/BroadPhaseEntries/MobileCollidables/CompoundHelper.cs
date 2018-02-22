@@ -208,16 +208,16 @@ namespace BEPUphysics.BroadPhaseEntries.MobileCollidables
                 //No split occurred, so we cannot proceed.
                 distributionInfoA = new ShapeDistributionInformation();
                 distributionInfoB = new ShapeDistributionInformation();
-                weightA = 0;
-                weightB = 0;
+                weightA = F64.C0;
+                weightB = F64.C0;
                 return false;
             }
 
             //Compute the contributions from the original shape to the new form of the original collidable.
             distributionInfoA = new ShapeDistributionInformation();
-            weightA = 0;
+            weightA = F64.C0;
             distributionInfoB = new ShapeDistributionInformation();
-            weightB = 0;
+            weightB = F64.C0;
             for (int i = a.children.Count - 1; i >= 0; i--)
             {
                 var child = a.children.Elements[i];
@@ -240,10 +240,10 @@ namespace BEPUphysics.BroadPhaseEntries.MobileCollidables
             }
 
             //Average the center out.
-            if (weightA > 0)
+            if (weightA > F64.C0)
                 Vector3.Divide(ref distributionInfoA.Center, weightA, out distributionInfoA.Center);
 
-            if (weightB > 0)
+            if (weightB > F64.C0)
                 Vector3.Divide(ref distributionInfoB.Center, weightB, out distributionInfoB.Center);
 
             //Note that the 'entry' is from the Shape, and so the translations are local to the shape's center.
@@ -283,8 +283,8 @@ namespace BEPUphysics.BroadPhaseEntries.MobileCollidables
             }
 
             //Normalize the volume distribution.
-            Matrix3x3.Multiply(ref distributionInfoA.VolumeDistribution, 1 / weightA, out distributionInfoA.VolumeDistribution);
-            Matrix3x3.Multiply(ref distributionInfoB.VolumeDistribution, 1 / weightB, out distributionInfoB.VolumeDistribution);
+            Matrix3x3.Multiply(ref distributionInfoA.VolumeDistribution, F64.C1 / weightA, out distributionInfoA.VolumeDistribution);
+            Matrix3x3.Multiply(ref distributionInfoB.VolumeDistribution, F64.C1 / weightB, out distributionInfoB.VolumeDistribution);
 
             //Update the hierarchies of the compounds.
             //TODO: Create a new method that does this quickly without garbage.  Requires a new Reconstruct method which takes a pool which stores the appropriate node types.
@@ -389,7 +389,7 @@ namespace BEPUphysics.BroadPhaseEntries.MobileCollidables
            out ShapeDistributionInformation distributionInfo, out Fix64 weight, out Fix64 removedWeight, out Vector3 removedCenter)
         {
             bool removalOccurred = false;
-            removedWeight = 0;
+            removedWeight = F64.C0;
             removedCenter = new Vector3();
             for (int i = compound.children.Count - 1; i >= 0; i--)
             {
@@ -414,17 +414,17 @@ namespace BEPUphysics.BroadPhaseEntries.MobileCollidables
             {
                 //No removal occurred, so we cannot proceed.
                 distributionInfo = new ShapeDistributionInformation();
-                weight = 0;
+                weight = F64.C0;
                 return false;
             }
-            if (removedWeight > 0)
+            if (removedWeight > F64.C0)
             {
                 Vector3.Divide(ref removedCenter, removedWeight, out removedCenter);
             }
 
             //Compute the contributions from the original shape to the new form of the original collidable.
             distributionInfo = new ShapeDistributionInformation();
-            weight = 0;
+            weight = F64.C0;
             for (int i = compound.children.Count - 1; i >= 0; i--)
             {
                 var child = compound.children.Elements[i];
@@ -462,7 +462,7 @@ namespace BEPUphysics.BroadPhaseEntries.MobileCollidables
             }
 
             //Normalize the volume distribution.
-            Matrix3x3.Multiply(ref distributionInfo.VolumeDistribution, 1 / weight, out distributionInfo.VolumeDistribution);
+            Matrix3x3.Multiply(ref distributionInfo.VolumeDistribution, F64.C1 / weight, out distributionInfo.VolumeDistribution);
 
             //Update the hierarchies of the compounds.
             //TODO: Create a new method that does this quickly without garbage.  Requires a new Reconstruct method which takes a pool which stores the appropriate node types.
@@ -484,7 +484,7 @@ namespace BEPUphysics.BroadPhaseEntries.MobileCollidables
 
             CompoundCollidable compound = new CompoundCollidable();
             Vector3 center = new Vector3();
-            Fix64 totalWeight = 0;
+            Fix64 totalWeight = F64.C0;
             for (int i = 0; i < childIndices.Count; i++)
             {
                 //Create and add the child object itself.
@@ -496,7 +496,7 @@ namespace BEPUphysics.BroadPhaseEntries.MobileCollidables
                 Vector3.Add(ref center, ref toAdd, out center);
                 totalWeight += entry.Weight;
             }
-            if (totalWeight <= 0)
+            if (totalWeight <= F64.C0)
             {
                 throw new ArgumentException("Compound has zero total weight; invalid configuration.");
             }

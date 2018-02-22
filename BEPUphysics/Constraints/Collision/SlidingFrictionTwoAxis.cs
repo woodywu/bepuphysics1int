@@ -93,7 +93,7 @@ namespace BEPUphysics.Constraints.Collision
 
                 //Re-using information version:
                 //TODO: va + wa x ra - vb - wb x rb, dotted against each axis, is it faster?
-                Fix64 dvx = 0, dvy = 0, dvz = 0;
+                Fix64 dvx = F64.C0, dvy = F64.C0, dvz = F64.C0;
                 if (entityA != null)
                 {
                     dvx = entityA.linearVelocity.X + (entityA.angularVelocity.Y * ra.Z) - (entityA.angularVelocity.Z * ra.Y);
@@ -169,7 +169,7 @@ namespace BEPUphysics.Constraints.Collision
             accumulatedImpulse.X += lambda.X;
             accumulatedImpulse.Y += lambda.Y;
             Fix64 length = accumulatedImpulse.LengthSquared();
-            Fix64 maximumFrictionForce = 0;
+            Fix64 maximumFrictionForce = F64.C0;
             for (int i = 0; i < contactCount; i++)
             {
                 maximumFrictionForce += contactManifoldConstraint.penetrationConstraints.Elements[i].accumulatedImpulse;
@@ -256,9 +256,9 @@ namespace BEPUphysics.Constraints.Collision
                     Vector3.Add(ref contactManifoldConstraint.penetrationConstraints.Elements[0].contact.Position,
                                 ref contactManifoldConstraint.penetrationConstraints.Elements[1].contact.Position,
                                 out manifoldCenter);
-                    manifoldCenter.X *= Fix64Utils.PointFive;
-                    manifoldCenter.Y *= Fix64Utils.PointFive;
-                    manifoldCenter.Z *= Fix64Utils.PointFive;
+                    manifoldCenter.X *= F64.C0p5;
+                    manifoldCenter.Y *= F64.C0p5;
+                    manifoldCenter.Z *= F64.C0p5;
                     break;
                 case 3:
                     Vector3.Add(ref contactManifoldConstraint.penetrationConstraints.Elements[0].contact.Position,
@@ -267,9 +267,9 @@ namespace BEPUphysics.Constraints.Collision
                     Vector3.Add(ref contactManifoldConstraint.penetrationConstraints.Elements[2].contact.Position,
                                 ref manifoldCenter,
                                 out manifoldCenter);
-                    manifoldCenter.X *= Fix64Utils.OneThird;
-                    manifoldCenter.Y *= Fix64Utils.OneThird;
-                    manifoldCenter.Z *= Fix64Utils.OneThird;
+                    manifoldCenter.X *= F64.OneThird;
+                    manifoldCenter.Y *= F64.OneThird;
+                    manifoldCenter.Z *= F64.OneThird;
                     break;
                 case 4:
                     //This isn't actually the center of the manifold.  Is it good enough?  Sure seems like it.
@@ -282,9 +282,9 @@ namespace BEPUphysics.Constraints.Collision
                     Vector3.Add(ref contactManifoldConstraint.penetrationConstraints.Elements[3].contact.Position,
                                 ref manifoldCenter,
                                 out manifoldCenter);
-                    manifoldCenter.X *= Fix64Utils.PointTwoFive;
-                    manifoldCenter.Y *= Fix64Utils.PointTwoFive;
-                    manifoldCenter.Z *= Fix64Utils.PointTwoFive;
+                    manifoldCenter.X *= F64.C0p25;
+                    manifoldCenter.Y *= F64.C0p25;
+                    manifoldCenter.Z *= F64.C0p25;
                     break;
                 default:
                     manifoldCenter = Toolbox.NoVector;
@@ -325,7 +325,7 @@ namespace BEPUphysics.Constraints.Collision
             if (length > Toolbox.Epsilon)
             {
                 length = Fix64.Sqrt(length);
-                Fix64 inverseLength = 1 / length;
+                Fix64 inverseLength = F64.C1 / length;
                 linearA.M11 = relativeVelocity.X * inverseLength;
                 linearA.M12 = relativeVelocity.Y * inverseLength;
                 linearA.M13 = relativeVelocity.Z * inverseLength;
@@ -341,7 +341,7 @@ namespace BEPUphysics.Constraints.Collision
 
                 //If there was no velocity, try using the previous frame's jacobian... if it exists.
                 //Reusing an old one is okay since jacobians are cleared when a contact is initialized.
-                if (!(linearA.M11 != 0 || linearA.M12 != 0 || linearA.M13 != 0))
+                if (!(linearA.M11 != F64.C0 || linearA.M12 != F64.C0 || linearA.M13 != F64.C0))
                 {
                     //Otherwise, just redo it all.
                     //Create arbitrary axes.
@@ -351,7 +351,7 @@ namespace BEPUphysics.Constraints.Collision
                     if (length > Toolbox.Epsilon)
                     {
                         length = Fix64.Sqrt(length);
-                        Fix64 inverseLength = 1 / length;
+                        Fix64 inverseLength = F64.C1 / length;
                         linearA.M11 = axis1.X * inverseLength;
                         linearA.M12 = axis1.Y * inverseLength;
                         linearA.M13 = axis1.Z * inverseLength;

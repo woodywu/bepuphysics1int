@@ -81,7 +81,7 @@ namespace BEPUphysics.NarrowPhaseSystems.Pairs
                 Fix64 velocitySquared = velocity.LengthSquared();
 
                 var minimumRadiusA = collidableA.Shape.MinimumRadius * MotionSettings.CoreShapeScaling;
-                timeOfImpact = 1;
+                timeOfImpact = F64.C1;
                 if (minimumRadiusA * minimumRadiusA < velocitySquared)
                 {
                     //Spherecast A against B.
@@ -105,8 +105,8 @@ namespace BEPUphysics.NarrowPhaseSystems.Pairs
                 //from a previous frame where CCD took place and a contact should have been created
                 //to deal with interpenetrating velocity.  Sometimes that contact isn't sufficient,
                 //but it's good enough.
-                if (timeOfImpact == 0)
-                    timeOfImpact = 1;
+                if (timeOfImpact == F64.C0)
+                    timeOfImpact = F64.C1;
             }
 
         }

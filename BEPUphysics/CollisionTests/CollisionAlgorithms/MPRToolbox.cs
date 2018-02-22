@@ -41,7 +41,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             }
             set
             {
-                if (value > 0)
+                if (value > F64.C0)
                     surfaceEpsilon = value;
                 else throw new ArgumentException("Epsilon must be positive.");
 
@@ -63,7 +63,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             }
             set
             {
-                if (value > 0)
+                if (value > F64.C0)
                     depthRefinementEpsilon = value;
                 else throw new ArgumentException("Epsilon must be positive.");
 
@@ -83,7 +83,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             }
             set
             {
-                if (value > 0)
+                if (value > F64.C0)
                     rayCastSurfaceEpsilon = value;
                 else
                     throw new ArgumentException("Epsilon must be positive.");
@@ -185,7 +185,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 //If the origin is within this extreme point, then there is an intersection.
                 Fix64 dot;
                 Vector3.Dot(ref v1, ref originRay, out dot);
-                if (dot < 0)
+                if (dot < F64.C0)
                 {
                     //Origin is outside.
                     position = new Vector3();
@@ -227,7 +227,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 Vector3.Cross(ref v1, ref v3, out temp1);
                 Fix64 dot;
                 Vector3.Dot(ref temp1, ref v0, out dot);
-                if (dot < 0)
+                if (dot < F64.C0)
                 {
                     //Replace the point that was on the inside of the plane (v2) with the new extreme point.
                     v2 = v3;
@@ -243,7 +243,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 // If the origin is outside the plane defined by v3,v0,v2, then the portal is invalid.
                 Vector3.Cross(ref v3, ref v2, out temp1);
                 Vector3.Dot(ref temp1, ref v0, out dot);
-                if (dot < 0)
+                if (dot < F64.C0)
                 {
                     //Replace the point that was on the inside of the plane (v1) with the new extreme point.
                     v1 = v3;
@@ -272,7 +272,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 Vector3.Cross(ref temp1, ref temp2, out n);
                 Fix64 dot;
                 Vector3.Dot(ref n, ref v1, out dot);
-                if (dot >= 0)
+                if (dot >= F64.C0)
                 {
                     Vector3 temp3;
                     //Compute the barycentric coordinates of the origin.
@@ -301,13 +301,13 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                     Fix64 v0v1ov3volume;
                     Vector3.Dot(ref cross, ref temp3, out v0v1ov3volume);
 
-                    if (v0v1v2v3volume > Toolbox.Epsilon * Fix64Utils.PointZeroOne)
+                    if (v0v1v2v3volume > Toolbox.Epsilon * F64.C0p01)
                     {
-                        Fix64 inverseTotalVolume = 1 / v0v1v2v3volume;
+                        Fix64 inverseTotalVolume = F64.C1 / v0v1v2v3volume;
                         Fix64 v0Weight = ov1v2v3volume * inverseTotalVolume;
                         Fix64 v1Weight = v0ov2v3volume * inverseTotalVolume;
                         Fix64 v2Weight = v0v1ov3volume * inverseTotalVolume;
-                        Fix64 v3Weight = 1 - v0Weight - v1Weight - v2Weight;
+                        Fix64 v3Weight = F64.C1 - v0Weight - v1Weight - v2Weight;
                         position = v1Weight * v1A + v2Weight * v2A + v3Weight * v3A;
                     }
                     else
@@ -324,7 +324,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 //If the origin is further along the direction than the extreme point, it's not inside the shape.
                 Fix64 dot2;
                 Vector3.Dot(ref v4, ref n, out dot2);
-                if (dot2 < 0)
+                if (dot2 < F64.C0)
                 {
                     //The origin is outside!
                     position = new Vector3();
@@ -345,10 +345,10 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 //Test origin against the three planes that separate the new portal candidates: (v1,v4,v0) (v2,v4,v0) (v3,v4,v0)
                 Vector3.Cross(ref v4, ref v0, out temp1);
                 Vector3.Dot(ref v1, ref temp1, out dot);
-                if (dot >= 0)
+                if (dot >= F64.C0)
                 {
                     Vector3.Dot(ref v2, ref temp1, out dot);
-                    if (dot >= 0)
+                    if (dot >= F64.C0)
                     {
                         v1 = v4; // Inside v1 & inside v2 ==> eliminate v1
                         v1A = v4A;
@@ -364,7 +364,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 else
                 {
                     Vector3.Dot(ref v3, ref temp1, out dot);
-                    if (dot >= 0)
+                    if (dot >= F64.C0)
                     {
                         v2 = v4; // Outside v1 & inside v3 ==> eliminate v2
                         v2A = v4A;
@@ -461,7 +461,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 //If the origin is within this extreme point, then there is an intersection.
                 Fix64 dot;
                 Vector3.Dot(ref v1, ref originRay, out dot);
-                if (dot < 0)
+                if (dot < F64.C0)
                 {
                     //Origin is outside.
                     return false;
@@ -495,7 +495,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 Vector3.Cross(ref v1, ref v3, out temp1);
                 Fix64 dot;
                 Vector3.Dot(ref temp1, ref v0, out dot);
-                if (dot < 0)
+                if (dot < F64.C0)
                 {
                     //Replace the point that was on the inside of the plane (v2) with the new extreme point.
                     v2 = v3;
@@ -509,7 +509,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 // If the origin is outside the plane defined by v3,v0,v2, then the portal is invalid.
                 Vector3.Cross(ref v3, ref v2, out temp1);
                 Vector3.Dot(ref temp1, ref v0, out dot);
-                if (dot < 0)
+                if (dot < F64.C0)
                 {
                     //Replace the point that was on the inside of the plane (v1) with the new extreme point.
                     v1 = v3;
@@ -536,7 +536,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 Vector3.Cross(ref temp1, ref temp2, out n);
                 Fix64 dot;
                 Vector3.Dot(ref n, ref v1, out dot);
-                if (dot >= 0)
+                if (dot >= F64.C0)
                 {
                     return true;
                 }
@@ -547,7 +547,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 //If the origin is further along the direction than the extreme point, it's not inside the shape.
                 Fix64 dot2;
                 Vector3.Dot(ref v4, ref n, out dot2);
-                if (dot2 < 0)
+                if (dot2 < F64.C0)
                 {
                     //The origin is outside!
                     return false;
@@ -565,10 +565,10 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 //Test origin against the three planes that separate the new portal candidates: (v1,v4,v0) (v2,v4,v0) (v3,v4,v0)
                 Vector3.Cross(ref v4, ref v0, out temp1);
                 Vector3.Dot(ref v1, ref temp1, out dot);
-                if (dot >= 0)
+                if (dot >= F64.C0)
                 {
                     Vector3.Dot(ref v2, ref temp1, out dot);
-                    if (dot >= 0)
+                    if (dot >= F64.C0)
                     {
                         v1 = v4; // Inside v1 & inside v2 ==> eliminate v1
                     }
@@ -580,7 +580,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 else
                 {
                     Vector3.Dot(ref v3, ref temp1, out dot);
-                    if (dot >= 0)
+                    if (dot >= F64.C0)
                     {
                         v2 = v4; // Outside v1 & inside v3 ==> eliminate v2
                     }
@@ -643,7 +643,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 //In other words, if the raycast is followed out to the surface, it will arrive at the extreme point!
 
                 Fix64 rayLengthSquared = direction.LengthSquared();
-                if (rayLengthSquared > Toolbox.Epsilon * Fix64Utils.PointZeroOne)
+                if (rayLengthSquared > Toolbox.Epsilon * F64.C0p01)
                     Vector3.Divide(ref direction, Fix64.Sqrt(rayLengthSquared), out normal);
                 else
                     normal = new Vector3();
@@ -652,10 +652,10 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 Vector3.Dot(ref  normal, ref direction, out rate);
                 Fix64 distance;
                 Vector3.Dot(ref  normal, ref v1, out distance);
-                if (rate > 0)
+                if (rate > F64.C0)
                     t = distance / rate;
                 else
-                    t = 0;
+                    t = F64.C0;
                 return;
             }
             MinkowskiToolbox.GetLocalMinkowskiExtremePoint(shapeA, shapeB, ref n, ref localTransformB, out v2);
@@ -671,7 +671,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             //relative to the direction vector.
             Fix64 dot;
             Vector3.Dot(ref n, ref direction, out dot);
-            if (dot > 0)
+            if (dot > F64.C0)
             {
                 //It's not properly calibrated.  Flip the winding (and the previously calculated normal).
                 Vector3.Negate(ref n, out n);
@@ -702,7 +702,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 // If the direction is outside the plane defined by v1,v0,v3, then the portal is invalid.
                 Vector3.Cross(ref v1, ref v3, out temp1);
                 Vector3.Dot(ref temp1, ref direction, out dot);
-                if (dot < 0)
+                if (dot < F64.C0)
                 {
                     //Replace the point that was on the inside of the plane (v2) with the new extreme point.
                     v2 = v3;
@@ -714,7 +714,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 // If the direction is outside the plane defined by v3,v0,v2, then the portal is invalid.
                 Vector3.Cross(ref v3, ref v2, out temp1);
                 Vector3.Dot(ref temp1, ref direction, out dot);
-                if (dot < 0)
+                if (dot < F64.C0)
                 {
                     //Replace the point that was on the inside of the plane (v1) with the new extreme point.
                     v1 = v3;
@@ -758,7 +758,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                     //t = dot * normalLengthInverse;
 
                     Fix64 lengthSquared = n.LengthSquared();
-                    if (lengthSquared > Toolbox.Epsilon * Fix64Utils.PointZeroOne)
+                    if (lengthSquared > Toolbox.Epsilon * F64.C0p01)
                     {
                         Vector3.Divide(ref n, Fix64.Sqrt(lengthSquared), out normal);
 
@@ -767,15 +767,15 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                         Vector3.Dot(ref normal, ref direction, out dot);
                         //supportDot is the distance to the plane.
                         Vector3.Dot(ref normal, ref v1, out supportDot);
-                        if (dot > 0)
+                        if (dot > F64.C0)
                             t = supportDot / dot;
                         else
-                            t = 0;
+                            t = F64.C0;
                     }
                     else
                     {
                         normal = Vector3.Up;
-                        t = 0;
+                        t = F64.C0;
                     }
                     ////DEBUG STUFF:
 
@@ -805,10 +805,10 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 //It eliminates the need for extra cross products for the inner if.
                 Vector3.Cross(ref v4, ref direction, out temp1);
                 Vector3.Dot(ref v1, ref temp1, out dot);
-                if (dot >= 0)
+                if (dot >= F64.C0)
                 {
                     Vector3.Dot(ref v2, ref temp1, out dot);
-                    if (dot >= 0)
+                    if (dot >= F64.C0)
                     {
                         v1 = v4; // Inside v1 & inside v2 ==> eliminate v1
                     }
@@ -820,7 +820,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 else
                 {
                     Vector3.Dot(ref v3, ref temp1, out dot);
-                    if (dot >= 0)
+                    if (dot >= F64.C0)
                     {
                         v2 = v4; // Outside v1 & inside v3 ==> eliminate v2
                     }
@@ -919,7 +919,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 //In other words, if the raycast is followed out to the surface, it will arrive at the extreme point!
 
                 Fix64 rayLengthSquared = direction.LengthSquared();
-                if (rayLengthSquared > Toolbox.Epsilon * Fix64Utils.PointZeroOne)
+                if (rayLengthSquared > Toolbox.Epsilon * F64.C0p01)
                     Vector3.Divide(ref direction, Fix64.Sqrt(rayLengthSquared), out normal);
                 else
                     normal = new Vector3();
@@ -928,10 +928,10 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 Vector3.Dot(ref  normal, ref direction, out rate);
                 Fix64 distance;
                 Vector3.Dot(ref  normal, ref v1, out distance);
-                if (rate > 0)
+                if (rate > F64.C0)
                     t = distance / rate;
                 else
-                    t = 0;
+                    t = F64.C0;
                 position = v1A;
                 return;
             }
@@ -948,7 +948,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             //relative to the direction vector.
             Fix64 dot;
             Vector3.Dot(ref n, ref direction, out dot);
-            if (dot > 0)
+            if (dot > F64.C0)
             {
                 //It's not properly calibrated.  Flip the winding (and the previously calculated normal).
                 Vector3.Negate(ref n, out n);
@@ -984,7 +984,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 // If the direction is outside the plane defined by v1,v0,v3, then the portal is invalid.
                 Vector3.Cross(ref v1, ref v3, out temp1);
                 Vector3.Dot(ref temp1, ref direction, out dot);
-                if (dot < 0)
+                if (dot < F64.C0)
                 {
                     //Replace the point that was on the inside of the plane (v2) with the new extreme point.
                     v2 = v3;
@@ -997,7 +997,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 // If the direction is outside the plane defined by v3,v0,v2, then the portal is invalid.
                 Vector3.Cross(ref v3, ref v2, out temp1);
                 Vector3.Dot(ref temp1, ref direction, out dot);
-                if (dot < 0)
+                if (dot < F64.C0)
                 {
                     //Replace the point that was on the inside of the plane (v1) with the new extreme point.
                     v1 = v3;
@@ -1042,7 +1042,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                     //t = dot * normalLengthInverse;
 
                     Fix64 lengthSquared = n.LengthSquared();
-                    if (lengthSquared > Toolbox.Epsilon * Fix64Utils.PointZeroOne)
+                    if (lengthSquared > Toolbox.Epsilon * F64.C0p01)
                     {
                         Vector3.Divide(ref n, Fix64.Sqrt(lengthSquared), out normal);
 
@@ -1051,15 +1051,15 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                         Vector3.Dot(ref normal, ref direction, out dot);
                         //supportDot is the distance to the plane.
                         Vector3.Dot(ref normal, ref v1, out supportDot);
-                        if (dot > 0)
+                        if (dot > F64.C0)
                             t = supportDot / dot;
                         else
-                            t = 0;
+                            t = F64.C0;
                     }
                     else
                     {
                         normal = Vector3.Up;
-                        t = 0;
+                        t = F64.C0;
                     }
 
                     Fix64 v1Weight, v2Weight, v3Weight;
@@ -1100,10 +1100,10 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 //It eliminates the need for extra cross products for the inner if.
                 Vector3.Cross(ref v4, ref direction, out temp1);
                 Vector3.Dot(ref v1, ref temp1, out dot);
-                if (dot >= 0)
+                if (dot >= F64.C0)
                 {
                     Vector3.Dot(ref v2, ref temp1, out dot);
-                    if (dot >= 0)
+                    if (dot >= F64.C0)
                     {
                         v1 = v4; // Inside v1 & inside v2 ==> eliminate v1
                         v1A = v4A;
@@ -1117,7 +1117,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 else
                 {
                     Vector3.Dot(ref v3, ref temp1, out dot);
-                    if (dot >= 0)
+                    if (dot >= F64.C0)
                     {
                         v2 = v4; // Outside v1 & inside v3 ==> eliminate v2
                         v2A = v4A;
@@ -1185,8 +1185,8 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             //v2, v0, v1
             cross = Vector3.Cross(v0 - v2, v1 - v2);
             Fix64 planeProduct3 = Vector3.Dot(cross, direction);
-            return (planeProduct1 <= 0 && planeProduct2 <= 0 && planeProduct3 <= 0) ||
-                (planeProduct1 >= 0 && planeProduct2 >= 0 && planeProduct3 >= 0);
+            return (planeProduct1 <= F64.C0 && planeProduct2 <= F64.C0 && planeProduct3 <= F64.C0) ||
+                (planeProduct1 >= F64.C0 && planeProduct2 >= F64.C0 && planeProduct3 >= F64.C0);
         }
 
         /// <summary>
@@ -1367,7 +1367,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
 
             Fix64 rayLengthSquared = localDirection.LengthSquared();
             Fix64 sweepLength;
-            if (rayLengthSquared > Toolbox.Epsilon * Fix64Utils.PointZeroOne)
+            if (rayLengthSquared > Toolbox.Epsilon * F64.C0p01)
             {
                 Vector3.Dot(ref localTransformB.Position, ref localDirection, out sweepLength);
                 sweepLength /= rayLengthSquared;
@@ -1376,14 +1376,14 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             }
             else
             {
-                rayLengthSquared = 0;
-                sweepLength = 0;
+                rayLengthSquared = F64.C0;
+                sweepLength = F64.C0;
             }
             //If the sweep direction is found to be negative, the ray can be thought of as pointing away from the shape.
             //Do not sweep backward.
-            bool negativeLength = sweepLength < 0;
+            bool negativeLength = sweepLength < F64.C0;
             if (negativeLength)
-                sweepLength = 0;
+                sweepLength = F64.C0;
 
 
 
@@ -1402,7 +1402,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             {
                 //The origin is contained, but we shouldn't continue.
                 //The ray is facing backwards.  The time of impact would be 0.
-                hit.T = 0;
+                hit.T = F64.C0;
                 Vector3.Normalize(ref localDirection, out hit.Normal);
                 Quaternion.Transform(ref hit.Normal, ref transformA.Orientation, out hit.Normal);
                 //hit.Location = hit.T * localDirection;
@@ -1460,13 +1460,13 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             Vector3 v2, v2A;
             Vector3.Cross(ref localDirection, ref v1, out n);
             hit.Location = new Vector3();
-            if (n.LengthSquared() < Toolbox.Epsilon * Fix64Utils.PointZeroOne)
+            if (n.LengthSquared() < Toolbox.Epsilon * F64.C0p01)
             {
                 //v1 and v0 could be parallel.
                 //This isn't a bad thing- it means the direction is exactly aligned with the extreme point offset.
                 //In other words, if the raycast is followed out to the surface, it will arrive at the extreme point!
 
-                if (rayLengthSquared > Toolbox.Epsilon * Fix64Utils.PointZeroOne)
+                if (rayLengthSquared > Toolbox.Epsilon * F64.C0p01)
                     Vector3.Divide(ref localDirection, Fix64.Sqrt(rayLengthSquared), out hit.Normal);
                 else
                     hit.Normal = new Vector3();
@@ -1475,20 +1475,20 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 Vector3.Dot(ref  hit.Normal, ref localDirection, out rate);
                 Fix64 distance;
                 Vector3.Dot(ref  hit.Normal, ref v1, out distance);
-                if (rate > 0)
+                if (rate > F64.C0)
                     hit.T = sweepLength - distance / rate;
                 else
                     hit.T = sweepLength;
 
-                if (hit.T < 0)
-                    hit.T = 0;
+                if (hit.T < F64.C0)
+                    hit.T = F64.C0;
 
                 //Vector3.Transform(ref hit.Normal, ref transform.Orientation, out hit.Normal);
                 ////hit.Location = hit.T * localDirection;
                 //Vector3.Transform(ref hit.Location, ref transform.Orientation, out hit.Location);
                 //Vector3.Add(ref hit.Location, ref transform.Position, out hit.Location);
                 //hit.Location += sweepA * hit.T;
-                return hit.T <= 1;
+                return hit.T <= F64.C1;
 
 
             }
@@ -1505,7 +1505,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             //relative to the direction vector.
             Fix64 dot;
             Vector3.Dot(ref n, ref localDirection, out dot);
-            if (dot > 0)
+            if (dot > F64.C0)
             {
                 //It's not properly calibrated.  Flip the winding (and the previously calculated normal).
                 Vector3.Negate(ref n, out n);
@@ -1541,7 +1541,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 // If the direction is outside the plane defined by v1,v0,v3, then the portal is invalid.
                 Vector3.Cross(ref v1, ref v3, out temp1);
                 Vector3.Dot(ref temp1, ref localDirection, out dot);
-                if (dot < 0)
+                if (dot < F64.C0)
                 {
                     //Replace the point that was on the inside of the plane (v2) with the new extreme point.
                     v2 = v3;
@@ -1554,7 +1554,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 // If the direction is outside the plane defined by v3,v0,v2, then the portal is invalid.
                 Vector3.Cross(ref v3, ref v2, out temp1);
                 Vector3.Dot(ref temp1, ref localDirection, out dot);
-                if (dot < 0)
+                if (dot < F64.C0)
                 {
                     //Replace the point that was on the inside of the plane (v1) with the new extreme point.
                     v1 = v3;
@@ -1591,7 +1591,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 {
                     //The portal is now on the surface.  The algorithm can now compute the TOI and exit.
                     Fix64 lengthSquared = n.LengthSquared();
-                    if (lengthSquared > Toolbox.Epsilon * Fix64Utils.EMinusFive)
+                    if (lengthSquared > Toolbox.Epsilon * F64.C1em5)
                     {
                         Vector3.Divide(ref n, Fix64.Sqrt(lengthSquared), out hit.Normal);
 
@@ -1611,8 +1611,8 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                     }
                     //Sometimes, when the objects are intersecting, the T parameter can be negative.
                     //In this case, just go with t = 0.
-                    if (hit.T < 0)
-                        hit.T = 0;
+                    if (hit.T < F64.C0)
+                        hit.T = F64.C0;
 
 
                     //Vector3.Transform(ref hit.Normal, ref transform.Orientation, out hit.Normal);
@@ -1631,7 +1631,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                     //Vector3.Transform(ref hit.Location, ref transform.Orientation, out hit.Location);
                     //Vector3.Add(ref hit.Location, ref transform.Position, out hit.Location);
 
-                    return hit.T <= 1;
+                    return hit.T <= F64.C1;
                 }
 
                 //Still haven't exited, so refine the portal.
@@ -1649,10 +1649,10 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 //It eliminates the need for extra cross products for the inner if.
                 Vector3.Cross(ref v4, ref localDirection, out temp1);
                 Vector3.Dot(ref v1, ref temp1, out dot);
-                if (dot >= 0)
+                if (dot >= F64.C0)
                 {
                     Vector3.Dot(ref v2, ref temp1, out dot);
-                    if (dot >= 0)
+                    if (dot >= F64.C0)
                     {
                         v1 = v4; // Inside v1 & inside v2 ==> eliminate v1
                         v1A = v4A;
@@ -1666,7 +1666,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 else
                 {
                     Vector3.Dot(ref v3, ref temp1, out dot);
-                    if (dot >= 0)
+                    if (dot >= F64.C0)
                     {
                         v2 = v4; // Outside v1 & inside v3 ==> eliminate v2
                         v2A = v4A;
@@ -1788,7 +1788,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 Vector3.Cross(ref v0v1, ref v0v3, out temp);
                 Fix64 dot;
                 Vector3.Dot(ref temp, ref pointToV0, out dot);
-                if (dot < 0)
+                if (dot < F64.C0)
                 {
                     //Replace the point that was on the inside of the plane (v2) with the new extreme point.
                     v2 = v3;
@@ -1803,7 +1803,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 Vector3.Subtract(ref v2, ref v0, out v0v2);
                 Vector3.Cross(ref v0v3, ref v0v2, out temp);
                 Vector3.Dot(ref temp, ref pointToV0, out dot);
-                if (dot < 0)
+                if (dot < F64.C0)
                 {
                     //Replace the point that was on the inside of the plane (v1) with the new extreme point.
                     v1 = v3;
@@ -1920,12 +1920,12 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 //Test minkowskiPoint against the three planes that separate the new portal candidates: (v1,v4,v0) (v2,v4,v0) (v3,v4,v0)
                 Vector3.Cross(ref pointToV4, ref pointToV0, out temp);
                 Vector3.Dot(ref pointToV1, ref temp, out dot);
-                if (dot >= 0) //Dot v0 x v4 against v1, and dot it against 
+                if (dot >= F64.C0) //Dot v0 x v4 against v1, and dot it against 
                 {
                     Vector3 pointToV2;
                     Vector3.Subtract(ref v2, ref minkowskiPosition, out pointToV2);
                     Vector3.Dot(ref pointToV2, ref temp, out dot);
-                    if (dot >= 0)
+                    if (dot >= F64.C0)
                     {
                         v1 = v4; // Inside v1 & inside v2 ==> eliminate v1
                         v1A = v4A;
@@ -1943,7 +1943,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                     Vector3 pointToV3;
                     Vector3.Subtract(ref v3, ref minkowskiPosition, out pointToV3);
                     Vector3.Dot(ref pointToV3, ref temp, out dot);
-                    if (dot >= 0)
+                    if (dot >= F64.C0)
                     {
                         v2 = v4; // Outside v1 & inside v3 ==> eliminate v2
                         v2A = v4A;
@@ -2012,7 +2012,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 //If the origin is within this extreme point, then there is an intersection.
                 Fix64 dot;
                 Vector3.Dot(ref v1, ref localTransformB.Position, out dot);
-                if (dot < 0)
+                if (dot < F64.C0)
                 {
                     //Origin is outside.
                     position = new Vector3();
@@ -2056,7 +2056,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 Vector3.Cross(ref v1, ref v3, out temp1);
                 Fix64 dot;
                 Vector3.Dot(ref temp1, ref v0, out dot);
-                if (dot < 0)
+                if (dot < F64.C0)
                 {
                     //Replace the point that was on the inside of the plane (v2) with the new extreme point.
                     v2 = v3;
@@ -2071,7 +2071,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 // If the origin is outside the plane defined by v3,v0,v2, then the portal is invalid.
                 Vector3.Cross(ref v3, ref v2, out temp1);
                 Vector3.Dot(ref temp1, ref v0, out dot);
-                if (dot < 0)
+                if (dot < F64.C0)
                 {
                     //Replace the point that was on the inside of the plane (v1) with the new extreme point.
                     v1 = v3;
@@ -2099,7 +2099,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 Vector3.Cross(ref temp1, ref temp2, out n);
                 Fix64 dot;
                 Vector3.Dot(ref n, ref v1, out dot);
-                if (dot >= 0)
+                if (dot >= F64.C0)
                 {
                     Vector3 temp3;
                     //Compute the barycentric coordinates of the origin.
@@ -2129,11 +2129,11 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                     Vector3.Dot(ref cross, ref temp3, out v0v1ov3volume);
 
 
-                    Fix64 inverseTotalVolume = 1 / v0v1v2v3volume;
+                    Fix64 inverseTotalVolume = F64.C1 / v0v1v2v3volume;
                     Fix64 v0Weight = ov1v2v3volume * inverseTotalVolume;
                     Fix64 v1Weight = v0ov2v3volume * inverseTotalVolume;
                     Fix64 v2Weight = v0v1ov3volume * inverseTotalVolume;
-                    Fix64 v3Weight = 1 - v0Weight - v1Weight - v2Weight;
+                    Fix64 v3Weight = F64.C1 - v0Weight - v1Weight - v2Weight;
                     position = v1Weight * v1A + v2Weight * v2A + v3Weight * v3A;
                     //DEBUGlastPosition = position;
                     return true;
@@ -2147,7 +2147,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 //If the origin is further along the direction than the extreme point, it's not inside the shape.
                 Fix64 dot2;
                 Vector3.Dot(ref v4, ref n, out dot2);
-                if (dot2 < 0)
+                if (dot2 < F64.C0)
                 {
                     //The origin is outside!
                     position = new Vector3();
@@ -2168,10 +2168,10 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 //Test origin against the three planes that separate the new portal candidates: (v1,v4,v0) (v2,v4,v0) (v3,v4,v0)
                 Vector3.Cross(ref v4, ref v0, out temp1);
                 Vector3.Dot(ref v1, ref temp1, out dot);
-                if (dot >= 0)
+                if (dot >= F64.C0)
                 {
                     Vector3.Dot(ref v2, ref temp1, out dot);
-                    if (dot >= 0)
+                    if (dot >= F64.C0)
                     {
                         v1 = v4; // Inside v1 & inside v2 ==> eliminate v1
                         v1A = v4A;
@@ -2185,7 +2185,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 else
                 {
                     Vector3.Dot(ref v3, ref temp1, out dot);
-                    if (dot >= 0)
+                    if (dot >= F64.C0)
                     {
                         v2 = v4; // Outside v1 & inside v3 ==> eliminate v2
                         v2A = v4A;
@@ -2212,7 +2212,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             MinkowskiToolbox.GetLocalMinkowskiExtremePoint(shapeA, shapeB, ref extremePointDirection, ref localTransformB, out extremePointA, out b, out extremePoint);
             Fix64 dot;
             Vector3.Dot(ref extremePointDirection, ref sweep, out dot);
-            if (dot > 0)
+            if (dot > F64.C0)
             {
                 Vector3.Add(ref extremePoint, ref sweep, out extremePoint);
             }
@@ -2275,7 +2275,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             {
                 //We can scoot ourselves almost all the way up to the intersection with the outer sphere.
                 //Stop just short to prevent a possible erroneous 'just-barely-contained' result.
-                sphereHit.T = MathHelper.Max(sphereHit.T - Fix64Utils.PointOne, 0);
+                sphereHit.T = MathHelper.Max(sphereHit.T - F64.C0p1, F64.C0);
                 Vector3 offset;
                 Vector3.Multiply(ref localRay.Direction, -sphereHit.T, out offset);
                 Vector3.Add(ref localRay.Position, ref offset, out localRay.Position);
@@ -2296,7 +2296,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
 
             Fix64 rayLengthSquared = localRay.Direction.LengthSquared();
             Fix64 sweepLength;
-            if (rayLengthSquared > Toolbox.Epsilon * Fix64Utils.PointZeroOne)
+            if (rayLengthSquared > Toolbox.Epsilon * F64.C0p01)
             {
                 Vector3.Dot(ref localRay.Position, ref localRay.Direction, out sweepLength);
                 //Ray length isn't necessarily normalized...
@@ -2306,14 +2306,14 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             }
             else
             {
-                rayLengthSquared = 0;
-                sweepLength = 0;
+                rayLengthSquared = F64.C0;
+                sweepLength = F64.C0;
             }
             //If the sweep direction is found to be negative, the ray can be thought of as pointing away from the shape.
             //Do not sweep backward.
-            bool negativeLength = sweepLength < 0;
+            bool negativeLength = sweepLength < F64.C0;
             if (negativeLength)
-                sweepLength = 0;
+                sweepLength = F64.C0;
 
 
 
@@ -2332,7 +2332,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             {
                 //The origin is contained, but we shouldn't continue.
                 //The ray is facing backwards.  The time of impact would be 0 (because we already verified that we are contained in the shape volume).
-                hit.T = 0;
+                hit.T = F64.C0;
                 Vector3.Normalize(ref ray.Direction, out hit.Normal);
                 hit.Location = ray.Position;
                 return true;
@@ -2398,7 +2398,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 //If the origin is within this extreme point, then there is an intersection.
                 Fix64 dot;
                 Vector3.Dot(ref v1, ref localPoint, out dot);
-                if (dot < 0)
+                if (dot < F64.C0)
                 {
                     //Origin is outside.
                     return false;
@@ -2433,7 +2433,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 Vector3.Cross(ref v1, ref v3, out temp1);
                 Fix64 dot;
                 Vector3.Dot(ref temp1, ref v0, out dot);
-                if (dot < 0)
+                if (dot < F64.C0)
                 {
                     //Replace the point that was on the inside of the plane (v2) with the new extreme point.
                     v2 = v3;
@@ -2447,7 +2447,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 // If the origin is outside the plane defined by v3,v0,v2, then the portal is invalid.
                 Vector3.Cross(ref v3, ref v2, out temp1);
                 Vector3.Dot(ref temp1, ref v0, out dot);
-                if (dot < 0)
+                if (dot < F64.C0)
                 {
                     //Replace the point that was on the inside of the plane (v1) with the new extreme point.
                     v1 = v3;
@@ -2474,7 +2474,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 Vector3.Cross(ref temp1, ref temp2, out n);
                 Fix64 dot;
                 Vector3.Dot(ref n, ref v1, out dot);
-                if (dot >= 0)
+                if (dot >= F64.C0)
                 {
                     return true;
                 }
@@ -2487,7 +2487,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 //If the origin is further along the direction than the extreme point, it's not inside the shape.
                 Fix64 dot2;
                 Vector3.Dot(ref v4, ref n, out dot2);
-                if (dot2 < 0)
+                if (dot2 < F64.C0)
                 {
                     //The origin is outside!
                     return false;
@@ -2506,10 +2506,10 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 //Test origin against the three planes that separate the new portal candidates: (v1,v4,v0) (v2,v4,v0) (v3,v4,v0)
                 Vector3.Cross(ref v4, ref v0, out temp1);
                 Vector3.Dot(ref v1, ref temp1, out dot);
-                if (dot >= 0)
+                if (dot >= F64.C0)
                 {
                     Vector3.Dot(ref v2, ref temp1, out dot);
-                    if (dot >= 0)
+                    if (dot >= F64.C0)
                     {
                         v1 = v4; // Inside v1 & inside v2 ==> eliminate v1
                     }
@@ -2521,7 +2521,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 else
                 {
                     Vector3.Dot(ref v3, ref temp1, out dot);
-                    if (dot >= 0)
+                    if (dot >= F64.C0)
                     {
                         v2 = v4; // Outside v1 & inside v3 ==> eliminate v2
                     }
@@ -2567,13 +2567,13 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             Vector3 v2;
             Vector3.Cross(ref localDirection, ref v1, out n);
             hit.Location = new Vector3();
-            if (n.LengthSquared() < Toolbox.Epsilon * Fix64Utils.PointZeroOne)
+            if (n.LengthSquared() < Toolbox.Epsilon * F64.C0p01)
             {
                 //v1 and v0 could be parallel.
                 //This isn't a bad thing- it means the direction is exactly aligned with the extreme point offset.
                 //In other words, if the raycast is followed out to the surface, it will arrive at the extreme point!
 
-                if (rayLengthSquared > Toolbox.Epsilon * Fix64Utils.PointZeroOne)
+                if (rayLengthSquared > Toolbox.Epsilon * F64.C0p01)
                     Vector3.Divide(ref localDirection, Fix64.Sqrt(rayLengthSquared), out hit.Normal);
                 else
                     hit.Normal = new Vector3();
@@ -2582,20 +2582,20 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 Vector3.Dot(ref  hit.Normal, ref localDirection, out rate);
                 Fix64 distance;
                 Vector3.Dot(ref  hit.Normal, ref v1, out distance);
-                if (rate > 0)
+                if (rate > F64.C0)
                     hit.T = sweepLength - distance / rate;
                 else
                     hit.T = sweepLength;
 
-                if (hit.T < 0)
-                    hit.T = 0;
+                if (hit.T < F64.C0)
+                    hit.T = F64.C0;
 
                 //Vector3.Transform(ref hit.Normal, ref transform.Orientation, out hit.Normal);
                 ////hit.Location = hit.T * localDirection;
                 //Vector3.Transform(ref hit.Location, ref transform.Orientation, out hit.Location);
                 //Vector3.Add(ref hit.Location, ref transform.Position, out hit.Location);
                 //hit.Location += sweepA * hit.T;
-                return hit.T <= 1;
+                return hit.T <= F64.C1;
 
 
             }
@@ -2612,7 +2612,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             //relative to the direction vector.
             Fix64 dot;
             Vector3.Dot(ref n, ref localDirection, out dot);
-            if (dot > 0)
+            if (dot > F64.C0)
             {
                 //It's not properly calibrated.  Flip the winding (and the previously calculated normal).
                 Vector3.Negate(ref n, out n);
@@ -2645,7 +2645,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 // If the direction is outside the plane defined by v1,v0,v3, then the portal is invalid.
                 Vector3.Cross(ref v1, ref v3, out temp1);
                 Vector3.Dot(ref temp1, ref localDirection, out dot);
-                if (dot < 0)
+                if (dot < F64.C0)
                 {
                     //Replace the point that was on the inside of the plane (v2) with the new extreme point.
                     v2 = v3;
@@ -2657,7 +2657,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 // If the direction is outside the plane defined by v3,v0,v2, then the portal is invalid.
                 Vector3.Cross(ref v3, ref v2, out temp1);
                 Vector3.Dot(ref temp1, ref localDirection, out dot);
-                if (dot < 0)
+                if (dot < F64.C0)
                 {
                     //Replace the point that was on the inside of the plane (v1) with the new extreme point.
                     v1 = v3;
@@ -2693,7 +2693,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 {
                     //The portal is now on the surface.  The algorithm can now compute the TOI and exit.
                     Fix64 lengthSquared = n.LengthSquared();
-                    if (lengthSquared > Toolbox.Epsilon * Fix64Utils.EMinusFive)
+                    if (lengthSquared > Toolbox.Epsilon * F64.C1em5)
                     {
                         Vector3.Divide(ref n, Fix64.Sqrt(lengthSquared), out hit.Normal);
 
@@ -2713,8 +2713,8 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                     }
                     //Sometimes, when the objects are intersecting, the T parameter can be negative.
                     //In this case, just go with t = 0.
-                    if (hit.T < 0)
-                        hit.T = 0;
+                    if (hit.T < F64.C0)
+                        hit.T = F64.C0;
                     return true;
                 }
 
@@ -2733,10 +2733,10 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 //It eliminates the need for extra cross products for the inner if.
                 Vector3.Cross(ref v4, ref localDirection, out temp1);
                 Vector3.Dot(ref v1, ref temp1, out dot);
-                if (dot >= 0)
+                if (dot >= F64.C0)
                 {
                     Vector3.Dot(ref v2, ref temp1, out dot);
-                    if (dot >= 0)
+                    if (dot >= F64.C0)
                     {
                         v1 = v4; // Inside v1 & inside v2 ==> eliminate v1
                     }
@@ -2748,7 +2748,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                 else
                 {
                     Vector3.Dot(ref v3, ref temp1, out dot);
-                    if (dot >= 0)
+                    if (dot >= F64.C0)
                     {
                         v2 = v4; // Outside v1 & inside v3 ==> eliminate v2
                     }
@@ -2769,7 +2769,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             Vector3.Subtract(ref extremePoint, ref point, out extremePoint);
             Fix64 dot;
             Vector3.Dot(ref extremePointDirection, ref sweep, out dot);
-            if (dot > 0)
+            if (dot > F64.C0)
             {
                 Vector3.Add(ref extremePoint, ref sweep, out extremePoint);
             }

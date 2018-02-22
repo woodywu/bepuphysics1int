@@ -45,14 +45,14 @@ namespace BEPUik
         /// </summary>
         public Fix64 Mass
         {
-            get { return 1 / inverseMass; }
+            get { return F64.C1 / inverseMass; }
             set
             {
                 //Long chains could produce exceptionally small values.
                 //Attempting to invert them would result in NaNs.
                 //Clamp the lowest mass to 1e-7f.
                 if (value > Toolbox.Epsilon)
-                    inverseMass = 1 / value;
+                    inverseMass = F64.C1 / value;
                 else
                     inverseMass = (Fix64)1e7m;
                 ComputeLocalInertiaTensor();
@@ -124,10 +124,10 @@ namespace BEPUik
         /// </summary>
         public Fix64 Height
         {
-            get { return halfHeight * 2; }
+            get { return halfHeight * F64.C2; }
             set
             {
-                halfHeight = value / 2;
+                halfHeight = value / F64.C2;
                 ComputeLocalInertiaTensor();
             }
         }
@@ -155,7 +155,7 @@ namespace BEPUik
         /// <param name="height">Height of the bone.</param>
         public Bone(Vector3 position, Quaternion orientation, Fix64 radius, Fix64 height)
         {
-            Mass = 1;
+            Mass = F64.C1;
             Position = position;
             Orientation = orientation;
             Radius = radius;
@@ -167,9 +167,9 @@ namespace BEPUik
         {
             var localInertiaTensor = new Matrix3x3();
             var multiplier = Mass * InertiaTensorScaling;
-            Fix64 diagValue = (Fix64Utils.PointZeroEightThrees * Height * Height + Fix64Utils.PointTwoFive * Radius * Radius) * multiplier;
+            Fix64 diagValue = (F64.C0p0833333333 * Height * Height + F64.C0p25 * Radius * Radius) * multiplier;
             localInertiaTensor.M11 = diagValue;
-            localInertiaTensor.M22 = Fix64Utils.PointFive * Radius * Radius * multiplier;
+            localInertiaTensor.M22 = F64.C0p5 * Radius * Radius * multiplier;
             localInertiaTensor.M33 = diagValue;
             Matrix3x3.Invert(ref localInertiaTensor, out localInertiaTensorInverse);
         }
@@ -197,8 +197,8 @@ namespace BEPUik
 
             //Update the orientation based on the angular velocity.
             Vector3 increment;
-            Vector3.Multiply(ref angularVelocity, Fix64Utils.PointFive, out increment);
-            var multiplier = new Quaternion(increment.X, increment.Y, increment.Z, 0);
+            Vector3.Multiply(ref angularVelocity, F64.C0p5, out increment);
+            var multiplier = new Quaternion(increment.X, increment.Y, increment.Z, F64.C0);
             Quaternion.Multiply(ref multiplier, ref Orientation, out multiplier);
             Quaternion.Add(ref Orientation, ref multiplier, out Orientation);
             Orientation.Normalize();

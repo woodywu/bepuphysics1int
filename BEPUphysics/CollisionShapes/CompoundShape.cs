@@ -229,17 +229,17 @@ namespace BEPUphysics.CollisionShapes
         public static void ComputeVolumeDistribution(IList<CompoundShapeEntry> entries, out Fix64 volume, out Matrix3x3 volumeDistribution, out Vector3 center)
         {
             center = new Vector3();
-            Fix64 totalWeight = 0;
-            volume = 0;
+            Fix64 totalWeight = F64.C0;
+            volume = F64.C0;
             for (int i = 0; i < entries.Count; i++)
             {
                 center += entries[i].LocalTransform.Position * entries[i].Weight;
                 volume += entries[i].Shape.Volume;
                 totalWeight += entries[i].Weight;
             }
-            if (totalWeight <= 0)
+            if (totalWeight <= F64.C0)
                 throw new NotFiniteNumberException("Cannot compute distribution; the total weight of a compound shape must be positive.");
-            Fix64 totalWeightInverse = 1 / totalWeight;
+            Fix64 totalWeightInverse = F64.C1 / totalWeight;
             totalWeightInverse.Validate();
             center *= totalWeightInverse;
 

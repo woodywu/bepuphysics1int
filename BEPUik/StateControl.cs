@@ -1,4 +1,5 @@
 ﻿using FixMath.NET;
+using BEPUutilities;
 
 namespace BEPUik
 {
@@ -44,8 +45,8 @@ namespace BEPUik
         {
             LinearMotor = new SingleBoneLinearMotor();
             AngularMotor = new SingleBoneAngularMotor();
-            LinearMotor.Rigidity = 1;
-            AngularMotor.Rigidity = 1;
+            LinearMotor.Rigidity = F64.C1;
+            AngularMotor.Rigidity = F64.C1;
         }
 
         protected internal override void Preupdate(Fix64 dt, Fix64 updateRate)

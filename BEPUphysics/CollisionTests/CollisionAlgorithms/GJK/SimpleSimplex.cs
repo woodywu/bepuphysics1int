@@ -127,7 +127,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms.GJK
             Vector3.Dot(ref ac, ref C, out d6);
             d5 = -d5;
             d6 = -d6;
-            if (d6 >= 0 && d5 <= d6)
+            if (d6 >= F64.C0 && d5 <= d6)
             {
                 //It is C!
                 State = SimplexState.Point;
@@ -143,7 +143,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms.GJK
             d1 = -d1;
             d2 = -d2;
             Fix64 vb = d5 * d2 - d1 * d6;
-            if (vb <= 0 && d2 > 0 && d6 < 0) //Note > instead of >= and < instead of <=; prevents bad denominator
+            if (vb <= F64.C0 && d2 > F64.C0 && d6 < F64.C0) //Note > instead of >= and < instead of <=; prevents bad denominator
             {
                 //Get rid of B.  Compress C into B.
                 State = SimplexState.Segment;
@@ -163,7 +163,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms.GJK
             Fix64 va = d3 * d6 - d5 * d4;
             Fix64 d3d4;
             Fix64 d6d5;
-            if (va <= 0 && (d3d4 = d4 - d3) > 0 && (d6d5 = d5 - d6) > 0)//Note > instead of >= and < instead of <=; prevents bad denominator
+            if (va <= F64.C0 && (d3d4 = d4 - d3) > F64.C0 && (d6d5 = d5 - d6) > F64.C0)//Note > instead of >= and < instead of <=; prevents bad denominator
             {
                 //Throw away A.  C->A.
                 //TODO: Does B->A, C->B work better?
@@ -181,7 +181,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms.GJK
 
             //On the face of the triangle.
             Fix64 vc = d1 * d4 - d3 * d2;
-            Fix64 denom = 1 / (va + vb + vc);
+            Fix64 denom = F64.C1 / (va + vb + vc);
             Fix64 v = vb * denom;
             Fix64 w = vc * denom;
 
@@ -274,7 +274,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms.GJK
             Vector3.Dot(ref AD, ref normal, out ADdotN);
 
             //If (-A * N) * (AD * N) < 0, D and O are on opposite sides of the triangle.
-            if (AdotN * ADdotN > 0)
+            if (AdotN * ADdotN > F64.C0)
             {
                 //The point we are comparing against the triangle is 0,0,0, so instead of storing an "A->P" vector,
                 //just use -A.
@@ -293,7 +293,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms.GJK
                 Vector3.Dot(ref ac, ref C, out CdotAC);
                 CdotAB = -CdotAB;
                 CdotAC = -CdotAC;
-                if (CdotAC >= 0 && CdotAB <= CdotAC)
+                if (CdotAC >= F64.C0 && CdotAB <= CdotAC)
                 {
                     //It is C!
                     simplex.State = SimplexState.Point;
@@ -309,7 +309,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms.GJK
                 AdotAB = -AdotAB;
                 AdotAC = -AdotAC;
                 Fix64 vb = CdotAB * AdotAC - AdotAB * CdotAC;
-                if (vb <= 0 && AdotAC > 0 && CdotAC < 0) //Note > instead of >= and < instead of <=; prevents bad denominator
+                if (vb <= F64.C0 && AdotAC > F64.C0 && CdotAC < F64.C0) //Note > instead of >= and < instead of <=; prevents bad denominator
                 {
                     simplex.State = SimplexState.Segment;
                     simplex.A = A;
@@ -330,7 +330,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms.GJK
                 Fix64 va = BdotAB * CdotAC - CdotAB * BdotAC;
                 Fix64 d3d4;
                 Fix64 d6d5;
-                if (va <= 0 && (d3d4 = BdotAC - BdotAB) > 0 && (d6d5 = CdotAB - CdotAC) > 0)//Note > instead of >= and < instead of <=; prevents bad denominator
+                if (va <= F64.C0 && (d3d4 = BdotAC - BdotAB) > F64.C0 && (d6d5 = CdotAB - CdotAC) > F64.C0)//Note > instead of >= and < instead of <=; prevents bad denominator
                 {
                     simplex.State = SimplexState.Segment;
                     simplex.A = B;
@@ -351,7 +351,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms.GJK
                 simplex.B = B;
                 simplex.C = C;
                 simplex.State = SimplexState.Triangle;
-                Fix64 denom = 1 / (va + vb + vc);
+                Fix64 denom = F64.C1 / (va + vb + vc);
                 Fix64 w = vc * denom;
                 Fix64 v = vb * denom;
 
@@ -413,7 +413,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms.GJK
                 case SimplexState.Tetrahedron:
                     return MathHelper.Max(A.LengthSquared(), MathHelper.Max(B.LengthSquared(), MathHelper.Max(C.LengthSquared(), D.LengthSquared())));
             }
-            return 1;
+            return F64.C1;
         }
 
 

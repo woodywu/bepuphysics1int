@@ -36,7 +36,7 @@ namespace BEPUphysics.CollisionShapes.ConvexShapes
             }
             set
             {
-                if (value < 0)
+                if (value < F64.C0)
                     throw new ArgumentException("Collision margin must be nonnegative..");
                 collisionMargin = value;
                 OnShapeChanged();

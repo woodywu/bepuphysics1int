@@ -153,7 +153,7 @@ namespace BEPUphysics.Constraints.SingleEntity
             basis.rotationMatrix = entity.orientationMatrix;
             basis.ComputeWorldSpaceAxes();
 
-            Fix64 updateRate = 1 / dt;
+            Fix64 updateRate = F64.C1 / dt;
             if (settings.mode == MotorMode.Servomechanism) //Only need to do the bulk of this work if it's a servo.
             {
                 Quaternion currentRelativeOrientation;
@@ -202,7 +202,7 @@ namespace BEPUphysics.Constraints.SingleEntity
             else
             {
                 usedSoftness = settings.velocityMotor.softness * updateRate;
-                angle = 0; //Zero out the error;
+                angle = F64.C0; //Zero out the error;
                 Matrix3x3 transform = basis.WorldTransform;
                 Matrix3x3.Transform(ref settings.velocityMotor.goalVelocity, ref transform, out biasVelocity);
             }

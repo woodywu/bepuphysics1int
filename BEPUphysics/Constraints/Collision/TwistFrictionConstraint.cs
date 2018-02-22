@@ -50,7 +50,7 @@ namespace BEPUphysics.Constraints.Collision
         {
             get
             {
-                Fix64 lambda = 0;
+                Fix64 lambda = F64.C0;
                 if (entityA != null)
                     lambda = entityA.angularVelocity.X * angularX + entityA.angularVelocity.Y * angularY + entityA.angularVelocity.Z * angularZ;
                 if (entityB != null)
@@ -72,7 +72,7 @@ namespace BEPUphysics.Constraints.Collision
 
             //Clamp accumulated impulse
             Fix64 previousAccumulatedImpulse = accumulatedImpulse;
-            Fix64 maximumFrictionForce = 0;
+            Fix64 maximumFrictionForce = F64.C0;
             for (int i = 0; i < contactCount; i++)
             {
                 maximumFrictionForce += leverArms[i] * contactManifoldConstraint.penetrationConstraints.Elements[i].accumulatedImpulse;
@@ -137,7 +137,7 @@ namespace BEPUphysics.Constraints.Collision
                 entryA = tX * angularX + tY * angularY + tZ * angularZ + entityA.inverseMass;
             }
             else
-                entryA = 0;
+                entryA = F64.C0;
 
             if (entityBDynamic)
             {
@@ -147,7 +147,7 @@ namespace BEPUphysics.Constraints.Collision
                 entryB = tX * angularX + tY * angularY + tZ * angularZ + entityB.inverseMass;
             }
             else
-                entryB = 0;
+                entryB = F64.C0;
 
             velocityToImpulse = -1 / (entryA + entryB);
 
@@ -215,7 +215,7 @@ namespace BEPUphysics.Constraints.Collision
 
         internal void CleanUp()
         {
-            accumulatedImpulse = 0;
+            accumulatedImpulse = F64.C0;
             contactManifoldConstraint = null;
             entityA = null;
             entityB = null;

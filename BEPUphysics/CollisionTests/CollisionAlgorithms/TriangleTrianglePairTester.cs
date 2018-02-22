@@ -37,14 +37,14 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
                         Vector3.Dot(ref item.Normal, ref normal, out dot);
                         if (sidedness == TriangleSidedness.Clockwise)
                         {
-                            if (dot < 0)
+                            if (dot < F64.C0)
                             {
                                 contactList.RemoveAt(i);
                             }
                         }
                         else
                         {
-                            if (dot > 0)
+                            if (dot > F64.C0)
                             {
                                 contactList.RemoveAt(i);
                             }

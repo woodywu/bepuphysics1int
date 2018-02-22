@@ -83,7 +83,7 @@ namespace BEPUphysics.Character
             }
         }
 
-        Vector3 viewDirection = new Vector3(0, 0, -1);
+        Vector3 viewDirection = new Vector3(F64.C0, F64.C0, -1);
 
         /// <summary>
         /// Gets or sets the view direction associated with the character.
@@ -99,7 +99,7 @@ namespace BEPUphysics.Character
             set
             {
                 Fix64 lengthSquared = value.LengthSquared();
-                if (lengthSquared > Fix64Utils.EMinusSeven)
+                if (lengthSquared > F64.C1em7)
                 {
                     Vector3.Divide(ref value, Fix64.Sqrt(lengthSquared), out viewDirection);
                 }
@@ -107,7 +107,7 @@ namespace BEPUphysics.Character
                 {
                     value = Vector3.Cross(Down, Toolbox.UpVector);
                     lengthSquared = value.LengthSquared();
-                    if (lengthSquared > Fix64Utils.EMinusSeven)
+                    if (lengthSquared > F64.C1em7)
                     {
                         Vector3.Divide(ref value, Fix64.Sqrt(lengthSquared), out viewDirection);
                     }
@@ -132,7 +132,7 @@ namespace BEPUphysics.Character
             }
             set
             {
-                if (value < 0)
+                if (value < F64.C0)
                     throw new ArgumentException("Value must be nonnegative.");
                 jumpSpeed = value;
             }
@@ -149,12 +149,12 @@ namespace BEPUphysics.Character
             }
             set
             {
-                if (value < 0)
+                if (value < F64.C0)
                     throw new ArgumentException("Value must be nonnegative.");
                 slidingJumpSpeed = value;
             }
         }
-        Fix64 jumpForceFactor = 1;
+        Fix64 jumpForceFactor = F64.C1;
         /// <summary>
         /// Gets or sets the amount of force to apply to supporting dynamic entities as a fraction of the force used to reach the jump speed.
         /// </summary>
@@ -166,7 +166,7 @@ namespace BEPUphysics.Character
             }
             set
             {
-                if (value < 0)
+                if (value < F64.C0)
                     throw new ArgumentException("Value must be nonnegative.");
                 jumpForceFactor = value;
             }
@@ -185,7 +185,7 @@ namespace BEPUphysics.Character
             }
             set
             {
-                if (value < 0)
+                if (value < F64.C0)
                     throw new ArgumentException("Value must be nonnegative.");
                 standingSpeed = value;
             }
@@ -203,7 +203,7 @@ namespace BEPUphysics.Character
             }
             set
             {
-                if (value < 0)
+                if (value < F64.C0)
                     throw new ArgumentException("Value must be nonnegative.");
                 crouchingSpeed = value;
             }
@@ -221,7 +221,7 @@ namespace BEPUphysics.Character
             }
             set
             {
-                if (value < 0)
+                if (value < F64.C0)
                     throw new ArgumentException("Value must be nonnegative.");
                 proneSpeed = value;
             }
@@ -238,7 +238,7 @@ namespace BEPUphysics.Character
             }
             set
             {
-                if (value < 0)
+                if (value < F64.C0)
                     throw new ArgumentException("Value must be nonnegative.");
                 tractionForce = value;
             }
@@ -257,7 +257,7 @@ namespace BEPUphysics.Character
             }
             set
             {
-                if (value < 0)
+                if (value < F64.C0)
                     throw new ArgumentException("Value must be nonnegative.");
                 slidingSpeed = value;
             }
@@ -274,7 +274,7 @@ namespace BEPUphysics.Character
             }
             set
             {
-                if (value < 0)
+                if (value < F64.C0)
                     throw new ArgumentException("Value must be nonnegative.");
                 slidingForce = value;
             }
@@ -293,7 +293,7 @@ namespace BEPUphysics.Character
             }
             set
             {
-                if (value < 0)
+                if (value < F64.C0)
                     throw new ArgumentException("Value must be nonnegative.");
                 airSpeed = value;
             }
@@ -310,13 +310,13 @@ namespace BEPUphysics.Character
             }
             set
             {
-                if (value < 0)
+                if (value < F64.C0)
                     throw new ArgumentException("Value must be nonnegative.");
                 airForce = value;
             }
         }
 
-        private Fix64 speedScale = 1;
+        private Fix64 speedScale = F64.C1;
         /// <summary>
         /// Gets or sets a scaling factor to apply to the maximum speed of the character.
         /// This is useful when a character does not have 0 or MaximumSpeed target speed, but rather
@@ -337,7 +337,7 @@ namespace BEPUphysics.Character
             get { return Body.CollisionInformation.Shape.Radius; }
             set
             {
-                if (value <= 0)
+                if (value <= F64.C0)
                     throw new ArgumentException("Radius must be positive.");
                 Body.CollisionInformation.Shape.Radius = value;
                 //Tell the query manager to update its representation.
@@ -353,7 +353,7 @@ namespace BEPUphysics.Character
             get { return Body.CollisionInformation.Shape.CollisionMargin; }
             set
             {
-                if (value <= 0)
+                if (value <= F64.C0)
                     throw new ArgumentException("Radius must be positive.");
                 Body.CollisionInformation.Shape.CollisionMargin = value;
                 //Tell the query manager to update its representation.
@@ -459,12 +459,12 @@ namespace BEPUphysics.Character
             //TODO: In v0.16.2, compound bodies would override the material properties that get set in the CreatingPair event handler.
             //In a future version where this is changed, change this to conceptually minimally required CreatingPair.
             Body.CollisionInformation.Events.DetectingInitialCollision += RemoveFriction;
-            Body.LinearDamping = 0;
+            Body.LinearDamping = F64.C0;
             ContactCategorizer = new CharacterContactCategorizer((Fix64)maximumTractionSlope, (Fix64)maximumSupportSlope);
             QueryManager = new QueryManager(Body, ContactCategorizer);
             SupportFinder = new SupportFinder(Body, QueryManager, ContactCategorizer);
             HorizontalMotionConstraint = new HorizontalMotionConstraint(Body, SupportFinder);
-            HorizontalMotionConstraint.PositionAnchorDistanceThreshold = (Fix64)radius * Fix64Utils.PointTwoFive;
+            HorizontalMotionConstraint.PositionAnchorDistanceThreshold = (Fix64)radius * F64.C0p25;
             VerticalMotionConstraint = new VerticalMotionConstraint(Body, SupportFinder, (Fix64)maximumGlueForce);
             StepManager = new StepManager(Body, ContactCategorizer, SupportFinder, QueryManager, HorizontalMotionConstraint);
             StanceManager = new StanceManager(Body, (Fix64)crouchingHeight, (Fix64)proneHeight, QueryManager, SupportFinder);
@@ -541,7 +541,7 @@ namespace BEPUphysics.Character
                 //To show this, try setting up the triangles at the corner of a cylinder with the world axes and cylinder axes.
 
                 //Since the test axes we're using are all standard directions ({0,0,1}, {0,1,0}, and {0,0,1}), most of the cross product logic simplifies out, and we are left with:
-                var horizontalExpansionAmount = Body.CollisionInformation.Shape.CollisionMargin * Fix64Utils.OnePointOne;
+                var horizontalExpansionAmount = Body.CollisionInformation.Shape.CollisionMargin * F64.C1p1;
                 Vector3 squaredDown;
                 squaredDown.X = down.X * down.X;
                 squaredDown.Y = down.Y * down.Y;
@@ -590,7 +590,7 @@ namespace BEPUphysics.Character
 
 
                 //Don't attempt to use an object as support if we are flying away from it (and we were never standing on it to begin with).
-                if (SupportFinder.HasSupport && !hadSupport && verticalVelocity < 0)
+                if (SupportFinder.HasSupport && !hadSupport && verticalVelocity < F64.C0)
                 {
                     SupportFinder.ClearSupportData();
                     supportData = new SupportData();
@@ -608,7 +608,7 @@ namespace BEPUphysics.Character
                         //The character has traction, so jump straight up.
                         Fix64 currentDownVelocity = Vector3.Dot(Down, relativeVelocity);
                         //Target velocity is JumpSpeed.
-                        Fix64 velocityChange = MathHelper.Max(jumpSpeed + currentDownVelocity, 0);
+                        Fix64 velocityChange = MathHelper.Max(jumpSpeed + currentDownVelocity, F64.C0);
                         ApplyJumpVelocity(ref supportData, Down * -velocityChange, ref relativeVelocity);
 
 
@@ -623,7 +623,7 @@ namespace BEPUphysics.Character
                         //The character does not have traction, so jump along the surface normal instead.
                         Fix64 currentNormalVelocity = Vector3.Dot(supportData.Normal, relativeVelocity);
                         //Target velocity is JumpSpeed.
-                        Fix64 velocityChange = MathHelper.Max(slidingJumpSpeed - currentNormalVelocity, 0);
+                        Fix64 velocityChange = MathHelper.Max(slidingJumpSpeed - currentNormalVelocity, F64.C0);
                         ApplyJumpVelocity(ref supportData, supportData.Normal * -velocityChange, ref relativeVelocity);
 
                         //Prevent any old contacts from hanging around and coming back with a negative depth.
@@ -746,7 +746,7 @@ namespace BEPUphysics.Character
             Vector3 downDirection = Body.OrientationMatrix.Down;
             Vector3 position = Body.Position;
             Fix64 margin = Body.CollisionInformation.Shape.CollisionMargin;
-            Fix64 minimumHeight = Body.Height * Fix64Utils.PointFive - margin;
+            Fix64 minimumHeight = Body.Height * F64.C0p5 - margin;
             Fix64 coreRadius = Body.Radius - margin;
             Fix64 coreRadiusSquared = coreRadius * coreRadius;
             foreach (var pair in Body.CollisionInformation.Pairs)
@@ -800,7 +800,7 @@ namespace BEPUphysics.Character
                         {
                             //Then use it!
                             Vector3.Dot(ref offsetDirection, ref contact.Normal, out dot);
-                            if (dot < 0)
+                            if (dot < F64.C0)
                             {
                                 //Don't flip the normal relative to the contact normal.  That would be bad!
                                 Vector3.Negate(ref offsetDirection, out offsetDirection);

@@ -117,11 +117,11 @@ namespace BEPUik
 
             //Incorporate the constraint softness into the effective mass denominator. This pushes the matrix away from singularity.
             //Softness will also be incorporated into the velocity solve iterations to complete the implementation.
-            if (effectiveMass.M11 != 0)
+            if (effectiveMass.M11 != F64.C0)
                 effectiveMass.M11 += softness;
-            if (effectiveMass.M22 != 0)
+            if (effectiveMass.M22 != F64.C0)
                 effectiveMass.M22 += softness;
-            if (effectiveMass.M33 != 0)
+            if (effectiveMass.M33 != F64.C0)
                 effectiveMass.M33 += softness;
 
             //Invert! Takes us from J * M^-1 * JT to 1 / (J * M^-1 * JT).

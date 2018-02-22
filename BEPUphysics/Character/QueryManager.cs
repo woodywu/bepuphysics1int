@@ -175,7 +175,7 @@ namespace BEPUphysics.Character
                                 standardPair.ContactManifold.IsQuery = true;
                         }
                         pairHandler.SuppressEvents = true;
-                        pairHandler.UpdateCollision(0);
+                        pairHandler.UpdateCollision(F64.C0);
                         pairHandler.SuppressEvents = false;
                         if (forceStandardPairsToBeQueries)
                         {
@@ -256,7 +256,7 @@ namespace BEPUphysics.Character
                 //It's too deep.
                 state = CharacterContactPositionState.TooDeep;
             }
-            else if (maxDepth < 0)
+            else if (maxDepth < F64.C0)
             {
                 //The depth is negative, meaning it's separated.  This shouldn't happen with the initial implementation of the character controller,
                 //but this case could conceivably occur in other usages of a system like this (or in a future version of the character),

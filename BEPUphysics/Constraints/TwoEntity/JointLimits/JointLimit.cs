@@ -13,7 +13,7 @@ namespace BEPUphysics.Constraints.TwoEntity.JointLimits
         /// <summary>
         /// Minimum velocity necessary for a bounce to occur at a joint limit.
         /// </summary>
-        protected Fix64 bounceVelocityThreshold = 1;
+        protected Fix64 bounceVelocityThreshold = F64.C1;
 
         /// <summary>
         /// Bounciness of this joint limit.  0 is completely inelastic; 1 is completely elastic.
@@ -33,7 +33,7 @@ namespace BEPUphysics.Constraints.TwoEntity.JointLimits
         public Fix64 BounceVelocityThreshold
         {
             get { return bounceVelocityThreshold; }
-            set { bounceVelocityThreshold = MathHelper.Max(0, value); }
+            set { bounceVelocityThreshold = MathHelper.Max(F64.C0, value); }
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace BEPUphysics.Constraints.TwoEntity.JointLimits
         public Fix64 Bounciness
         {
             get { return bounciness; }
-            set { bounciness = MathHelper.Clamp(value, 0, 1); }
+            set { bounciness = MathHelper.Clamp(value, F64.C0, F64.C1); }
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace BEPUphysics.Constraints.TwoEntity.JointLimits
         public Fix64 Margin
         {
             get { return margin; }
-            set { margin = MathHelper.Max(value, 0); }
+            set { margin = MathHelper.Max(value, F64.C0); }
         }
 
         /// <summary>
@@ -70,8 +70,8 @@ namespace BEPUphysics.Constraints.TwoEntity.JointLimits
         /// <returns>The resulting bounce velocity of the impact.</returns>
         protected Fix64 ComputeBounceVelocity(Fix64 impactVelocity)
         {
-            var lowThreshold = bounceVelocityThreshold * Fix64Utils.PointThree;
-            var velocityFraction = MathHelper.Clamp((impactVelocity - lowThreshold) / (bounceVelocityThreshold - lowThreshold + Toolbox.Epsilon), 0, 1);
+            var lowThreshold = bounceVelocityThreshold * F64.C0p3;
+            var velocityFraction = MathHelper.Clamp((impactVelocity - lowThreshold) / (bounceVelocityThreshold - lowThreshold + Toolbox.Epsilon), F64.C0, F64.C1);
             return velocityFraction * impactVelocity * Bounciness;
         }
 

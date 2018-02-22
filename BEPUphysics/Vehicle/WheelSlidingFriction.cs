@@ -53,7 +53,7 @@ namespace BEPUphysics.Vehicle
         internal Vector3 slidingFrictionAxis;
         internal SolverSettings solverSettings = new SolverSettings();
         private Fix64 staticCoefficient;
-        private Fix64 staticFrictionVelocityThreshold = 5;
+        private Fix64 staticFrictionVelocityThreshold = F64.C5;
         private Wheel wheel;
         internal int numIterationsAtZeroImpulse;
         private Entity vehicleEntity, supportEntity;
@@ -94,7 +94,7 @@ namespace BEPUphysics.Vehicle
         public Fix64 KineticCoefficient
         {
             get { return kineticCoefficient; }
-            set { kineticCoefficient = MathHelper.Max(value, 0); }
+            set { kineticCoefficient = MathHelper.Max(value, F64.C0); }
         }
 
         /// <summary>
@@ -122,7 +122,7 @@ namespace BEPUphysics.Vehicle
         public Fix64 StaticCoefficient
         {
             get { return staticCoefficient; }
-            set { staticCoefficient = MathHelper.Max(value, 0); }
+            set { staticCoefficient = MathHelper.Max(value, F64.C0); }
         }
 
         /// <summary>
@@ -272,7 +272,7 @@ namespace BEPUphysics.Vehicle
                 entryA = tX * angularAX + tY * angularAY + tZ * angularAZ + vehicleEntity.inverseMass;
             }
             else
-                entryA = 0;
+                entryA = F64.C0;
 
             if (supportIsDynamic)
             {
@@ -282,7 +282,7 @@ namespace BEPUphysics.Vehicle
                 entryB = tX * angularBX + tY * angularBY + tZ * angularBZ + supportEntity.inverseMass;
             }
             else
-                entryB = 0;
+                entryB = F64.C0;
 
             velocityToImpulse = -1 / (entryA + entryB); //Softness?
 

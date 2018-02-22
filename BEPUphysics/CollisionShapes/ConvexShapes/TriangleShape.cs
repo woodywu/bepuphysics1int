@@ -95,7 +95,7 @@ namespace BEPUphysics.CollisionShapes.ConvexShapes
         public TriangleShape(Vector3 vA, Vector3 vB, Vector3 vC)
         {
             //Recenter.  Convexes should contain the origin.
-            Vector3 center = (vA + vB + vC) / 3;
+            Vector3 center = (vA + vB + vC) / F64.C3;
             this.vA = vA - center;
             this.vB = vB - center;
             this.vC = vC - center;
@@ -113,7 +113,7 @@ namespace BEPUphysics.CollisionShapes.ConvexShapes
         public TriangleShape(Vector3 vA, Vector3 vB, Vector3 vC, out Vector3 center)
         {
             //Recenter.  Convexes should contain the origin.
-            center = (vA + vB + vC) / 3;
+            center = (vA + vB + vC) / F64.C3;
             this.vA = vA - center;
             this.vB = vB - center;
             this.vC = vC - center;
@@ -130,7 +130,7 @@ namespace BEPUphysics.CollisionShapes.ConvexShapes
         public TriangleShape(Vector3 vA, Vector3 vB, Vector3 vC, ConvexShapeDescription description)
         {
             //Recenter.  Convexes should contain the origin.
-            var center = (vA + vB + vC) / 3;
+            var center = (vA + vB + vC) / F64.C3;
             this.vA = vA - center;
             this.vB = vB - center;
             this.vC = vC - center;
@@ -162,13 +162,13 @@ namespace BEPUphysics.CollisionShapes.ConvexShapes
                 vB.X, vB.Y, vB.Z,
                 vC.X, vC.Y, vC.Z);
             var s = new Matrix3x3(
-                2, 1, 1,
-                1, 2, 1,
-                1, 1, 2);
+				F64.C2, F64.C1, F64.C1,
+				F64.C1, F64.C2, F64.C1,
+				F64.C1, F64.C1, F64.C2);
 
             Matrix3x3.MultiplyTransposed(ref v, ref s, out description.EntityShapeVolume.VolumeDistribution);
             Matrix3x3.Multiply(ref description.EntityShapeVolume.VolumeDistribution, ref v, out description.EntityShapeVolume.VolumeDistribution);
-            var scaling = doubleArea / 24;
+            var scaling = doubleArea / F64.C24;
             Matrix3x3.Multiply(ref description.EntityShapeVolume.VolumeDistribution, -scaling, out description.EntityShapeVolume.VolumeDistribution);
 
             //The square-of-sum term is ignored since the parameters should already be localized (and so would sum to zero).
@@ -249,11 +249,11 @@ namespace BEPUphysics.CollisionShapes.ConvexShapes
         /// <returns>Volume distribution of the shape.</returns>
         public static Matrix3x3 ComputeVolumeDistribution(Vector3 vA, Vector3 vB, Vector3 vC)
         {
-            Vector3 center = (vA + vB + vC) * Fix64Utils.OneThird;
+            Vector3 center = (vA + vB + vC) * F64.OneThird;
 
             //Calculate distribution of mass.
 
-            Fix64 massPerPoint = Fix64Utils.OneThird;
+            Fix64 massPerPoint = F64.OneThird;
 
             //Subtract the position from the distribution, moving into a 'body space' relative to itself.
             //        [ (j * j + z * z)  (-j * j)  (-j * z) ]

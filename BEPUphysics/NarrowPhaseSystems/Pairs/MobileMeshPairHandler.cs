@@ -164,14 +164,14 @@ namespace BEPUphysics.NarrowPhaseSystems.Pairs
                 Fix64 velocitySquared = velocity.LengthSquared();
 
                 var minimumRadius = convex.Shape.MinimumRadius * MotionSettings.CoreShapeScaling;
-                timeOfImpact = 1;
+                timeOfImpact = F64.C1;
                 if (minimumRadius * minimumRadius < velocitySquared)
                 {
                     TriangleSidedness sidedness = mobileMesh.Shape.Sidedness;
                     Matrix3x3 orientation;
                     Matrix3x3.CreateFromQuaternion(ref mobileMesh.worldTransform.Orientation, out orientation);
                     var triangle = PhysicsThreadResources.GetTriangle();
-                    triangle.collisionMargin = 0;
+                    triangle.collisionMargin = F64.C0;
                     //Spherecast against all triangles to find the earliest time.
                     for (int i = 0; i < MeshManifold.overlappedTriangles.Count; i++)
                     {
@@ -205,8 +205,8 @@ namespace BEPUphysics.NarrowPhaseSystems.Pairs
                                 Vector3.Dot(ref normal, ref rayHit.Normal, out dot);
                                 //Only perform sweep if the object is in danger of hitting the object.
                                 //Triangles can be one sided, so check the impact normal against the triangle normal.
-                                if (sidedness == TriangleSidedness.Counterclockwise && dot < 0 ||
-                                    sidedness == TriangleSidedness.Clockwise && dot > 0)
+                                if (sidedness == TriangleSidedness.Counterclockwise && dot < F64.C0 ||
+                                    sidedness == TriangleSidedness.Clockwise && dot > F64.C0)
                                 {
                                     timeOfImpact = rayHit.T;
                                 }
@@ -231,8 +231,8 @@ namespace BEPUphysics.NarrowPhaseSystems.Pairs
         {
             info.Contact = MeshManifold.contacts.Elements[index];
             //Find the contact's normal and friction forces.
-            info.FrictionImpulse = 0;
-            info.NormalImpulse = 0;
+            info.FrictionImpulse = F64.C0;
+            info.NormalImpulse = F64.C0;
             for (int i = 0; i < contactConstraint.frictionConstraints.Count; i++)
             {
                 if (contactConstraint.frictionConstraints.Elements[i].PenetrationConstraint.contact == info.Contact)

@@ -32,14 +32,14 @@ namespace BEPUphysics.Character
             }
             set
             {
-                if (maximumGlueForce < 0)
+                if (maximumGlueForce < F64.C0)
                     throw new ArgumentException("Value must be nonnegative.");
                 maximumGlueForce = value;
             }
         }
         Fix64 maximumForce;
 
-        Fix64 supportForceFactor = 1;
+        Fix64 supportForceFactor = F64.C1;
         /// <summary>
         /// Gets or sets the scaling factor of forces applied to the supporting object if it is a dynamic entity.
         /// Low values (below 1) reduce the amount of motion imparted to the support object; it acts 'heavier' as far as vertical motion is concerned.
@@ -53,7 +53,7 @@ namespace BEPUphysics.Character
             }
             set
             {
-                if (value < 0)
+                if (value < F64.C0)
                     throw new ArgumentException("Value must be nonnegative.");
                 supportForceFactor = value;
             }
@@ -178,7 +178,7 @@ namespace BEPUphysics.Character
             //Let the character escape penetration in a controlled manner. This mirrors the regular penetration recovery speed.
             //Since the vertical motion constraint works in the opposite direction of the contact penetration constraint,
             //this actually eliminates the 'bounce' that can occur with non-character objects in deep penetration.
-            permittedVelocity = MathHelper.Min(MathHelper.Max(supportData.Depth * CollisionResponseSettings.PenetrationRecoveryStiffness / dt, 0), CollisionResponseSettings.MaximumPenetrationRecoverySpeed);
+            permittedVelocity = MathHelper.Min(MathHelper.Max(supportData.Depth * CollisionResponseSettings.PenetrationRecoveryStiffness / dt, F64.C0), CollisionResponseSettings.MaximumPenetrationRecoverySpeed);
 
             //Compute the jacobians and effective mass matrix.  This constraint works along a single degree of freedom, so the mass matrix boils down to a scalar.
 
@@ -202,7 +202,7 @@ namespace BEPUphysics.Character
                     inverseEffectiveMass += supportForceFactor * (effectiveMassContribution + supportEntity.InverseMass);
                 }
             }
-            effectiveMass = 1 / (inverseEffectiveMass);
+            effectiveMass = F64.C1 / (inverseEffectiveMass);
             //So much nicer and shorter than the horizontal constraint!
 
         }
@@ -252,7 +252,7 @@ namespace BEPUphysics.Character
 
             //Add and clamp the impulse.
             Fix64 previousAccumulatedImpulse = accumulatedImpulse;
-            accumulatedImpulse = MathHelper.Clamp(accumulatedImpulse + lambda, 0, maximumForce);
+            accumulatedImpulse = MathHelper.Clamp(accumulatedImpulse + lambda, F64.C0, maximumForce);
             lambda = accumulatedImpulse - previousAccumulatedImpulse;
             //Use the jacobians to put the impulse into world space.
 

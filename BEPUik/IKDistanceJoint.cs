@@ -43,7 +43,7 @@ namespace BEPUik
         public Fix64 Distance
         {
             get { return distance; }
-            set { distance = MathHelper.Max(0, value); }
+            set { distance = MathHelper.Max(F64.C0, value); }
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace BEPUik
                 linearA.Y = separation.Y / currentDistance;
                 linearA.Z = separation.Z / currentDistance;
 
-                velocityBias = new Vector3(errorCorrectionFactor * (currentDistance - distance), 0, 0);
+                velocityBias = new Vector3(errorCorrectionFactor * (currentDistance - distance), F64.C0, F64.C0);
             }
             else
             {

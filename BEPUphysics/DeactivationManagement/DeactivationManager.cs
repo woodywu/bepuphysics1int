@@ -18,7 +18,7 @@ namespace BEPUphysics.DeactivationManagement
 
         internal Fix64 velocityLowerLimit = (Fix64).26m;
         internal Fix64 velocityLowerLimitSquared = (Fix64)(.26m * .26m);
-        internal Fix64 lowVelocityTimeMinimum = 1;
+        internal Fix64 lowVelocityTimeMinimum = F64.C1;
 
         ///<summary>
         /// Gets or sets the velocity under which the deactivation system will consider 
@@ -34,7 +34,7 @@ namespace BEPUphysics.DeactivationManagement
             }
             set
             {
-                velocityLowerLimit = MathHelper.Max(0, value);
+                velocityLowerLimit = MathHelper.Max(F64.C0, value);
                 velocityLowerLimitSquared = velocityLowerLimit * velocityLowerLimit;
             }
         }
@@ -52,7 +52,7 @@ namespace BEPUphysics.DeactivationManagement
             }
             set
             {
-                if (value <= 0)
+                if (value <= F64.C0)
                     throw new ArgumentException("Must use a positive, non-zero value for deactivation time minimum.");
                 lowVelocityTimeMinimum = value;
             }
@@ -242,7 +242,7 @@ namespace BEPUphysics.DeactivationManagement
             }
             set
             {
-                if (value > 1 || value < 0)
+                if (value > F64.C1 || value < F64.C0)
                     throw new ArgumentException("Value must be from zero to one.");
                 maximumSplitAttemptsFraction = value;
             }

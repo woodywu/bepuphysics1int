@@ -9,6 +9,7 @@ using BEPUphysics.Materials;
 using BEPUphysics.Settings;
 using BEPUutilities.DataStructures;
 using FixMath.NET;
+using BEPUutilities;
 
 namespace BEPUphysics.NarrowPhaseSystems.Pairs
 {
@@ -239,7 +240,7 @@ namespace BEPUphysics.NarrowPhaseSystems.Pairs
         ///<param name="dt">Timestep duration.</param>
         public override void UpdateTimeOfImpact(Collidable requester, Fix64 dt)
         {
-            timeOfImpact = 1;
+            timeOfImpact = F64.C1;
             foreach (CollidablePairHandler pair in subPairs.Values)
             {
                 //The system uses the identity of the requester to determine if it needs to do handle the TOI calculation.

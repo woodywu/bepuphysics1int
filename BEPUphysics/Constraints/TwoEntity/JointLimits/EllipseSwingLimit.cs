@@ -144,7 +144,7 @@ namespace BEPUphysics.Constraints.TwoEntity.JointLimits
                     Vector3.Dot(ref connectionB.angularVelocity, ref jacobianB, out velocityB);
                     return velocityA + velocityB;
                 }
-                return 0;
+                return F64.C0;
             }
         }
 
@@ -286,11 +286,11 @@ namespace BEPUphysics.Constraints.TwoEntity.JointLimits
             Fix64 maxAngleYSquared = maximumAngleY * maximumAngleY;
             error = angleX * angleX * maxAngleYSquared + angleY * angleY * maxAngleXSquared - maxAngleXSquared * maxAngleYSquared;
 
-            if (error < 0)
+            if (error < F64.C0)
             {
                 isActiveInSolver = false;
-                error = 0;
-                accumulatedImpulse = 0;
+                error = F64.C0;
+                accumulatedImpulse = F64.C0;
                 isLimitActive = false;
                 return;
             }
@@ -318,8 +318,8 @@ namespace BEPUphysics.Constraints.TwoEntity.JointLimits
 #else
             Vector2 tangent;
 #endif
-            tangent.X = 2 * angleX / maxAngleXSquared;
-            tangent.Y = 2 * angleY / maxAngleYSquared;
+            tangent.X = F64.C2 * angleX / maxAngleXSquared;
+            tangent.Y = F64.C2 * angleY / maxAngleYSquared;
 
             //The tangent is then taken into world space using the basis.
 
@@ -339,15 +339,15 @@ namespace BEPUphysics.Constraints.TwoEntity.JointLimits
 
 
             Fix64 errorReduction;
-            Fix64 inverseDt = 1 / dt;
+            Fix64 inverseDt = F64.C1 / dt;
             springSettings.ComputeErrorReductionAndSoftness(dt, inverseDt, out errorReduction, out softness);
 
             //Compute the error correcting velocity
             error = error - margin;
-            biasVelocity = MathHelper.Min(MathHelper.Max(error, 0) * errorReduction, maxCorrectiveVelocity);
+            biasVelocity = MathHelper.Min(MathHelper.Max(error, F64.C0) * errorReduction, maxCorrectiveVelocity);
 
 
-            if (bounciness > 0)
+            if (bounciness > F64.C0)
             {
                 Fix64 relativeVelocity;
                 Fix64 dot;
@@ -371,7 +371,7 @@ namespace BEPUphysics.Constraints.TwoEntity.JointLimits
                 Vector3.Dot(ref transformedAxis, ref jacobianA, out entryA);
             }
             else
-                entryA = 0;
+                entryA = F64.C0;
 
             //Connection B's contribution to the mass matrix
             Fix64 entryB;
@@ -381,10 +381,10 @@ namespace BEPUphysics.Constraints.TwoEntity.JointLimits
                 Vector3.Dot(ref transformedAxis, ref jacobianB, out entryB);
             }
             else
-                entryB = 0;
+                entryB = F64.C0;
 
             //Compute the inverse mass matrix
-            velocityToImpulse = 1 / (softness + entryA + entryB);
+            velocityToImpulse = F64.C1 / (softness + entryA + entryB);
 
 
         }
@@ -430,7 +430,7 @@ namespace BEPUphysics.Constraints.TwoEntity.JointLimits
 
             //Clamp accumulated impulse (can't go negative)
             Fix64 previousAccumulatedImpulse = accumulatedImpulse;
-            accumulatedImpulse = MathHelper.Min(accumulatedImpulse + lambda, 0);
+            accumulatedImpulse = MathHelper.Min(accumulatedImpulse + lambda, F64.C0);
             lambda = accumulatedImpulse - previousAccumulatedImpulse;
 
             //Apply the impulse

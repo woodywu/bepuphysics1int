@@ -133,7 +133,7 @@ namespace BEPUphysics.Paths
 
             if (indexMax == 0)
             {
-                return 0;
+                return F64.C0;
             }
             //If time < controlpoints.mintime, should be... 0 or -1?
             while (indexMax - indexMin > 1) //if time belongs to min
@@ -151,7 +151,7 @@ namespace BEPUphysics.Paths
 
 
             Fix64 curveTime = (time - samples[indexMin].Wrapped) / (samples[indexMin + 1].Wrapped - samples[indexMin].Wrapped);
-            return (1 - curveTime) * samples[indexMin].SpeedControlled + (curveTime) * samples[indexMin + 1].SpeedControlled;
+            return (F64.C1 - curveTime) * samples[indexMin].SpeedControlled + (curveTime) * samples[indexMin + 1].SpeedControlled;
         }
 
         /// <summary>
@@ -184,13 +184,13 @@ namespace BEPUphysics.Paths
         {
             if (samples.Count > 0)
             {
-                startingTime = 0;
+                startingTime = F64.C0;
                 endingTime = samples[samples.Count - 1].Wrapped;
             }
             else
             {
-                startingTime = 0;
-                endingTime = 0;
+                startingTime = F64.C0;
+                endingTime = F64.C0;
             }
         }
 
@@ -212,7 +212,7 @@ namespace BEPUphysics.Paths
             if (minIndex < 0 || maxIndex < 0)
                 return;
 
-            Fix64 timeElapsed = 0;
+            Fix64 timeElapsed = F64.C0;
             //TODO: useless calculation due to this
             TValue currentValue = Curve.ControlPoints[minIndex].Value;
             TValue previousValue = currentValue;
@@ -226,7 +226,7 @@ namespace BEPUphysics.Paths
                 previousValue = currentValue;
                 currentValue = Curve.ControlPoints[i].Value;
 
-                if (speed != 0)
+                if (speed != F64.C0)
                     timeElapsed += GetDistance(previousValue, currentValue) / speed;
                 previousSpeed = speed;
                 speed = GetSpeedAtCurveTime(Curve.ControlPoints[i].Time);
@@ -242,7 +242,7 @@ namespace BEPUphysics.Paths
                     Curve.Evaluate(i, j * inverseSampleCount, out currentValue);
 
                     curveTime += curveTimePerSample;
-                    if (speed != 0)
+                    if (speed != F64.C0)
                         timeElapsed += GetDistance(previousValue, currentValue) / speed;
 
                     previousSpeed = speed;

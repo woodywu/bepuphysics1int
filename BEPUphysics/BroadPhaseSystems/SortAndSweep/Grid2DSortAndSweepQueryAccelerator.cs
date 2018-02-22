@@ -40,27 +40,27 @@ namespace BEPUphysics.BroadPhaseSystems.SortAndSweep
             //Use 2d line rasterization.
             //Compute the exit location in the cell.
             //Test against each bounding box up until the exit value is reached.
-            Fix64 length = 0;
+            Fix64 length = F64.C0;
             Int2 cellIndex;
             Vector3 currentPosition = ray.Position;
             Grid2DSortAndSweep.ComputeCell(ref currentPosition, out cellIndex);
             while (true)
             {
 
-                Fix64 cellWidth = 1 / Grid2DSortAndSweep.cellSizeInverse;
+                Fix64 cellWidth = F64.C1 / Grid2DSortAndSweep.cellSizeInverse;
                 Fix64 nextT; //Distance along ray to next boundary.
                 Fix64 nextTy; //Distance along ray to next boundary along y axis.
                 Fix64 nextTz; //Distance along ray to next boundary along z axis.
 							  //Find the next cell.
-				if (ray.Direction.Y > 0)
+				if (ray.Direction.Y > F64.C0)
 					nextTy = ((cellIndex.Y + 1) * cellWidth - currentPosition.Y) / ray.Direction.Y;
-				else if (ray.Direction.Y < 0)
+				else if (ray.Direction.Y < F64.C0)
 					nextTy = ((cellIndex.Y) * cellWidth - currentPosition.Y) / ray.Direction.Y;
 				else
 					nextTy = Fix64.MaxValue;
-                if (ray.Direction.Z > 0)
+                if (ray.Direction.Z > F64.C0)
                     nextTz = ((cellIndex.Z + 1) * cellWidth - currentPosition.Z) / ray.Direction.Z;
-                else if (ray.Direction.Z < 0)
+                else if (ray.Direction.Z < F64.C0)
                     nextTz = ((cellIndex.Z) * cellWidth - currentPosition.Z) / ray.Direction.Z;
                 else
                     nextTz = Fix64.MaxValue;
@@ -76,7 +76,7 @@ namespace BEPUphysics.BroadPhaseSystems.SortAndSweep
                 if (owner.cellSet.TryGetCell(ref cellIndex, out cell))
                 {
                     Fix64 endingX;
-                    if(ray.Direction.X < 0)
+                    if(ray.Direction.X < F64.C0)
                         endingX = currentPosition.X;
                     else
                         endingX = currentPosition.X + ray.Direction.X * nextT;
@@ -104,12 +104,12 @@ namespace BEPUphysics.BroadPhaseSystems.SortAndSweep
                 Vector3.Multiply(ref ray.Direction, nextT, out offset);
                 Vector3.Add(ref offset, ref currentPosition, out currentPosition);
                 if (yIsMinimum)
-                    if (ray.Direction.Y < 0)
+                    if (ray.Direction.Y < F64.C0)
                         cellIndex.Y -= 1;
                     else
                         cellIndex.Y += 1;
                 else
-                    if (ray.Direction.Z < 0)
+                    if (ray.Direction.Z < F64.C0)
                         cellIndex.Z -= 1;
                     else
                         cellIndex.Z += 1;

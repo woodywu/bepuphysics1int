@@ -32,7 +32,7 @@ namespace BEPUphysics.CollisionShapes
             }
             set
             {
-                if (value < 0)
+                if (value < F64.C0)
                     throw new ArgumentException("Mesh margin must be nonnegative.");
                 meshCollisionMargin = value;
                 OnShapeChanged();
@@ -251,7 +251,7 @@ namespace BEPUphysics.CollisionShapes
         /// <summary>
         /// The difference in t parameters in a ray cast under which two hits are considered to be redundant.
         /// </summary>
-        public static Fix64 MeshHitUniquenessThreshold = Fix64Utils.EMinusFive;
+        public static Fix64 MeshHitUniquenessThreshold = F64.C1em5;
 
         internal bool IsHitUnique(RawList<RayHit> hits, ref RayHit hit)
         {
@@ -282,7 +282,7 @@ namespace BEPUphysics.CollisionShapes
             var ray = new Ray();
             Vector3 vA, vB, vC;
             triangleMesh.Data.GetTriangle(((triangleMesh.Data.indices.Length / 3) / 2) * 3, out vA, out vB, out vC);
-            ray.Direction = (vA + vB + vC) / 3;
+            ray.Direction = (vA + vB + vC) / F64.C3;
             ray.Direction.Normalize();
 
             SidednessWhenSolid = ComputeSolidSidednessHelper(ray);
@@ -331,7 +331,7 @@ namespace BEPUphysics.CollisionShapes
 
                     triangleMesh.Data.GetTriangle(minimum, out vA, out vB, out vC);
                     var normal = Vector3.Cross(vA - vB, vA - vC);
-                    if (Vector3.Dot(normal, ray.Direction) < 0)
+                    if (Vector3.Dot(normal, ray.Direction) < F64.C0)
                         toReturn = TriangleSidedness.Clockwise;
                     else
                         toReturn = TriangleSidedness.Counterclockwise;
@@ -343,7 +343,7 @@ namespace BEPUphysics.CollisionShapes
 
                     triangleMesh.Data.GetTriangle(maximum, out vA, out vB, out vC);
                     var normal = Vector3.Cross(vA - vB, vA - vC);
-                    if (Vector3.Dot(normal, ray.Direction) < 0)
+                    if (Vector3.Dot(normal, ray.Direction) < F64.C0)
                         toReturn = TriangleSidedness.Counterclockwise;
                     else
                         toReturn = TriangleSidedness.Clockwise;
@@ -361,7 +361,7 @@ namespace BEPUphysics.CollisionShapes
         private void UpdateSurfaceVertices()
         {
             hullVertices.Clear();
-            if (Volume > 0)
+            if (Volume > F64.C0)
             {
                 ConvexHullHelper.GetConvexHull(triangleMesh.Data.vertices, hullVertices);
                 var transformableData = triangleMesh.Data as TransformableMeshData;
@@ -432,13 +432,13 @@ namespace BEPUphysics.CollisionShapes
                 }
                 InertiaHelper.ComputeShapeDistribution(transformedVertices, data.indices, out shapeInformation.Center, out shapeInformation.Volume, out shapeInformation.VolumeDistribution);
                 CommonResources.GiveBack(transformedVertices);
-                if (shapeInformation.Volume > 0)
+                if (shapeInformation.Volume > F64.C0)
                     return shapeInformation;
                 throw new ArgumentException("A solid mesh must have volume.");
             }
             shapeInformation.Center = new Vector3();
             shapeInformation.VolumeDistribution = new Matrix3x3();
-            Fix64 totalWeight = 0;
+            Fix64 totalWeight = F64.C0;
             for (int i = 0; i < data.indices.Length; i += 3)
             {
                 //Compute the center contribution.
@@ -453,7 +453,7 @@ namespace BEPUphysics.CollisionShapes
                 Fix64 weight = cross.Length();
                 totalWeight += weight;
 
-                Fix64 perVertexWeight = weight * Fix64Utils.OneThird;
+                Fix64 perVertexWeight = weight * F64.OneThird;
                 shapeInformation.Center += perVertexWeight * (vA + vB + vC);
 
                 //Compute the inertia contribution of this triangle.
@@ -472,14 +472,14 @@ namespace BEPUphysics.CollisionShapes
             shapeInformation.Center /= totalWeight;
 
             //The extra factor of 2 is used because the cross product length was twice the actual area.
-            Matrix3x3.Multiply(ref shapeInformation.VolumeDistribution, 1 / (2 * totalWeight), out shapeInformation.VolumeDistribution);
+            Matrix3x3.Multiply(ref shapeInformation.VolumeDistribution, F64.C1 / (F64.C2 * totalWeight), out shapeInformation.VolumeDistribution);
 
             //Move the inertia tensor into position according to the center.
             Matrix3x3 additionalInertia;
-            InertiaHelper.GetPointContribution(Fix64Utils.PointFive, ref Toolbox.ZeroVector, ref shapeInformation.Center, out additionalInertia);
+            InertiaHelper.GetPointContribution(F64.C0p5, ref Toolbox.ZeroVector, ref shapeInformation.Center, out additionalInertia);
             Matrix3x3.Subtract(ref shapeInformation.VolumeDistribution, ref additionalInertia, out shapeInformation.VolumeDistribution);
 
-            shapeInformation.Volume = 0;
+            shapeInformation.Volume = F64.C0;
 
 
             return shapeInformation;

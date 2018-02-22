@@ -29,7 +29,7 @@ namespace BEPUphysics.Character
             get { return tractionThreshold; }
             set
             {
-                if (value < Toolbox.BigEpsilon || value > 1)
+                if (value < Toolbox.BigEpsilon || value > F64.C1)
                     throw new ArgumentException("Traction threshold values must range from " + Toolbox.BigEpsilon + " to 1, inclusive.");
                 tractionThreshold = value;
             }
@@ -46,7 +46,7 @@ namespace BEPUphysics.Character
             get { return supportThreshold; }
             set
             {
-                if (value < Toolbox.BigEpsilon || value > 1)
+                if (value < Toolbox.BigEpsilon || value > F64.C1)
                     throw new ArgumentException("Support threshold values must range from " + Toolbox.BigEpsilon + " to 1, inclusive.");
                 supportThreshold = value;
             }
@@ -145,14 +145,14 @@ namespace BEPUphysics.Character
                 //If we were to use such a speculative contact for support, the character would find supports
                 //in situations where it should not.
                 //This can actually be useful in some situations, but keep it disabled by default.
-                if (contactInfo.Pair.CollisionRule != CollisionRule.Normal || characterContact.Contact.PenetrationDepth < 0)
+                if (contactInfo.Pair.CollisionRule != CollisionRule.Normal || characterContact.Contact.PenetrationDepth < F64.C0)
                     continue;
 
                 Fix64 dot;
                 Vector3 offset;
                 Vector3.Subtract(ref characterContact.Contact.Position, ref characterCollidable.worldTransform.Position, out offset);
                 Vector3.Dot(ref characterContact.Contact.Normal, ref offset, out dot);
-                if (dot < 0)
+                if (dot < F64.C0)
                 {
                     //The normal should face outward.
                     Vector3.Negate(ref characterContact.Contact.Normal, out characterContact.Contact.Normal);

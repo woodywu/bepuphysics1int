@@ -157,7 +157,7 @@ namespace BEPUutilities
                     Vector3.Subtract(ref maximum, ref points.Elements[outputTriangleIndices.Elements[k]], out offset);
 					Fix64 dot;
                     Vector3.Dot(ref normal, ref offset, out dot);
-                    if (dot > 0)
+                    if (dot > F64.C0)
                     {
                         //It's been picked! Remove the maximum point from the outside.
                         outsidePoints.FastRemoveAt(maxIndexInOutsideList);
@@ -382,7 +382,7 @@ namespace BEPUutilities
             Vector3.Add(ref points.Elements[a], ref points.Elements[b], out centroid);
             Vector3.Add(ref centroid, ref points.Elements[c], out centroid);
             Vector3.Add(ref centroid, ref points.Elements[d], out centroid);
-            Vector3.Multiply(ref centroid, Fix64Utils.PointTwoFive, out centroid);
+            Vector3.Multiply(ref centroid, F64.C0p25, out centroid);
 
             for (int i = 0; i < triangleIndices.Count; i += 3)
             {
@@ -404,7 +404,7 @@ namespace BEPUutilities
                 {
                     throw new ArgumentException("Point set is degenerate; convex hulls must have volume.");
                 }
-                if (volume < 0)
+                if (volume < F64.C0)
                 {
                     //If the signed volume is negative, that means the triangle's winding is opposite of what we want.
                     //Flip it around!
@@ -461,7 +461,7 @@ namespace BEPUutilities
                     Fix64 dot;
                     Vector3.Dot(ref offset, ref normal, out dot);
                     //If it's visible, then it's outside!
-                    if (dot > 0)
+                    if (dot > F64.C0)
                     {
                         //This point is known to be on the outside; put it on the outside!
                         outsidePoints.Add(insidePoints.Elements[j]);
@@ -496,7 +496,7 @@ namespace BEPUutilities
             Vector3.Subtract(ref point, ref a, out offset);
             Fix64 dot;
             Vector3.Dot(ref offset, ref normal, out dot);
-            return dot >= 0;
+            return dot >= F64.C0;
         }
 
         private static void VerifyWindings(RawList<int> newIndices, RawList<Vector3> points, ref Vector3 centroid)

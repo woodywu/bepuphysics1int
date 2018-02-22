@@ -143,7 +143,7 @@ namespace BEPUphysics.NarrowPhaseSystems.Pairs
                 Fix64 velocitySquared = velocity.LengthSquared();
 
                 var minimumRadiusA = convex.Shape.MinimumRadius * MotionSettings.CoreShapeScaling;
-                timeOfImpact = 1;
+                timeOfImpact = F64.C1;
                 if (minimumRadiusA * minimumRadiusA < velocitySquared)
                 {
                     //Spherecast A against B.
@@ -162,8 +162,8 @@ namespace BEPUphysics.NarrowPhaseSystems.Pairs
 
                             Fix64 dot;
                             Vector3.Dot(ref rayHit.Normal, ref normal, out dot);
-                            if (triangle.Shape.sidedness == TriangleSidedness.Counterclockwise && dot < 0 ||
-                                triangle.Shape.sidedness == TriangleSidedness.Clockwise && dot > 0)
+                            if (triangle.Shape.sidedness == TriangleSidedness.Counterclockwise && dot < F64.C0 ||
+                                triangle.Shape.sidedness == TriangleSidedness.Clockwise && dot > F64.C0)
                             {
                                 timeOfImpact = rayHit.T;
                             }
@@ -206,8 +206,8 @@ namespace BEPUphysics.NarrowPhaseSystems.Pairs
                 //from a previous frame where CCD took place and a contact should have been created
                 //to deal with interpenetrating velocity.  Sometimes that contact isn't sufficient,
                 //but it's good enough.
-                if (timeOfImpact == 0)
-                    timeOfImpact = 1;
+                if (timeOfImpact == F64.C0)
+                    timeOfImpact = F64.C1;
             }
 
         }

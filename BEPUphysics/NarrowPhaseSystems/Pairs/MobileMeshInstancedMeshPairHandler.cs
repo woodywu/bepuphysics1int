@@ -41,7 +41,7 @@ namespace BEPUphysics.NarrowPhaseSystems.Pairs
             Vector3 center;
             Vector3.Add(ref shape.vA, ref shape.vB, out center);
             Vector3.Add(ref center, ref shape.vC, out center);
-            Vector3.Multiply(ref center, Fix64Utils.OneThird, out center);
+            Vector3.Multiply(ref center, F64.OneThird, out center);
             Vector3.Subtract(ref shape.vA, ref center, out shape.vA);
             Vector3.Subtract(ref shape.vB, ref center, out shape.vB);
             Vector3.Subtract(ref shape.vC, ref center, out shape.vC);
@@ -50,7 +50,7 @@ namespace BEPUphysics.NarrowPhaseSystems.Pairs
             //The bounding box doesn't update by itself.
             toReturn.worldTransform.Position = center;
             toReturn.worldTransform.Orientation = Quaternion.Identity;
-            toReturn.UpdateBoundingBoxInternal(0);
+            toReturn.UpdateBoundingBoxInternal(F64.C0);
             shape.sidedness = mesh.Sidedness;
             shape.collisionMargin = mobileMesh.Shape.MeshCollisionMargin;
             return toReturn;

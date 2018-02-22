@@ -34,7 +34,7 @@ namespace BEPUphysics.Constraints.TwoEntity.Joints
             get { return maxCorrectiveVelocity; }
             set
             {
-                maxCorrectiveVelocity = MathHelper.Max(0, value);
+                maxCorrectiveVelocity = MathHelper.Max(F64.C0, value);
                 if (maxCorrectiveVelocity >= Fix64.MaxValue)
                 {
                     maxCorrectiveVelocitySquared = Fix64.MaxValue;

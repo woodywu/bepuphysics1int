@@ -24,7 +24,7 @@ namespace BEPUutilities
 						iMax = i;
 					}
 				}
-				if (maxValue == 0)
+				if (maxValue == F64.C0)
 					return false;
 				// Swap rows k, iMax
 				if (k != iMax)
@@ -38,9 +38,9 @@ namespace BEPUutilities
 				}
 
 				// Divide row by pivot
-				Fix64 pivotInverse = 1 / M[k, k];
+				Fix64 pivotInverse = F64.C1 / M[k, k];
 
-				M[k, k] = 1;
+				M[k, k] = F64.C1;
 				for (int j = k + 1; j < n; j++)
 				{
 					M[k, j] *= pivotInverse;
@@ -56,7 +56,7 @@ namespace BEPUutilities
 					{
 						M[i, j] = M[i, j] - M[k, j] * f;
 					}
-					M[i, k] = 0;
+					M[i, k] = F64.C0;
 				}
 			}
 			return true;

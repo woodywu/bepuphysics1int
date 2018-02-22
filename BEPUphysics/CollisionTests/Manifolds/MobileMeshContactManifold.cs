@@ -60,17 +60,17 @@ namespace BEPUphysics.CollisionTests.Manifolds
             Matrix3x3.TransformTranspose(ref transformedVelocity, ref transform.LinearTransform, out transformedVelocity);
             Vector3.Multiply(ref transformedVelocity, dt, out transformedVelocity);
 
-            if (transformedVelocity.X > 0)
+            if (transformedVelocity.X > F64.C0)
                 boundingBox.Max.X += transformedVelocity.X;
             else
                 boundingBox.Min.X += transformedVelocity.X;
 
-            if (transformedVelocity.Y > 0)
+            if (transformedVelocity.Y > F64.C0)
                 boundingBox.Max.Y += transformedVelocity.Y;
             else
                 boundingBox.Min.Y += transformedVelocity.Y;
 
-            if (transformedVelocity.Z > 0)
+            if (transformedVelocity.Z > F64.C0)
                 boundingBox.Max.Z += transformedVelocity.Z;
             else
                 boundingBox.Min.Z += transformedVelocity.Z;
@@ -125,7 +125,7 @@ namespace BEPUphysics.CollisionTests.Manifolds
                 }
             }
             localTriangleShape.sidedness = sidedness;
-            localTriangleShape.collisionMargin = 0;
+            localTriangleShape.collisionMargin = F64.C0;
             indices = new TriangleIndices
             {
                 A = data.indices[triangleIndex],
@@ -186,7 +186,7 @@ namespace BEPUphysics.CollisionTests.Manifolds
                     {
                         //This is unlikely; just pick something completely arbitrary then.
                         ray.Direction = Vector3.Up;
-                        rayDirectionLength = 1;
+                        rayDirectionLength = F64.C1;
                     }
                 }
                 Vector3.Divide(ref ray.Direction, Fix64.Sqrt(rayDirectionLength), out ray.Direction);
@@ -235,12 +235,12 @@ namespace BEPUphysics.CollisionTests.Manifolds
                 {
                     //It's possible that we had a false negative.  The previous frame may have been in deep intersection, and this frame just failed to come to the same conclusion.
                     //If we set the target location to the current location, the object will never escape the mesh.  Instead, only do that if two frames agree that we are no longer colliding.
-                    if (previousDepth > 0)
+                    if (previousDepth > F64.C0)
                     {
                         //We're not touching the mesh.
                         lastValidConvexPosition = ray.Position;
                     }
-                    previousDepth = 0;
+                    previousDepth = F64.C0;
 
                 }
             }

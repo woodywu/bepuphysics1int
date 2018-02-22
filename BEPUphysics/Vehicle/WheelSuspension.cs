@@ -71,7 +71,7 @@ namespace BEPUphysics.Vehicle
         public Fix64 AllowedCompression
         {
             get { return allowedCompression; }
-            set { allowedCompression = MathHelper.Max(0, value); }
+            set { allowedCompression = MathHelper.Max(F64.C0, value); }
         }
 
         /// <summary>
@@ -110,7 +110,7 @@ namespace BEPUphysics.Vehicle
         public Fix64 MaximumSpringCorrectionSpeed
         {
             get { return maximumSpringCorrectionSpeed; }
-            set { maximumSpringCorrectionSpeed = MathHelper.Max(0, value); }
+            set { maximumSpringCorrectionSpeed = MathHelper.Max(F64.C0, value); }
         }
 
         /// <summary>
@@ -119,7 +119,7 @@ namespace BEPUphysics.Vehicle
         public Fix64 MaximumSpringForce
         {
             get { return maximumSpringForce; }
-            set { maximumSpringForce = MathHelper.Max(0, value); }
+            set { maximumSpringForce = MathHelper.Max(F64.C0, value); }
         }
 
         /// <summary>
@@ -260,7 +260,7 @@ namespace BEPUphysics.Vehicle
 
             //Clamp accumulated impulse
             Fix64 previousAccumulatedImpulse = accumulatedImpulse;
-            accumulatedImpulse = MathHelper.Clamp(accumulatedImpulse + lambda, -maximumSpringForce, 0);
+            accumulatedImpulse = MathHelper.Clamp(accumulatedImpulse + lambda, -maximumSpringForce, F64.C0);
             lambda = accumulatedImpulse - previousAccumulatedImpulse;
 
             //Apply the impulse
@@ -352,7 +352,7 @@ namespace BEPUphysics.Vehicle
                 entryA = tX * angularAX + tY * angularAY + tZ * angularAZ + vehicleEntity.inverseMass;
             }
             else
-                entryA = 0;
+                entryA = F64.C0;
 
             if (supportIsDynamic)
             {
@@ -362,16 +362,16 @@ namespace BEPUphysics.Vehicle
                 entryB = tX * angularBX + tY * angularBY + tZ * angularBZ + supportEntity.inverseMass;
             }
             else
-                entryB = 0;
+                entryB = F64.C0;
 
             //Convert spring constant and damping constant into ERP and CFM.
             Fix64 biasFactor;
-            springSettings.ComputeErrorReductionAndSoftness(dt, 1 / dt, out biasFactor, out softness);
+            springSettings.ComputeErrorReductionAndSoftness(dt, F64.C1 / dt, out biasFactor, out softness);
 
             velocityToImpulse = -1 / (entryA + entryB + softness);
 
             //Correction velocity
-            bias = MathHelper.Min(MathHelper.Max(0, (restLength - currentLength) - allowedCompression) * biasFactor, maximumSpringCorrectionSpeed);
+            bias = MathHelper.Min(MathHelper.Max(F64.C0, (restLength - currentLength) - allowedCompression) * biasFactor, maximumSpringCorrectionSpeed);
 
 
         }

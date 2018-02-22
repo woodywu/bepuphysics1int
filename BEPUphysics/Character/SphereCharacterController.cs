@@ -51,7 +51,7 @@ namespace BEPUphysics.Character
         /// </summary>
         private CharacterPairLocker PairLocker { get; set; }
 
-        private Vector3 down = new Vector3(0, -1, 0);
+        private Vector3 down = new Vector3(F64.C0, -1, F64.C0);
         /// <summary>
         /// Gets or sets the down direction of the character. Controls the interpretation of movement and support finding.
         /// </summary>
@@ -71,7 +71,7 @@ namespace BEPUphysics.Character
             }
         }
 
-        Vector3 viewDirection = new Vector3(0, 0, -1);
+        Vector3 viewDirection = new Vector3(F64.C0, F64.C0, -1);
 
         /// <summary>
         /// Gets or sets the view direction associated with the character.
@@ -102,7 +102,7 @@ namespace BEPUphysics.Character
             }
             set
             {
-                if (value < 0)
+                if (value < F64.C0)
                     throw new ArgumentException("Value must be nonnegative.");
                 jumpSpeed = value;
             }
@@ -119,12 +119,12 @@ namespace BEPUphysics.Character
             }
             set
             {
-                if (value < 0)
+                if (value < F64.C0)
                     throw new ArgumentException("Value must be nonnegative.");
                 slidingJumpSpeed = value;
             }
         }
-        Fix64 jumpForceFactor = 1;
+        Fix64 jumpForceFactor = F64.C1;
         /// <summary>
         /// Gets or sets the amount of force to apply to supporting dynamic entities as a fraction of the force used to reach the jump speed.
         /// </summary>
@@ -136,7 +136,7 @@ namespace BEPUphysics.Character
             }
             set
             {
-                if (value < 0)
+                if (value < F64.C0)
                     throw new ArgumentException("Value must be nonnegative.");
                 jumpForceFactor = value;
             }
@@ -155,7 +155,7 @@ namespace BEPUphysics.Character
             }
             set
             {
-                if (value < 0)
+                if (value < F64.C0)
                     throw new ArgumentException("Value must be nonnegative.");
                 speed = value;
             }
@@ -172,7 +172,7 @@ namespace BEPUphysics.Character
             }
             set
             {
-                if (value < 0)
+                if (value < F64.C0)
                     throw new ArgumentException("Value must be nonnegative.");
                 tractionForce = value;
             }
@@ -191,7 +191,7 @@ namespace BEPUphysics.Character
             }
             set
             {
-                if (value < 0)
+                if (value < F64.C0)
                     throw new ArgumentException("Value must be nonnegative.");
                 slidingSpeed = value;
             }
@@ -208,7 +208,7 @@ namespace BEPUphysics.Character
             }
             set
             {
-                if (value < 0)
+                if (value < F64.C0)
                     throw new ArgumentException("Value must be nonnegative.");
                 slidingForce = value;
             }
@@ -227,7 +227,7 @@ namespace BEPUphysics.Character
             }
             set
             {
-                if (value < 0)
+                if (value < F64.C0)
                     throw new ArgumentException("Value must be nonnegative.");
                 airSpeed = value;
             }
@@ -244,13 +244,13 @@ namespace BEPUphysics.Character
             }
             set
             {
-                if (value < 0)
+                if (value < F64.C0)
                     throw new ArgumentException("Value must be nonnegative.");
                 airForce = value;
             }
         }
 
-        private Fix64 speedScale = 1;
+        private Fix64 speedScale = F64.C1;
         /// <summary>
         /// Gets or sets a scaling factor to apply to the maximum speed of the character.
         /// This is useful when a character does not have 0 or MaximumSpeed target speed, but rather
@@ -335,7 +335,7 @@ namespace BEPUphysics.Character
             //TODO: In v0.16.2, compound bodies would override the material properties that get set in the CreatingPair event handler.
             //In a future version where this is changed, change this to conceptually minimally required CreatingPair.
             Body.CollisionInformation.Events.DetectingInitialCollision += RemoveFriction;
-            Body.LinearDamping = 0;
+            Body.LinearDamping = F64.C0;
             ContactCategorizer = new CharacterContactCategorizer((Fix64)maximumTractionSlope, (Fix64)maximumSupportSlope);
             QueryManager = new QueryManager(Body, ContactCategorizer);
             SupportFinder = new SupportFinder(Body, QueryManager, ContactCategorizer);
@@ -384,15 +384,15 @@ namespace BEPUphysics.Character
                 //The expansion allows the downward pointing raycast to collect hit points.
                 Vector3 expansion = SupportFinder.MaximumAssistedDownStepHeight * down;
                 BoundingBox box = Body.CollisionInformation.BoundingBox;
-                if (down.X < 0)
+                if (down.X < F64.C0)
                     box.Min.X += expansion.X;
                 else
                     box.Max.X += expansion.X;
-                if (down.Y < 0)
+                if (down.Y < F64.C0)
                     box.Min.Y += expansion.Y;
                 else
                     box.Max.Y += expansion.Y;
-                if (down.Z < 0)
+                if (down.Z < F64.C0)
                     box.Min.Z += expansion.Z;
                 else
                     box.Max.Z += expansion.Z;
@@ -429,7 +429,7 @@ namespace BEPUphysics.Character
 
 
                 //Don't attempt to use an object as support if we are flying away from it (and we were never standing on it to begin with).
-                if (SupportFinder.HasSupport && !hadSupport && verticalVelocity < 0)
+                if (SupportFinder.HasSupport && !hadSupport && verticalVelocity < F64.C0)
                 {
                     SupportFinder.ClearSupportData();
                     supportData = new SupportData();
@@ -449,7 +449,7 @@ namespace BEPUphysics.Character
                         Fix64 currentDownVelocity;
                         Vector3.Dot(ref down, ref relativeVelocity, out currentDownVelocity);
                         //Target velocity is JumpSpeed.
-                        Fix64 velocityChange = MathHelper.Max(jumpSpeed + currentDownVelocity, 0);
+                        Fix64 velocityChange = MathHelper.Max(jumpSpeed + currentDownVelocity, F64.C0);
                         ApplyJumpVelocity(ref supportData, down * -velocityChange, ref relativeVelocity);
 
 
@@ -464,7 +464,7 @@ namespace BEPUphysics.Character
                         //The character does not have traction, so jump along the surface normal instead.
                         Fix64 currentNormalVelocity = Vector3.Dot(supportData.Normal, relativeVelocity);
                         //Target velocity is JumpSpeed.
-                        Fix64 velocityChange = MathHelper.Max(slidingJumpSpeed - currentNormalVelocity, 0);
+                        Fix64 velocityChange = MathHelper.Max(slidingJumpSpeed - currentNormalVelocity, F64.C0);
                         ApplyJumpVelocity(ref supportData, supportData.Normal * -velocityChange, ref relativeVelocity);
 
                         //Prevent any old contacts from hanging around and coming back with a negative depth.

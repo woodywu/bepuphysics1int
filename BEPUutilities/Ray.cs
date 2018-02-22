@@ -39,20 +39,20 @@ namespace BEPUutilities
         /// <returns>True if the ray intersects the target, false otherwise.</returns>
         public bool Intersects(ref BoundingBox boundingBox, out Fix64 t)
         {
-			Fix64 tmin = 0, tmax = Fix64.MaxValue;
+			Fix64 tmin = F64.C0, tmax = Fix64.MaxValue;
             if (Fix64.Abs(Direction.X) < Toolbox.Epsilon)
             {
                 if (Position.X < boundingBox.Min.X || Position.X > boundingBox.Max.X)
                 {
                     //If the ray isn't pointing along the axis at all, and is outside of the box's interval, then it
                     //can't be intersecting.
-                    t = 0;
+                    t = F64.C0;
                     return false;
                 }
             }
             else
             {
-                var inverseDirection = 1 / Direction.X;
+                var inverseDirection = F64.C1 / Direction.X;
                 var t1 = (boundingBox.Min.X - Position.X) * inverseDirection;
                 var t2 = (boundingBox.Max.X - Position.X) * inverseDirection;
                 if (t1 > t2)
@@ -65,7 +65,7 @@ namespace BEPUutilities
                 tmax = MathHelper.Min(tmax, t2);
                 if (tmin > tmax)
                 {
-                    t = 0;
+                    t = F64.C0;
                     return false;
                 }
             }
@@ -75,13 +75,13 @@ namespace BEPUutilities
                 {
                     //If the ray isn't pointing along the axis at all, and is outside of the box's interval, then it
                     //can't be intersecting.
-                    t = 0;
+                    t = F64.C0;
                     return false;
                 }
             }
             else
             {
-                var inverseDirection = 1 / Direction.Y;
+                var inverseDirection = F64.C1 / Direction.Y;
                 var t1 = (boundingBox.Min.Y - Position.Y) * inverseDirection;
                 var t2 = (boundingBox.Max.Y - Position.Y) * inverseDirection;
                 if (t1 > t2)
@@ -94,7 +94,7 @@ namespace BEPUutilities
                 tmax = MathHelper.Min(tmax, t2);
                 if (tmin > tmax)
                 {
-                    t = 0;
+                    t = F64.C0;
                     return false;
                 }
             }
@@ -104,13 +104,13 @@ namespace BEPUutilities
                 {
                     //If the ray isn't pointing along the axis at all, and is outside of the box's interval, then it
                     //can't be intersecting.
-                    t = 0;
+                    t = F64.C0;
                     return false;
                 }
             }
             else
             {
-                var inverseDirection = 1 / Direction.Z;
+                var inverseDirection = F64.C1 / Direction.Z;
                 var t1 = (boundingBox.Min.Z - Position.Z) * inverseDirection;
                 var t2 = (boundingBox.Max.Z - Position.Z) * inverseDirection;
                 if (t1 > t2)
@@ -123,7 +123,7 @@ namespace BEPUutilities
                 tmax = MathHelper.Min(tmax, t2);
                 if (tmin > tmax)
                 {
-                    t = 0;
+                    t = F64.C0;
                     return false;
                 }
             }
@@ -154,7 +154,7 @@ namespace BEPUutilities
             Vector3.Dot(ref Direction, ref plane.Normal, out velocity);
             if (Fix64.Abs(velocity) < Toolbox.Epsilon)
             {
-                t = 0;
+                t = F64.C0;
                 return false;
             }
 			Fix64 distanceAlongNormal;

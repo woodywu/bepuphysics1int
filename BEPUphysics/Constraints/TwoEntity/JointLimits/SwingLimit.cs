@@ -14,7 +14,7 @@ namespace BEPUphysics.Constraints.TwoEntity.JointLimits
         private Fix64 accumulatedImpulse;
         private Fix64 biasVelocity;
         private Vector3 hingeAxis;
-        private Fix64 minimumCosine = 1;
+        private Fix64 minimumCosine = F64.C1;
         private Fix64 error;
 
         private Vector3 localAxisA;
@@ -85,7 +85,7 @@ namespace BEPUphysics.Constraints.TwoEntity.JointLimits
         public Fix64 MaximumAngle
         {
             get { return Fix64.Acos(minimumCosine); }
-            set { minimumCosine = Fix64.Cos(MathHelper.Clamp(value, 0, MathHelper.Pi)); }
+            set { minimumCosine = Fix64.Cos(MathHelper.Clamp(value, F64.C0, MathHelper.Pi)); }
         }
 
         /// <summary>
@@ -135,7 +135,7 @@ namespace BEPUphysics.Constraints.TwoEntity.JointLimits
                     Vector3.Dot(ref relativeVelocity, ref hingeAxis, out lambda);
                     return lambda;
                 }
-                return 0;
+                return F64.C0;
             }
         }
 
@@ -224,7 +224,7 @@ namespace BEPUphysics.Constraints.TwoEntity.JointLimits
 
             //Clamp accumulated impulse (can't go negative)
             Fix64 previousAccumulatedImpulse = accumulatedImpulse;
-            accumulatedImpulse = MathHelper.Max(accumulatedImpulse + lambda, 0);
+            accumulatedImpulse = MathHelper.Max(accumulatedImpulse + lambda, F64.C0);
             lambda = accumulatedImpulse - previousAccumulatedImpulse;
 
             //Apply the impulse
@@ -262,8 +262,8 @@ namespace BEPUphysics.Constraints.TwoEntity.JointLimits
             if (dot > minimumCosine)
             {
                 isActiveInSolver = false;
-                error = 0;
-                accumulatedImpulse = 0;
+                error = F64.C0;
+                accumulatedImpulse = F64.C0;
                 isLimitActive = false;
                 return;
             }
@@ -287,13 +287,13 @@ namespace BEPUphysics.Constraints.TwoEntity.JointLimits
 
 
             Fix64 errorReduction;
-            springSettings.ComputeErrorReductionAndSoftness(dt, 1 / dt, out errorReduction, out softness);
+            springSettings.ComputeErrorReductionAndSoftness(dt, F64.C1 / dt, out errorReduction, out softness);
 
             //Further away from 0 degrees is further negative; if the dot is below the minimum cosine, it means the angle is above the maximum angle.
-            error = MathHelper.Max(0, minimumCosine - dot - margin);
+            error = MathHelper.Max(F64.C0, minimumCosine - dot - margin);
             biasVelocity = MathHelper.Clamp(errorReduction * error, -maxCorrectiveVelocity, maxCorrectiveVelocity);
 
-            if (bounciness > 0)
+            if (bounciness > F64.C0)
             {
                 //Compute the speed around the axis.
                 Fix64 relativeSpeed;
@@ -313,7 +313,7 @@ namespace BEPUphysics.Constraints.TwoEntity.JointLimits
                 Vector3.Dot(ref transformedAxis, ref hingeAxis, out entryA);
             }
             else
-                entryA = 0;
+                entryA = F64.C0;
 
             //Connection B's contribution to the mass matrix
             Fix64 entryB;
@@ -323,10 +323,10 @@ namespace BEPUphysics.Constraints.TwoEntity.JointLimits
                 Vector3.Dot(ref transformedAxis, ref hingeAxis, out entryB);
             }
             else
-                entryB = 0;
+                entryB = F64.C0;
 
             //Compute the inverse mass matrix
-            velocityToImpulse = 1 / (softness + entryA + entryB);
+            velocityToImpulse = F64.C1 / (softness + entryA + entryB);
 
 
         }

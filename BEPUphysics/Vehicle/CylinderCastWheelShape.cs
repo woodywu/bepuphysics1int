@@ -52,7 +52,7 @@ namespace BEPUphysics.Vehicle
             get { return shape.Radius; }
             set
             {
-                shape.Radius = MathHelper.Max(value, 0);
+                shape.Radius = MathHelper.Max(value, F64.C0);
                 Initialize();
             }
         }
@@ -65,7 +65,7 @@ namespace BEPUphysics.Vehicle
             get { return shape.Height; }
             set
             {
-                shape.Height = MathHelper.Max(value, 0);
+                shape.Height = MathHelper.Max(value, F64.C0);
                 Initialize();
             }
         }
@@ -187,11 +187,11 @@ namespace BEPUphysics.Vehicle
             }
             if (hit)
             {
-                if (suspensionLength > 0)
+                if (suspensionLength > F64.C0)
                 {
                     Fix64 dot;
                     Vector3.Dot(ref normal, ref wheel.suspension.worldDirection, out dot);
-                    if (dot > 0)
+                    if (dot > F64.C0)
                     {
                         //The cylinder cast produced a normal which is opposite of what we expect.
                         Vector3.Negate(ref normal, out normal);
@@ -216,19 +216,19 @@ namespace BEPUphysics.Vehicle
             BoundingBox boundingBox;
             shape.GetBoundingBox(ref initialTransform, out boundingBox);
             var expansion = wheel.suspension.localDirection * wheel.suspension.restLength;
-            if (expansion.X > 0)
+            if (expansion.X > F64.C0)
                 boundingBox.Max.X += expansion.X;
-            else if (expansion.X < 0)
+            else if (expansion.X < F64.C0)
                 boundingBox.Min.X += expansion.X;
 
-            if (expansion.Y > 0)
+            if (expansion.Y > F64.C0)
                 boundingBox.Max.Y += expansion.Y;
-            else if (expansion.Y < 0)
+            else if (expansion.Y < F64.C0)
                 boundingBox.Min.Y += expansion.Y;
 
-            if (expansion.Z > 0)
+            if (expansion.Z > F64.C0)
                 boundingBox.Max.Z += expansion.Z;
-            else if (expansion.Z < 0)
+            else if (expansion.Z < F64.C0)
                 boundingBox.Min.Z += expansion.Z;
 
 
@@ -248,9 +248,9 @@ namespace BEPUphysics.Vehicle
             Vector3 newPosition;
 #endif
 
-            newPosition.X = wheel.suspension.worldAttachmentPoint.X + wheel.suspension.worldDirection.X * wheel.suspension.restLength * Fix64Utils.PointFive;
-            newPosition.Y = wheel.suspension.worldAttachmentPoint.Y + wheel.suspension.worldDirection.Y * wheel.suspension.restLength * Fix64Utils.PointFive;
-            newPosition.Z = wheel.suspension.worldAttachmentPoint.Z + wheel.suspension.worldDirection.Z * wheel.suspension.restLength * Fix64Utils.PointFive;
+            newPosition.X = wheel.suspension.worldAttachmentPoint.X + wheel.suspension.worldDirection.X * wheel.suspension.restLength * F64.C0p5;
+            newPosition.Y = wheel.suspension.worldAttachmentPoint.Y + wheel.suspension.worldDirection.Y * wheel.suspension.restLength * F64.C0p5;
+            newPosition.Z = wheel.suspension.worldAttachmentPoint.Z + wheel.suspension.worldDirection.Z * wheel.suspension.restLength * F64.C0p5;
 
             detector.Position = newPosition;
             if (IncludeSteeringTransformInCast)

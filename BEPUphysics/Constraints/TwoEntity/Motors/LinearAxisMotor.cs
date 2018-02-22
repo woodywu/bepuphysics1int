@@ -328,7 +328,7 @@ namespace BEPUphysics.Constraints.TwoEntity.Motors
             Vector3.Subtract(ref worldAnchorB, ref connectionA.position, out rA);
             Matrix3x3.Transform(ref localAxis, ref connectionA.orientationMatrix, out worldAxis);
 
-            Fix64 updateRate = 1 / dt;
+            Fix64 updateRate = F64.C1 / dt;
             if (settings.mode == MotorMode.Servomechanism)
             {
                 //Compute error
@@ -351,14 +351,14 @@ namespace BEPUphysics.Constraints.TwoEntity.Motors
                 Fix64 absErrorOverDt = Fix64.Abs(error * updateRate);
                 Fix64 errorReduction;
                 settings.servo.springSettings.ComputeErrorReductionAndSoftness(dt, updateRate, out errorReduction, out usedSoftness);
-                biasVelocity = Fix64Utils.Sign(error) * MathHelper.Min(settings.servo.baseCorrectiveSpeed, absErrorOverDt) + error * errorReduction;
+                biasVelocity = Fix64.Sign(error) * MathHelper.Min(settings.servo.baseCorrectiveSpeed, absErrorOverDt) + error * errorReduction;
                 biasVelocity = MathHelper.Clamp(biasVelocity, -settings.servo.maxCorrectiveVelocity, settings.servo.maxCorrectiveVelocity);
             }
             else
             {
                 biasVelocity = -settings.velocityMotor.goalVelocity;
                 usedSoftness = settings.velocityMotor.softness * updateRate;
-                error = 0;
+                error = F64.C0;
             }
 
             //Compute jacobians
@@ -379,7 +379,7 @@ namespace BEPUphysics.Constraints.TwoEntity.Motors
                 entryA += connectionA.inverseMass;
             }
             else
-                entryA = 0;
+                entryA = F64.C0;
             if (connectionB.isDynamic)
             {
                 Matrix3x3.Transform(ref jAngularB, ref connectionB.inertiaTensorInverse, out intermediate);
@@ -387,8 +387,8 @@ namespace BEPUphysics.Constraints.TwoEntity.Motors
                 entryB += connectionB.inverseMass;
             }
             else
-                entryB = 0;
-            massMatrix = 1 / (entryA + entryB + usedSoftness);
+                entryB = F64.C0;
+            massMatrix = F64.C1 / (entryA + entryB + usedSoftness);
 
             //Update the maximum force
             ComputeMaxForces(settings.maximumForce, dt);

@@ -69,9 +69,9 @@ namespace BEPUphysics.Constraints.Collision
             this.contactManifoldConstraint = contactManifoldConstraint;
             this.penetrationConstraint = penetrationConstraint;
             IsActive = true;
-            linearAX = 0;
-            linearAY = 0;
-            linearAZ = 0;
+            linearAX = F64.C0;
+            linearAY = F64.C0;
+            linearAZ = F64.C0;
 
             entityA = contactManifoldConstraint.EntityA;
             entityB = contactManifoldConstraint.EntityB;
@@ -82,7 +82,7 @@ namespace BEPUphysics.Constraints.Collision
         ///</summary>
         public void CleanUp()
         {
-            accumulatedImpulse = 0;
+            accumulatedImpulse = F64.C0;
             contactManifoldConstraint = null;
             penetrationConstraint = null;
             entityA = null;
@@ -113,7 +113,7 @@ namespace BEPUphysics.Constraints.Collision
         {
             get
             {
-                Fix64 velocity = 0;
+                Fix64 velocity = F64.C0;
                 if (entityA != null)
                     velocity += entityA.linearVelocity.X * linearAX + entityA.linearVelocity.Y * linearAY + entityA.linearVelocity.Z * linearAZ +
                                 entityA.angularVelocity.X * angularAX + entityA.angularVelocity.Y * angularAY + entityA.angularVelocity.Z * angularAZ;
@@ -232,7 +232,7 @@ namespace BEPUphysics.Constraints.Collision
                 //return;
 
                 //if the above doesn't work well, try using the previous frame's jacobian.
-                if (linearAX != 0 || linearAY != 0 || linearAZ != 0)
+                if (linearAX != F64.C0 || linearAY != F64.C0 || linearAZ != F64.C0)
                 {
                     friction = contactManifoldConstraint.materialInteraction.StaticFriction;
                 }
@@ -269,7 +269,7 @@ namespace BEPUphysics.Constraints.Collision
                 entryA = tX * angularAX + tY * angularAY + tZ * angularAZ + entityA.inverseMass;
             }
             else
-                entryA = 0;
+                entryA = F64.C0;
 
             if (entityBIsDynamic)
             {
@@ -279,7 +279,7 @@ namespace BEPUphysics.Constraints.Collision
                 entryB = tX * angularBX + tY * angularBY + tZ * angularBZ + entityB.inverseMass;
             }
             else
-                entryB = 0;
+                entryB = F64.C0;
 
             velocityToImpulse = -1 / (entryA + entryB); //Softness?
 

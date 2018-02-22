@@ -33,13 +33,13 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             Vector3.Subtract(ref triangle.vC, ref triangle.vA, out ac);
             Vector3 triangleNormal;
             Vector3.Cross(ref ab, ref ac, out triangleNormal);
-            if (triangleNormal.LengthSquared() < Toolbox.Epsilon * Fix64Utils.PointZeroOne)
+            if (triangleNormal.LengthSquared() < Toolbox.Epsilon * F64.C0p01)
             {
                 //If the triangle is degenerate, use the offset between its center and the sphere.
                 Vector3.Add(ref triangle.vA, ref triangle.vB, out triangleNormal);
                 Vector3.Add(ref triangleNormal, ref triangle.vC, out triangleNormal);
-                Vector3.Multiply(ref triangleNormal, Fix64Utils.OneThird, out triangleNormal);
-                if (triangleNormal.LengthSquared() < Toolbox.Epsilon * Fix64Utils.PointZeroOne)
+                Vector3.Multiply(ref triangleNormal, F64.OneThird, out triangleNormal);
+                if (triangleNormal.LengthSquared() < Toolbox.Epsilon * F64.C0p01)
                     triangleNormal = Toolbox.UpVector; //Alrighty then! Pick a random direction.
                     
             }
@@ -50,15 +50,15 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             switch (triangle.sidedness)
             {
                 case TriangleSidedness.DoubleSided:
-                    if (dot < 0)
+                    if (dot < F64.C0)
                         Vector3.Negate(ref triangleNormal, out triangleNormal); //Normal must face outward.
                     break;
                 case TriangleSidedness.Clockwise:
-                    if (dot > 0)
+                    if (dot > F64.C0)
                         return false; //Wrong side, can't have a contact pointing in a reasonable direction.
                     break;
                 case TriangleSidedness.Counterclockwise:
-                    if (dot < 0)
+                    if (dot < F64.C0)
                         return false; //Wrong side, can't have a contact pointing in a reasonable direction.
                     break;
 

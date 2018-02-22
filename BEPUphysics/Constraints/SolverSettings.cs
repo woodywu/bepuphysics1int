@@ -52,7 +52,7 @@ namespace BEPUphysics.Constraints
         public Fix64 MinimumImpulse
         {
             get { return minimumImpulse; }
-            set { minimumImpulse = MathHelper.Max(value, 0); }
+            set { minimumImpulse = MathHelper.Max(value, F64.C0); }
         }
 
         /// <summary>

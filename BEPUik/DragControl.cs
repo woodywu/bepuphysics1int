@@ -1,4 +1,5 @@
 ﻿using FixMath.NET;
+using BEPUutilities;
 
 namespace BEPUik
 {
@@ -31,7 +32,7 @@ namespace BEPUik
         public DragControl()
         {
             LinearMotor = new SingleBoneLinearMotor();
-            LinearMotor.Rigidity = 1;
+            LinearMotor.Rigidity = F64.C1;
         }
 
         protected internal override void Preupdate(Fix64 dt, Fix64 updateRate)

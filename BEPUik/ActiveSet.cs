@@ -48,11 +48,11 @@ namespace BEPUik
             get { return automassUnstressedFalloff; }
             set
             {
-                automassUnstressedFalloff = MathHelper.Max(value, 0);
+                automassUnstressedFalloff = MathHelper.Max(value, F64.C0);
             }
         }
 
-        private Fix64 automassTarget = 1;
+        private Fix64 automassTarget = F64.C1;
         /// <summary>
         /// Gets or sets the mass that the heaviest bones will have when automass is enabled.
         /// </summary>
@@ -61,7 +61,7 @@ namespace BEPUik
             get { return automassTarget; }
             set
             {
-                if (value <= 0)
+                if (value <= F64.C0)
                     throw new ArgumentException("Mass must be positive.");
                 automassTarget = value;
             }
@@ -252,7 +252,7 @@ namespace BEPUik
             //We distribute a portion of the current bone's total mass to the child bones.
             //By applying a multiplier automassUnstressedFalloff, we guarantee that a chain has a certain maximum weight (excluding cycles).
             //This is thanks to the convergent geometric series sum(automassUnstressedFalloff^n, 1, infinity).
-            Fix64 massPerChild = uniqueChildren.Count > 0 ? automassUnstressedFalloff * bone.Mass / uniqueChildren.Count : 0;
+            Fix64 massPerChild = uniqueChildren.Count > 0 ? automassUnstressedFalloff * bone.Mass / uniqueChildren.Count : F64.C0;
 
             uniqueChildren.Clear();
             //(If the number of children is 0, then the only bones which can exist are either bones which were already traversed and will be skipped
@@ -371,7 +371,7 @@ namespace BEPUik
                     lowestInverseMass = bone.inverseMass;
             }
 
-            Fix64 inverseMassScale = 1 / (AutomassTarget * lowestInverseMass);
+            Fix64 inverseMassScale = F64.C1 / (AutomassTarget * lowestInverseMass);
 
             foreach (var bone in bones)
             {
@@ -399,7 +399,7 @@ namespace BEPUik
                 bones[i].IsActive = false;
                 bones[i].stressCount = 0;
                 bones[i].predecessors.Clear();
-                bones[i].Mass = Fix64Utils.PointZeroOne;
+                bones[i].Mass = F64.C0p01;
             }
             for (int i = 0; i < joints.Count; i++)
             {

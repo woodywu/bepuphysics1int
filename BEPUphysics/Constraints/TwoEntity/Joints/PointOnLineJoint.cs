@@ -424,7 +424,7 @@ namespace BEPUphysics.Constraints.TwoEntity.Joints
             Vector3.Dot(ref error3D, ref worldRestrictedAxis2, out error.Y);
 
             Fix64 errorReduction;
-            springSettings.ComputeErrorReductionAndSoftness(dt, 1 / dt, out errorReduction, out softness);
+            springSettings.ComputeErrorReductionAndSoftness(dt, F64.C1 / dt, out errorReduction, out softness);
             Fix64 bias = -errorReduction;
 
 
@@ -446,7 +446,7 @@ namespace BEPUphysics.Constraints.TwoEntity.Joints
             Vector3.Cross(ref rA, ref worldRestrictedAxis2, out angularA2);
             Vector3.Cross(ref worldRestrictedAxis2, ref rB, out angularB2);
 
-            Fix64 m11 = 0, m22 = 0, m1221 = 0;
+            Fix64 m11 = F64.C0, m22 = F64.C0, m1221 = F64.C0;
             Fix64 inverseMass;
             Vector3 intermediate;
             //Compute the effective mass matrix.
@@ -538,7 +538,7 @@ namespace BEPUphysics.Constraints.TwoEntity.Joints
         private void UpdateRestrictedAxes()
         {
             localRestrictedAxis1 = Vector3.Cross(Vector3.Up, localLineDirection);
-            if (localRestrictedAxis1.LengthSquared() < Fix64Utils.PointZeroZeroOne)
+            if (localRestrictedAxis1.LengthSquared() < F64.C0p001)
             {
                 localRestrictedAxis1 = Vector3.Cross(Vector3.Right, localLineDirection);
             }

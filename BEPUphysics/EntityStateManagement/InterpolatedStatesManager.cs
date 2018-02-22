@@ -122,7 +122,7 @@ namespace BEPUphysics.EntityStateManagement
             }
             set
             {
-                blendAmount = MathHelper.Clamp(value, 0, 1);
+                blendAmount = MathHelper.Clamp(value, F64.C0, F64.C1);
             }
         }
 

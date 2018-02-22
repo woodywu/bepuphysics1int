@@ -150,16 +150,16 @@ namespace BEPUik
             //We can now compare the angle between the twist axes.
             Fix64 error;
             Vector3.Dot(ref twistMeasureAxisA, ref twistMeasureAxisB, out error);
-            error = Fix64.Acos(MathHelper.Clamp(error, -1, 1));
+            error = Fix64.Acos(MathHelper.Clamp(error, -1, F64.C1));
             Vector3 cross;
             Vector3.Cross(ref twistMeasureAxisA, ref twistMeasureAxisB, out cross);
             Fix64 dot;
             Vector3.Dot(ref cross, ref axisA, out dot);
-            if (dot < 0)
+            if (dot < F64.C0)
                 error = -error;
 
             //Compute the bias based upon the error.
-            velocityBias = new Vector3(errorCorrectionFactor * error, 0, 0);
+            velocityBias = new Vector3(errorCorrectionFactor * error, F64.C0, F64.C0);
 
             //We can't just use the axes directly as jacobians. Consider 'cranking' one object around the other.
             Vector3 jacobian;

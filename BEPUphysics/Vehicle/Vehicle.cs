@@ -4,6 +4,7 @@ using BEPUphysics.Entities;
 using BEPUutilities.DataStructures;
 using BEPUphysics.UpdateableSystems;
 using FixMath.NET;
+using BEPUutilities;
 
 namespace BEPUphysics.Vehicle
 {
@@ -212,7 +213,7 @@ namespace BEPUphysics.Vehicle
             }
             if (numActive == 0)
                 isActiveInSolver = false;
-            return solverSettings.minimumImpulse + 1; //We take care of ourselves.
+            return solverSettings.minimumImpulse + F64.C1; //We take care of ourselves.
         }
 
         /// <summary>

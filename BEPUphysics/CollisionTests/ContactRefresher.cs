@@ -56,7 +56,7 @@ namespace BEPUphysics.CollisionTests
                         //Refresh position and ra/rb.
                         Vector3 newPos;
                         Vector3.Add(ref newPosB, ref newPosA, out newPos);
-                        Vector3.Multiply(ref newPos, Fix64Utils.PointFive, out newPos);
+                        Vector3.Multiply(ref newPos, F64.C0p5, out newPos);
                         contacts.Elements[k].Position = newPos;
                         //This is an interesting idea, but has very little effect one way or the other.
                         //data.BasePenetrationDepth = contacts.Elements[k].PenetrationDepth;

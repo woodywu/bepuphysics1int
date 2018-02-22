@@ -18,12 +18,12 @@ namespace BEPUutilities
         /// <summary>
         /// Large tolerance value. Defaults to 1e-5f.
         /// </summary>
-        public static Fix64 BigEpsilon = 1 / new Fix64(100000);
+        public static Fix64 BigEpsilon = F64.C1 / new Fix64(100000);
 
         /// <summary>
         /// Tolerance value. Defaults to 1e-7f.
         /// </summary>
-        public static Fix64 Epsilon = 1 / new Fix64(10000000);
+        public static Fix64 Epsilon = F64.C1 / new Fix64(10000000);
 
         /// <summary>
         /// Represents an invalid Vector3.
@@ -68,7 +68,7 @@ namespace BEPUutilities
         /// <summary>
         /// Matrix containing zeroes for every element.
         /// </summary>
-        public static Matrix ZeroMatrix = new Matrix(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+        public static Matrix ZeroMatrix = new Matrix(F64.C0, F64.C0, F64.C0, F64.C0, F64.C0, F64.C0, F64.C0, F64.C0, F64.C0, F64.C0, F64.C0, F64.C0, F64.C0, F64.C0, F64.C0, F64.C0);
 
         /// <summary>
         /// Reference for a vector with dimensions (0,0,0).
@@ -109,14 +109,14 @@ namespace BEPUutilities
             Vector3.Dot(ref ray.Direction, ref hit.Normal, out d);
             d = -d;
 
-            hitClockwise = d >= 0;
+            hitClockwise = d >= F64.C0;
 
             Vector3 ap;
             Vector3.Subtract(ref ray.Position, ref a, out ap);
 
             Vector3.Dot(ref ap, ref hit.Normal, out hit.T);
             hit.T /= d;
-            if (hit.T < 0 || hit.T > maximumLength)
+            if (hit.T < F64.C0 || hit.T > maximumLength)
                 return false;//Hit is behind origin, or too far away.
 
             Vector3.Multiply(ref ray.Direction, hit.T, out hit.Location);
@@ -132,11 +132,11 @@ namespace BEPUutilities
             Vector3.Dot(ref ac, ref ac, out ACdotAC);
             Vector3.Dot(ref ac, ref ap, out ACdotAP);
 
-            Fix64 denom = 1 / (ABdotAB * ACdotAC - ABdotAC * ABdotAC);
+            Fix64 denom = F64.C1 / (ABdotAB * ACdotAC - ABdotAC * ABdotAC);
             Fix64 u = (ACdotAC * ABdotAP - ABdotAC * ACdotAP) * denom;
             Fix64 v = (ABdotAB * ACdotAP - ABdotAC * ABdotAP) * denom;
 
-            return (u >= -Toolbox.BigEpsilon) && (v >= -Toolbox.BigEpsilon) && (u + v <= 1 + Toolbox.BigEpsilon);
+            return (u >= -Toolbox.BigEpsilon) && (v >= -Toolbox.BigEpsilon) && (u + v <= F64.C1 + Toolbox.BigEpsilon);
 
         }
 
@@ -168,19 +168,19 @@ namespace BEPUutilities
             switch (sidedness)
             {
                 case TriangleSidedness.DoubleSided:
-                    if (d <= 0) //Pointing the wrong way.  Flip the normal.
+                    if (d <= F64.C0) //Pointing the wrong way.  Flip the normal.
                     {
                         Vector3.Negate(ref hit.Normal, out hit.Normal);
                         d = -d;
                     }
                     break;
                 case TriangleSidedness.Clockwise:
-                    if (d <= 0) //Pointing the wrong way.  Can't hit.
+                    if (d <= F64.C0) //Pointing the wrong way.  Can't hit.
                         return false;
 
                     break;
                 case TriangleSidedness.Counterclockwise:
-                    if (d >= 0) //Pointing the wrong way.  Can't hit.
+                    if (d >= F64.C0) //Pointing the wrong way.  Can't hit.
                         return false;
 
                     Vector3.Negate(ref hit.Normal, out hit.Normal);
@@ -193,7 +193,7 @@ namespace BEPUutilities
 
             Vector3.Dot(ref ap, ref hit.Normal, out hit.T);
             hit.T /= d;
-            if (hit.T < 0 || hit.T > maximumLength)
+            if (hit.T < F64.C0 || hit.T > maximumLength)
                 return false;//Hit is behind origin, or too far away.
 
             Vector3.Multiply(ref ray.Direction, hit.T, out hit.Location);
@@ -209,11 +209,11 @@ namespace BEPUutilities
             Vector3.Dot(ref ac, ref ac, out ACdotAC);
             Vector3.Dot(ref ac, ref ap, out ACdotAP);
 
-            Fix64 denom = 1 / (ABdotAB * ACdotAC - ABdotAC * ABdotAC);
+            Fix64 denom = F64.C1 / (ABdotAB * ACdotAC - ABdotAC * ABdotAC);
             Fix64 u = (ACdotAC * ABdotAP - ABdotAC * ACdotAP) * denom;
             Fix64 v = (ABdotAB * ACdotAP - ABdotAC * ABdotAP) * denom;
 
-            return (u >= -Toolbox.BigEpsilon) && (v >= -Toolbox.BigEpsilon) && (u + v <= 1 + Toolbox.BigEpsilon);
+            return (u >= -Toolbox.BigEpsilon) && (v >= -Toolbox.BigEpsilon) && (u + v <= F64.C1 + Toolbox.BigEpsilon);
 
         }
 
@@ -247,7 +247,7 @@ namespace BEPUutilities
         public static bool GetSegmentPlaneIntersection(Vector3 a, Vector3 b, Plane p, out Vector3 q)
         {
             Fix64 t;
-            return GetLinePlaneIntersection(ref a, ref b, ref p, out t, out q) && t >= 0 && t <= 1;
+            return GetLinePlaneIntersection(ref a, ref b, ref p, out t, out q) && t >= F64.C0 && t <= F64.C1;
         }
 
         /// <summary>
@@ -261,7 +261,7 @@ namespace BEPUutilities
         /// <returns>Whether or not the segment intersects the plane.</returns>
         public static bool GetSegmentPlaneIntersection(Vector3 a, Vector3 b, Plane p, out Fix64 t, out Vector3 q)
         {
-            return GetLinePlaneIntersection(ref a, ref b, ref p, out t, out q) && t >= 0 && t <= 1;
+            return GetLinePlaneIntersection(ref a, ref b, ref p, out t, out q) && t >= F64.C0 && t <= F64.C1;
         }
 
         /// <summary>
@@ -320,7 +320,7 @@ namespace BEPUutilities
             //Compute the intersection position.
             Vector3.Multiply(ref ray.Direction, t, out q);
             Vector3.Add(ref ray.Position, ref q, out q);
-            return t >= 0;
+            return t >= F64.C0;
         }
 
         #endregion
@@ -350,7 +350,7 @@ namespace BEPUutilities
             Vector3.Dot(ref ab, ref ap, out d1);
             Fix64 d2;
             Vector3.Dot(ref ac, ref ap, out d2);
-            if (d1 <= 0 && d2 < 0)
+            if (d1 <= F64.C0 && d2 < F64.C0)
             {
                 closestPoint = a;
                 return VoronoiRegion.A;
@@ -362,14 +362,14 @@ namespace BEPUutilities
             Vector3.Dot(ref ab, ref bp, out d3);
             Fix64 d4;
             Vector3.Dot(ref ac, ref bp, out d4);
-            if (d3 >= 0 && d4 <= d3)
+            if (d3 >= F64.C0 && d4 <= d3)
             {
                 closestPoint = b;
                 return VoronoiRegion.B;
             }
             //Edge region AB?
             Fix64 vc = d1 * d4 - d3 * d2;
-            if (vc <= 0 && d1 >= 0 && d3 <= 0)
+            if (vc <= F64.C0 && d1 >= F64.C0 && d3 <= F64.C0)
             {
                 v = d1 / (d1 - d3);
                 Vector3.Multiply(ref ab, v, out closestPoint);
@@ -383,14 +383,14 @@ namespace BEPUutilities
             Vector3.Dot(ref ab, ref cp, out d5);
             Fix64 d6;
             Vector3.Dot(ref ac, ref cp, out d6);
-            if (d6 >= 0 && d5 <= d6)
+            if (d6 >= F64.C0 && d5 <= d6)
             {
                 closestPoint = c;
                 return VoronoiRegion.C;
             }
             //Edge region AC?
             Fix64 vb = d5 * d2 - d1 * d6;
-            if (vb <= 0 && d2 >= 0 && d6 <= 0)
+            if (vb <= F64.C0 && d2 >= F64.C0 && d6 <= F64.C0)
             {
                 w = d2 / (d2 - d6);
                 Vector3.Multiply(ref ac, w, out closestPoint);
@@ -399,7 +399,7 @@ namespace BEPUutilities
             }
             //Edge region BC?
             Fix64 va = d3 * d6 - d5 * d4;
-            if (va <= 0 && (d4 - d3) >= 0 && (d5 - d6) >= 0)
+            if (va <= F64.C0 && (d4 - d3) >= F64.C0 && (d5 - d6) >= F64.C0)
             {
                 w = (d4 - d3) / ((d4 - d3) + (d5 - d6));
                 Vector3.Subtract(ref c, ref b, out closestPoint);
@@ -408,7 +408,7 @@ namespace BEPUutilities
                 return VoronoiRegion.BC;
             }
             //Inside triangle?
-            Fix64 denom = 1 / (va + vb + vc);
+            Fix64 denom = F64.C1 / (va + vb + vc);
             v = vb * denom;
             w = vc * denom;
             Vector3 abv;
@@ -445,7 +445,7 @@ namespace BEPUutilities
             Vector3.Dot(ref ab, ref ap, out d1);
             Fix64 d2;
             Vector3.Dot(ref ac, ref ap, out d2);
-            if (d1 <= 0 && d2 < 0)
+            if (d1 <= F64.C0 && d2 < F64.C0)
             {
                 subsimplex.Add(a);
                 closestPoint = a;
@@ -458,7 +458,7 @@ namespace BEPUutilities
             Vector3.Dot(ref ab, ref bp, out d3);
             Fix64 d4;
             Vector3.Dot(ref ac, ref bp, out d4);
-            if (d3 >= 0 && d4 <= d3)
+            if (d3 >= F64.C0 && d4 <= d3)
             {
                 subsimplex.Add(b);
                 closestPoint = b;
@@ -466,7 +466,7 @@ namespace BEPUutilities
             }
             //Edge region AB?
             Fix64 vc = d1 * d4 - d3 * d2;
-            if (vc <= 0 && d1 >= 0 && d3 <= 0)
+            if (vc <= F64.C0 && d1 >= F64.C0 && d3 <= F64.C0)
             {
                 subsimplex.Add(a);
                 subsimplex.Add(b);
@@ -482,7 +482,7 @@ namespace BEPUutilities
             Vector3.Dot(ref ab, ref cp, out d5);
             Fix64 d6;
             Vector3.Dot(ref ac, ref cp, out d6);
-            if (d6 >= 0 && d5 <= d6)
+            if (d6 >= F64.C0 && d5 <= d6)
             {
                 subsimplex.Add(c);
                 closestPoint = c;
@@ -490,7 +490,7 @@ namespace BEPUutilities
             }
             //Edge region AC?
             Fix64 vb = d5 * d2 - d1 * d6;
-            if (vb <= 0 && d2 >= 0 && d6 <= 0)
+            if (vb <= F64.C0 && d2 >= F64.C0 && d6 <= F64.C0)
             {
                 subsimplex.Add(a);
                 subsimplex.Add(c);
@@ -501,7 +501,7 @@ namespace BEPUutilities
             }
             //Edge region BC?
             Fix64 va = d3 * d6 - d5 * d4;
-            if (va <= 0 && (d4 - d3) >= 0 && (d5 - d6) >= 0)
+            if (va <= F64.C0 && (d4 - d3) >= F64.C0 && (d5 - d6) >= F64.C0)
             {
                 subsimplex.Add(b);
                 subsimplex.Add(c);
@@ -515,7 +515,7 @@ namespace BEPUutilities
             subsimplex.Add(a);
             subsimplex.Add(b);
             subsimplex.Add(c);
-            Fix64 denom = 1 / (va + vb + vc);
+            Fix64 denom = F64.C1 / (va + vb + vc);
             v = vb * denom;
             w = vc * denom;
             Vector3 abv;
@@ -557,10 +557,10 @@ namespace BEPUutilities
             Vector3.Dot(ref ab, ref ap, out d1);
             Fix64 d2;
             Vector3.Dot(ref ac, ref ap, out d2);
-            if (d1 <= 0 && d2 < 0)
+            if (d1 <= F64.C0 && d2 < F64.C0)
             {
                 subsimplex.Add(i);
-                baryCoords.Add(1);
+                baryCoords.Add(F64.C1);
                 closestPoint = a;
                 return; //barycentric coordinates (1,0,0)
             }
@@ -571,21 +571,21 @@ namespace BEPUutilities
             Vector3.Dot(ref ab, ref bp, out d3);
             Fix64 d4;
             Vector3.Dot(ref ac, ref bp, out d4);
-            if (d3 >= 0 && d4 <= d3)
+            if (d3 >= F64.C0 && d4 <= d3)
             {
                 subsimplex.Add(j);
-                baryCoords.Add(1);
+                baryCoords.Add(F64.C1);
                 closestPoint = b;
                 return; //barycentric coordinates (0,1,0)
             }
             //Edge region AB?
             Fix64 vc = d1 * d4 - d3 * d2;
-            if (vc <= 0 && d1 >= 0 && d3 <= 0)
+            if (vc <= F64.C0 && d1 >= F64.C0 && d3 <= F64.C0)
             {
                 subsimplex.Add(i);
                 subsimplex.Add(j);
                 v = d1 / (d1 - d3);
-                baryCoords.Add(1 - v);
+                baryCoords.Add(F64.C1 - v);
                 baryCoords.Add(v);
                 Vector3.Multiply(ref ab, v, out closestPoint);
                 Vector3.Add(ref closestPoint, ref a, out closestPoint);
@@ -598,21 +598,21 @@ namespace BEPUutilities
             Vector3.Dot(ref ab, ref cp, out d5);
             Fix64 d6;
             Vector3.Dot(ref ac, ref cp, out d6);
-            if (d6 >= 0 && d5 <= d6)
+            if (d6 >= F64.C0 && d5 <= d6)
             {
                 subsimplex.Add(k);
-                baryCoords.Add(1);
+                baryCoords.Add(F64.C1);
                 closestPoint = c;
                 return; //barycentric coordinates (0,0,1)
             }
             //Edge region AC?
             Fix64 vb = d5 * d2 - d1 * d6;
-            if (vb <= 0 && d2 >= 0 && d6 <= 0)
+            if (vb <= F64.C0 && d2 >= F64.C0 && d6 <= F64.C0)
             {
                 subsimplex.Add(i);
                 subsimplex.Add(k);
                 w = d2 / (d2 - d6);
-                baryCoords.Add(1 - w);
+                baryCoords.Add(F64.C1 - w);
                 baryCoords.Add(w);
                 Vector3.Multiply(ref ac, w, out closestPoint);
                 Vector3.Add(ref closestPoint, ref a, out closestPoint);
@@ -620,12 +620,12 @@ namespace BEPUutilities
             }
             //Edge region BC?
             Fix64 va = d3 * d6 - d5 * d4;
-            if (va <= 0 && (d4 - d3) >= 0 && (d5 - d6) >= 0)
+            if (va <= F64.C0 && (d4 - d3) >= F64.C0 && (d5 - d6) >= F64.C0)
             {
                 subsimplex.Add(j);
                 subsimplex.Add(k);
                 w = (d4 - d3) / ((d4 - d3) + (d5 - d6));
-                baryCoords.Add(1 - w);
+                baryCoords.Add(F64.C1 - w);
                 baryCoords.Add(w);
                 Vector3.Subtract(ref c, ref b, out closestPoint);
                 Vector3.Multiply(ref closestPoint, w, out closestPoint);
@@ -636,10 +636,10 @@ namespace BEPUutilities
             subsimplex.Add(i);
             subsimplex.Add(j);
             subsimplex.Add(k);
-            Fix64 denom = 1 / (va + vb + vc);
+            Fix64 denom = F64.C1 / (va + vb + vc);
             v = vb * denom;
             w = vc * denom;
-            baryCoords.Add(1 - v - w);
+            baryCoords.Add(F64.C1 - v - w);
             baryCoords.Add(v);
             baryCoords.Add(w);
             Vector3 abv;
@@ -703,7 +703,7 @@ namespace BEPUutilities
             Vector3.Subtract(ref p, ref a, out ap);
             Fix64 t;
             Vector3.Dot(ref ap, ref ab, out t);
-            if (t <= 0)
+            if (t <= F64.C0)
             {
                 closestPoint = a;
             }
@@ -742,7 +742,7 @@ namespace BEPUutilities
             Vector3.Subtract(ref p, ref a, out ap);
             Fix64 t;
             Vector3.Dot(ref ap, ref ab, out t);
-            if (t <= 0)
+            if (t <= F64.C0)
             {
                 //t = 0;//Don't need this for returning purposes.
                 subsimplex.Add(a);
@@ -792,10 +792,10 @@ namespace BEPUutilities
             Vector3.Subtract(ref p, ref a, out ap);
             Fix64 t;
             Vector3.Dot(ref ap, ref ab, out t);
-            if (t <= 0)
+            if (t <= F64.C0)
             {
                 subsimplex.Add(i);
-                baryCoords.Add(1);
+                baryCoords.Add(F64.C1);
                 closestPoint = a;
             }
             else
@@ -804,7 +804,7 @@ namespace BEPUutilities
                 if (t >= denom)
                 {
                     subsimplex.Add(j);
-                    baryCoords.Add(1);
+                    baryCoords.Add(F64.C1);
                     closestPoint = b;
                 }
                 else
@@ -812,7 +812,7 @@ namespace BEPUutilities
                     t = t / denom;
                     subsimplex.Add(i);
                     subsimplex.Add(j);
-                    baryCoords.Add(1 - t);
+                    baryCoords.Add(F64.C1 - t);
                     baryCoords.Add(t);
                     Vector3 tab;
                     Vector3.Multiply(ref ab, t, out tab);
@@ -888,7 +888,7 @@ namespace BEPUutilities
             if (a <= Epsilon && e <= Epsilon)
             {
                 //These segments are more like points.
-                s = t = 0;
+                s = t = F64.C0;
                 c1 = p1;
                 c2 = p2;
                 return;
@@ -896,8 +896,8 @@ namespace BEPUutilities
             if (a <= Epsilon)
             {
                 // First segment is basically a point.
-                s = 0;
-                t = MathHelper.Clamp(f / e, 0, 1);
+                s = F64.C0;
+                t = MathHelper.Clamp(f / e, F64.C0, F64.C1);
             }
             else
             {
@@ -905,8 +905,8 @@ namespace BEPUutilities
                 if (e <= Epsilon)
                 {
                     // Second segment is basically a point.
-                    t = 0;
-                    s = MathHelper.Clamp(-c / a, 0, 1);
+                    t = F64.C0;
+                    s = MathHelper.Clamp(-c / a, F64.C0, F64.C1);
                 }
                 else
                 {
@@ -915,25 +915,25 @@ namespace BEPUutilities
 
                     // If segments not parallel, compute closest point on L1 to L2, and
                     // clamp to segment S1. Else pick some s (here .5f)
-                    if (denom != 0)
-                        s = MathHelper.Clamp((b * f - c * e) / denom, 0, 1);
+                    if (denom != F64.C0)
+                        s = MathHelper.Clamp((b * f - c * e) / denom, F64.C0, F64.C1);
                     else //Parallel, just use .5f
-                        s = Fix64Utils.PointFive;
+                        s = F64.C0p5;
 
 
                     t = (b * s + f) / e;
 
-                    if (t < 0)
+                    if (t < F64.C0)
                     {
                         //Closest point is before the segment.
-                        t = 0;
-                        s = MathHelper.Clamp(-c / a, 0, 1);
+                        t = F64.C0;
+                        s = MathHelper.Clamp(-c / a, F64.C0, F64.C1);
                     }
-                    else if (t > 1)
+                    else if (t > F64.C1)
                     {
                         //Closest point is after the segment.
-                        t = 1;
-                        s = MathHelper.Clamp((b - c) / a, 0, 1);
+                        t = F64.C1;
+                        s = MathHelper.Clamp((b - c) / a, F64.C0, F64.C1);
                     }
                 }
             }
@@ -975,7 +975,7 @@ namespace BEPUutilities
             if (a <= Epsilon && e <= Epsilon)
             {
                 //These segments are more like points.
-                s = t = 0;
+                s = t = F64.C0;
                 c1 = p1;
                 c2 = p2;
                 return;
@@ -983,8 +983,8 @@ namespace BEPUutilities
             if (a <= Epsilon)
             {
                 // First segment is basically a point.
-                s = 0;
-                t = MathHelper.Clamp(f / e, 0, 1);
+                s = F64.C0;
+                t = MathHelper.Clamp(f / e, F64.C0, F64.C1);
             }
             else
             {
@@ -992,8 +992,8 @@ namespace BEPUutilities
                 if (e <= Epsilon)
                 {
                     // Second segment is basically a point.
-                    t = 0;
-                    s = MathHelper.Clamp(-c / a, 0, 1);
+                    t = F64.C0;
+                    s = MathHelper.Clamp(-c / a, F64.C0, F64.C1);
                 }
                 else
                 {
@@ -1002,10 +1002,10 @@ namespace BEPUutilities
 
                     // If segments not parallel, compute closest point on L1 to L2, and
                     // clamp to segment S1. Else pick some s (here .5f)
-                    if (denom != 0)
+                    if (denom != F64.C0)
                         s = (b * f - c * e) / denom;
                     else //Parallel, just use .5f
-                        s = Fix64Utils.PointFive;
+                        s = F64.C0p5;
 
 
                     t = (b * s + f) / e;
@@ -1047,7 +1047,7 @@ namespace BEPUutilities
             Vector3.Dot(ref ap, ref q, out signp);
 			Fix64 signo;
             Vector3.Dot(ref ao, ref q, out signo);
-            if (signp * signo <= 0)
+            if (signp * signo <= F64.C0)
                 return true;
             return false;
         }
@@ -1378,27 +1378,27 @@ namespace BEPUutilities
 				//subsimplex is the entire tetrahedron, can only occur when objects intersect!  Determinants of each of the tetrahedrons based on triangles composing the sides and the point itself.
 				//This is basically computing the volume of parallelepipeds (triple scalar product).
 				//Could be quicker just to do it directly.
-				Fix64 abcd = (new Matrix(tetrahedron[0].X, tetrahedron[0].Y, tetrahedron[0].Z, 1,
-                                         tetrahedron[1].X, tetrahedron[1].Y, tetrahedron[1].Z, 1,
-                                         tetrahedron[2].X, tetrahedron[2].Y, tetrahedron[2].Z, 1,
-                                         tetrahedron[3].X, tetrahedron[3].Y, tetrahedron[3].Z, 1)).Determinant();
-				Fix64 pbcd = (new Matrix(p.X, p.Y, p.Z, 1,
-                                         tetrahedron[1].X, tetrahedron[1].Y, tetrahedron[1].Z, 1,
-                                         tetrahedron[2].X, tetrahedron[2].Y, tetrahedron[2].Z, 1,
-                                         tetrahedron[3].X, tetrahedron[3].Y, tetrahedron[3].Z, 1)).Determinant();
-				Fix64 apcd = (new Matrix(tetrahedron[0].X, tetrahedron[0].Y, tetrahedron[0].Z, 1,
-                                         p.X, p.Y, p.Z, 1,
-                                         tetrahedron[2].X, tetrahedron[2].Y, tetrahedron[2].Z, 1,
-                                         tetrahedron[3].X, tetrahedron[3].Y, tetrahedron[3].Z, 1)).Determinant();
-				Fix64 abpd = (new Matrix(tetrahedron[0].X, tetrahedron[0].Y, tetrahedron[0].Z, 1,
-                                         tetrahedron[1].X, tetrahedron[1].Y, tetrahedron[1].Z, 1,
-                                         p.X, p.Y, p.Z, 1,
-                                         tetrahedron[3].X, tetrahedron[3].Y, tetrahedron[3].Z, 1)).Determinant();
-                abcd = 1 / abcd;
+				Fix64 abcd = (new Matrix(tetrahedron[0].X, tetrahedron[0].Y, tetrahedron[0].Z, F64.C1,
+                                         tetrahedron[1].X, tetrahedron[1].Y, tetrahedron[1].Z, F64.C1,
+                                         tetrahedron[2].X, tetrahedron[2].Y, tetrahedron[2].Z, F64.C1,
+                                         tetrahedron[3].X, tetrahedron[3].Y, tetrahedron[3].Z, F64.C1)).Determinant();
+				Fix64 pbcd = (new Matrix(p.X, p.Y, p.Z, F64.C1,
+                                         tetrahedron[1].X, tetrahedron[1].Y, tetrahedron[1].Z, F64.C1,
+                                         tetrahedron[2].X, tetrahedron[2].Y, tetrahedron[2].Z, F64.C1,
+                                         tetrahedron[3].X, tetrahedron[3].Y, tetrahedron[3].Z, F64.C1)).Determinant();
+				Fix64 apcd = (new Matrix(tetrahedron[0].X, tetrahedron[0].Y, tetrahedron[0].Z, F64.C1,
+                                         p.X, p.Y, p.Z, F64.C1,
+                                         tetrahedron[2].X, tetrahedron[2].Y, tetrahedron[2].Z, F64.C1,
+                                         tetrahedron[3].X, tetrahedron[3].Y, tetrahedron[3].Z, F64.C1)).Determinant();
+				Fix64 abpd = (new Matrix(tetrahedron[0].X, tetrahedron[0].Y, tetrahedron[0].Z, F64.C1,
+                                         tetrahedron[1].X, tetrahedron[1].Y, tetrahedron[1].Z, F64.C1,
+                                         p.X, p.Y, p.Z, F64.C1,
+                                         tetrahedron[3].X, tetrahedron[3].Y, tetrahedron[3].Z, F64.C1)).Determinant();
+                abcd = F64.C1 / abcd;
                 baryCoords.Add(pbcd * abcd); //u
                 baryCoords.Add(apcd * abcd); //v
                 baryCoords.Add(abpd * abcd); //w
-                baryCoords.Add(1 - baryCoords[0] - baryCoords[1] - baryCoords[2]); //x = 1-u-v-w
+                baryCoords.Add(F64.C1 - baryCoords[0] - baryCoords[1] - baryCoords[2]); //x = 1-u-v-w
             }
             CommonResources.GiveBack(subsimplexCandidate);
             CommonResources.GiveBack(baryCoordsCandidate);
@@ -1433,15 +1433,15 @@ namespace BEPUutilities
 			Fix64 b = Vector3.Dot(m, normalizedDirection);
 			Fix64 c = m.LengthSquared() - radius * radius;
 
-            if (c > 0 && b > 0)
+            if (c > F64.C0 && b > F64.C0)
                 return false;
 			Fix64 discriminant = b * b - c;
-            if (discriminant < 0)
+            if (discriminant < F64.C0)
                 return false;
 
             hit.T = -b - Fix64.Sqrt(discriminant);
-            if (hit.T < 0)
-                hit.T = 0;
+            if (hit.T < F64.C0)
+                hit.T = F64.C0;
             if (hit.T > maximumLength)
                 return false;
             hit.T /= length;
@@ -1491,17 +1491,17 @@ namespace BEPUutilities
         /// <param name="sweep">Sweep to expand the bounding box with.</param>
         public static void ExpandBoundingBox(ref BoundingBox boundingBox, ref Vector3 sweep)
         {
-            if (sweep.X > 0)
+            if (sweep.X > F64.C0)
                 boundingBox.Max.X += sweep.X;
             else
                 boundingBox.Min.X += sweep.X;
 
-            if (sweep.Y > 0)
+            if (sweep.Y > F64.C0)
                 boundingBox.Max.Y += sweep.Y;
             else
                 boundingBox.Min.Y += sweep.Y;
 
-            if (sweep.Z > 0)
+            if (sweep.Z > F64.C0)
                 boundingBox.Max.Z += sweep.Z;
             else
                 boundingBox.Min.Z += sweep.Z;
@@ -1598,13 +1598,13 @@ namespace BEPUutilities
             Quaternion d1;
             DifferentiateQuaternion(ref q, ref localInertiaTensorInverse, ref angularMomentum, out d1);
             Quaternion s2;
-            Quaternion.Multiply(ref d1, dt * Fix64Utils.PointFive, out s2);
+            Quaternion.Multiply(ref d1, dt * F64.C0p5, out s2);
             Quaternion.Add(ref q, ref s2, out s2);
 
             Quaternion d2;
             DifferentiateQuaternion(ref s2, ref localInertiaTensorInverse, ref angularMomentum, out d2);
             Quaternion s3;
-            Quaternion.Multiply(ref d2, dt * Fix64Utils.PointFive, out s3);
+            Quaternion.Multiply(ref d2, dt * F64.C0p5, out s3);
             Quaternion.Add(ref q, ref s3, out s3);
 
             Quaternion d3;
@@ -1616,10 +1616,10 @@ namespace BEPUutilities
             Quaternion d4;
             DifferentiateQuaternion(ref s4, ref localInertiaTensorInverse, ref angularMomentum, out d4);
 
-            Quaternion.Multiply(ref d1, dt / 6, out d1);
-            Quaternion.Multiply(ref d2, dt / 3, out d2);
-            Quaternion.Multiply(ref d3, dt / 3, out d3);
-            Quaternion.Multiply(ref d4, dt / 6, out d4);
+            Quaternion.Multiply(ref d1, dt / F64.C6, out d1);
+            Quaternion.Multiply(ref d2, dt / F64.C3, out d2);
+            Quaternion.Multiply(ref d3, dt / F64.C3, out d3);
+            Quaternion.Multiply(ref d4, dt / F64.C6, out d4);
             Quaternion added;
             Quaternion.Add(ref q, ref d1, out added);
             Quaternion.Add(ref added, ref d2, out added);
@@ -1647,8 +1647,8 @@ namespace BEPUutilities
             Matrix3x3.Multiply(ref tempInertiaTensorInverse, ref tempRotMat, out tempInertiaTensorInverse);
             Vector3 halfspin;
             Matrix3x3.Transform(ref angularMomentum, ref tempInertiaTensorInverse, out halfspin);
-            Vector3.Multiply(ref halfspin, Fix64Utils.PointFive, out halfspin);
-            var halfspinQuaternion = new Quaternion(halfspin.X, halfspin.Y, halfspin.Z, 0);
+            Vector3.Multiply(ref halfspin, F64.C0p5, out halfspin);
+            var halfspinQuaternion = new Quaternion(halfspin.X, halfspin.Y, halfspin.Z, F64.C0);
             Quaternion.Multiply(ref halfspinQuaternion, ref normalizedOrientation, out orientationChange);
         }
 
@@ -1670,9 +1670,9 @@ namespace BEPUutilities
             Vector3.Subtract(ref c, ref a, out ac);
             Vector3 triangleNormal;
             Vector3.Cross(ref ab, ref ac, out triangleNormal);
-            Fix64 x = triangleNormal.X < 0 ? -triangleNormal.X : triangleNormal.X;
-            Fix64 y = triangleNormal.Y < 0 ? -triangleNormal.Y : triangleNormal.Y;
-            Fix64 z = triangleNormal.Z < 0 ? -triangleNormal.Z : triangleNormal.Z;
+            Fix64 x = triangleNormal.X < F64.C0 ? -triangleNormal.X : triangleNormal.X;
+            Fix64 y = triangleNormal.Y < F64.C0 ? -triangleNormal.Y : triangleNormal.Y;
+            Fix64 z = triangleNormal.Z < F64.C0 ? -triangleNormal.Z : triangleNormal.Z;
 
             Fix64 numeratorU, numeratorV, denominator;
             if (x >= y && x >= z)
@@ -1697,12 +1697,12 @@ namespace BEPUutilities
                 denominator = triangleNormal.Z;
             }
 
-            if (denominator < Fix64Utils.MinusEMinusNine || denominator > Fix64Utils.EMinusNine)
+            if (denominator < F64.Cm1em9 || denominator > F64.C1em9)
             {
-                denominator = 1 / denominator;
+                denominator = F64.C1 / denominator;
                 aWeight = numeratorU * denominator;
                 bWeight = numeratorV * denominator;
-                cWeight = 1 - aWeight - bWeight;
+                cWeight = F64.C1 - aWeight - bWeight;
             }
             else
             {
@@ -1719,21 +1719,21 @@ namespace BEPUutilities
                 Vector3.DistanceSquared(ref p, ref c, out distance3);
                 if (distance1 < distance2 && distance1 < distance3)
                 {
-                    aWeight = 1;
-                    bWeight = 0;
-                    cWeight = 0;
+                    aWeight = F64.C1;
+                    bWeight = F64.C0;
+                    cWeight = F64.C0;
                 }
                 else if (distance2 < distance3)
                 {
-                    aWeight = 0;
-                    bWeight = 1;
-                    cWeight = 0;
+                    aWeight = F64.C0;
+                    bWeight = F64.C1;
+                    cWeight = F64.C0;
                 }
                 else
                 {
-                    aWeight = 0;
-                    bWeight = 0;
-                    cWeight = 1;
+                    aWeight = F64.C0;
+                    bWeight = F64.C0;
+                    cWeight = F64.C1;
                 }
             }
 

@@ -1,4 +1,5 @@
 ﻿using FixMath.NET;
+using BEPUutilities;
 
 namespace BEPUik
 {
@@ -31,7 +32,7 @@ namespace BEPUik
         public RevoluteControl()
         {
             AngularMotor = new SingleBoneRevoluteConstraint();
-            AngularMotor.Rigidity = 1;
+            AngularMotor.Rigidity = F64.C1;
         }
 
         protected internal override void Preupdate(Fix64 dt, Fix64 updateRate)

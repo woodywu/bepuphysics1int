@@ -53,9 +53,9 @@ namespace BEPUphysics.CollisionShapes.ConvexShapes
         public static ConvexShapeDescription ComputeDescription(Fix64 radius)
         {
             ConvexShapeDescription description;
-            description.EntityShapeVolume.Volume = Fix64Utils.FourThirds * MathHelper.Pi * radius * radius * radius;
+            description.EntityShapeVolume.Volume = F64.FourThirds * MathHelper.Pi * radius * radius * radius;
             description.EntityShapeVolume.VolumeDistribution = new Matrix3x3();
-            Fix64 diagValue = ((Fix64Utils.TwoFifths) * radius * radius);
+            Fix64 diagValue = ((F64.TwoFifths) * radius * radius);
             description.EntityShapeVolume.VolumeDistribution.M11 = diagValue;
             description.EntityShapeVolume.VolumeDistribution.M22 = diagValue;
             description.EntityShapeVolume.VolumeDistribution.M33 = diagValue;

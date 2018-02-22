@@ -52,7 +52,7 @@ namespace BEPUutilities
         /// </summary>
         public static Matrix2x2 Identity
         {
-            get { return new Matrix2x2(1, 0, 0, 1); }
+            get { return new Matrix2x2(F64.C1, F64.C0, F64.C0, F64.C1); }
         }
 
         /// <summary>
@@ -149,8 +149,8 @@ namespace BEPUutilities
             matrix.M11 = scale;
             matrix.M22 = scale;
 
-            matrix.M12 = 0;
-            matrix.M21 = 0;
+            matrix.M12 = F64.C0;
+            matrix.M21 = F64.C0;
         }
 
 
@@ -161,7 +161,7 @@ namespace BEPUutilities
         /// <param name="result">Inverted matrix.</param>
         public static void Invert(ref Matrix2x2 matrix, out Matrix2x2 result)
         {
-            Fix64 determinantInverse = 1 / (matrix.M11 * matrix.M22 - matrix.M12 * matrix.M21);
+            Fix64 determinantInverse = F64.C1 / (matrix.M11 * matrix.M22 - matrix.M12 * matrix.M21);
             Fix64 m11 = matrix.M22 * determinantInverse;
             Fix64 m12 = -matrix.M12 * determinantInverse;
 

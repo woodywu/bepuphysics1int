@@ -129,11 +129,11 @@ namespace BEPUphysics.NarrowPhaseSystems.Pairs
                 Fix64 velocitySquared = velocity.LengthSquared();
 
                 var minimumRadius = convex.Shape.MinimumRadius * MotionSettings.CoreShapeScaling;
-                timeOfImpact = 1;
+                timeOfImpact = F64.C1;
                 if (minimumRadius * minimumRadius < velocitySquared)
                 {
                     var triangle = PhysicsThreadResources.GetTriangle();
-                    triangle.collisionMargin = 0;
+                    triangle.collisionMargin = F64.C0;
                     Vector3 terrainUp = new Vector3(terrain.worldTransform.LinearTransform.M21, terrain.worldTransform.LinearTransform.M22, terrain.worldTransform.LinearTransform.M23);
                     //Spherecast against all triangles to find the earliest time.
                     for (int i = 0; i < TerrainManifold.overlappedTriangles.Count; i++)
@@ -156,7 +156,7 @@ namespace BEPUphysics.NarrowPhaseSystems.Pairs
                             Vector3.Cross(ref AC, ref AB, out normal);
                             Fix64 dot;
                             Vector3.Dot(ref normal, ref terrainUp, out dot);
-                            if (dot < 0)
+                            if (dot < F64.C0)
                                 Vector3.Dot(ref normal, ref rayHit.Normal, out dot);
                             else
                             {
@@ -165,7 +165,7 @@ namespace BEPUphysics.NarrowPhaseSystems.Pairs
                             }
                             //Only perform sweep if the object is in danger of hitting the object.
                             //Triangles can be one sided, so check the impact normal against the triangle normal.
-                            if (dot < 0)
+                            if (dot < F64.C0)
                             {
                                 timeOfImpact = rayHit.T;
                             }
@@ -185,8 +185,8 @@ namespace BEPUphysics.NarrowPhaseSystems.Pairs
         {
             info.Contact = TerrainManifold.contacts.Elements[index];
             //Find the contact's normal and friction forces.
-            info.FrictionImpulse = 0;
-            info.NormalImpulse = 0;
+            info.FrictionImpulse = F64.C0;
+            info.NormalImpulse = F64.C0;
             for (int i = 0; i < contactConstraint.frictionConstraints.Count; i++)
             {
                 if (contactConstraint.frictionConstraints.Elements[i].PenetrationConstraint.contact == info.Contact)

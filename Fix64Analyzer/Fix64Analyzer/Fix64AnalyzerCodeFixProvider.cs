@@ -29,7 +29,6 @@ namespace Fix64Analyzer
 
         public sealed override FixAllProvider GetFixAllProvider()
         {
-            // See https://github.com/dotnet/roslyn/blob/master/docs/analyzers/FixAllProvider.md for more information on Fix All Providers
             return WellKnownFixAllProviders.BatchFixer;
         }
 
@@ -37,14 +36,11 @@ namespace Fix64Analyzer
         {
             var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
 
-            // TODO: Replace the following code with your own analysis, generating a CodeAction for each fix to suggest
             var diagnostic = context.Diagnostics.First();
             var diagnosticSpan = diagnostic.Location.SourceSpan;
 
-            // Find the literal identified by the diagnostic.
             var literal = root.FindToken(diagnosticSpan.Start).Parent.AncestorsAndSelf().OfType<LiteralExpressionSyntax>().First();
 
-            // Register a code action that will invoke the fix.
             context.RegisterCodeFix(
                 CodeAction.Create(
                     title: title,
@@ -76,10 +72,9 @@ namespace Fix64Analyzer
         {
 			if (document.Name == "F64.cs")
 				return null;
-			//string 
 
-			// Get the symbol representing the type to be renamed.
 			var semanticModel = await document.GetSemanticModelAsync(cancellationToken);
+
 			ISymbol symbol = semanticModel.GetSymbolInfo(literal).Symbol;
 
 			var value = semanticModel.GetConstantValue(literal);
@@ -97,15 +92,13 @@ namespace Fix64Analyzer
 
 			Solution solution = document.Project.Solution;
 
-			//			Project bepuUtils = solution.GetProject("BEPUutilities");
-			//			Document F64 = bepuUtils.GetDocument("F64.cs");
-
 			var documentEditor = await DocumentEditor.CreateAsync(document);
 			documentEditor.ReplaceNode(literal, newLiteral);
 
 			var syntaxRoot = await document.GetSyntaxRootAsync();
-			bool hasUsing = syntaxRoot.DescendantNodes().OfType<UsingDirectiveSyntax>().Any(d => d.Name.ToFullString() == "BEPUutilities");
-
+			bool hasUsing = syntaxRoot.DescendantNodes().OfType<UsingDirectiveSyntax>().Any(d => d.Name.ToString() == "BEPUutilities")
+				|| syntaxRoot.DescendantNodes().OfType<NamespaceDeclarationSyntax>().Any(d => d.Name.ToString() == "BEPUutilities");
+			
 			if (!hasUsing)
 			{
 				var usingF64 = SyntaxFactory.UsingDirective(SyntaxFactory.IdentifierName("BEPUutilities"));
@@ -121,8 +114,6 @@ namespace Fix64Analyzer
 			bool constantDefined = syntaxRoot.DescendantNodes().OfType<FieldDeclarationSyntax>().Any(d => d.ToString().Contains(staticName));
 			if (!constantDefined)
 			{
-				//documentEditor = await DocumentEditor.CreateAsync(F64);
-
 				var valExp = SyntaxFactory.ParseExpression("(Fix64)" + staticDefinition);
 				var definition = SyntaxFactory.FieldDeclaration(
 					SyntaxFactory.VariableDeclaration(
@@ -136,25 +127,11 @@ namespace Fix64Analyzer
 						})
 					)).AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword), SyntaxFactory.Token(SyntaxKind.StaticKeyword), SyntaxFactory.Token(SyntaxKind.ReadOnlyKeyword)); ;
 
-				//var definition = SyntaxFactory.ParseExpression("public static readonly Fix64 " + staticName + " = (Fix64)" + staticDefinition);
 				ClassDeclarationSyntax cls = syntaxRoot.DescendantNodes().OfType<ClassDeclarationSyntax>().Single();
 
 				var newCls = cls.WithMembers(cls.Members.Add(definition));
-				//documentEditor.InsertMembers(cls, 0, new [] { definition });
-				//documentEditor.InsertAfter(cls, definition);
-				//var newDoc = documentEditor.GetChangedDocument();
-
 				newSolution = F64.WithSyntaxRoot(syntaxRoot.ReplaceNode(cls, newCls)).Project.Solution;
 			}
-
-			//var typeSymbol = semanticModel.GetDeclaredSymbol(typeDecl, cancellationToken);
-
-			// Produce a new solution that has all references to that type renamed, including the declaration.
-			//var originalSolution = document.Project.Solution;
-			//var optionSet = originalSolution.Workspace.Options;
-			//var newSolution = await Renamer.RenameSymbolAsync(document.Project.Solution, typeSymbol, newName, optionSet, cancellationToken).ConfigureAwait(false);
-
-			// Return the new solution with the now-uppercase type name.
 
 			return newSolution;
         }

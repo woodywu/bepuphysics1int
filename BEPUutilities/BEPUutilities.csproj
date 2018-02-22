@@ -109,7 +109,7 @@
     <Compile Include="DataStructures\QuickList.cs" />
     <Compile Include="DataStructures\QuickQueue.cs" />
     <Compile Include="DataStructures\QuickSet.cs" />
-    <Compile Include="Fix64Utils.cs" />
+    <Compile Include="F64.cs" />
     <Compile Include="Int2.cs" />
     <Compile Include="Matrix4x8.cs" />
     <Compile Include="Matrix3x6.cs" />

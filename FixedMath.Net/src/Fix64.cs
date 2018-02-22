@@ -15,7 +15,8 @@ namespace FixMath.NET
         public static readonly decimal Precision = (decimal)(new Fix64(1L));//0.00000000023283064365386962890625m;
         public static readonly Fix64 MaxValue = new Fix64(MAX_VALUE);
         public static readonly Fix64 MinValue = new Fix64(MIN_VALUE);
-        public static readonly Fix64 One = new Fix64(ONE);
+		public static readonly Fix64 MinusOne = new Fix64(-ONE);
+		public static readonly Fix64 One = new Fix64(ONE);
 		public static readonly Fix64 Two = (Fix64)2;
 		public static readonly Fix64 Three = (Fix64)3;
 		public static readonly Fix64 Zero = new Fix64();
@@ -56,12 +57,21 @@ namespace FixMath.NET
 		/// Returns a number indicating the sign of a Fix64 number.
 		/// Returns 1 if the value is positive, 0 if is 0, and -1 if it is negative.
 		/// </summary>
-		public static int Sign(Fix64 value) {
+		public static int SignI(Fix64 value) {
             return
                 value.m_rawValue < 0 ? -1 :
                 value.m_rawValue > 0 ? 1 :
                 0;
         }
+
+		public static Fix64 Sign(Fix64 v)
+		{
+			long raw = v.RawValue;
+			return
+				raw < 0 ? MinusOne :
+				raw > 0 ? One :
+				Fix64.Zero;
+		}
 
 
 		/// <summary>
@@ -679,8 +689,8 @@ namespace FixMath.NET
                 SinLut.Length - 1 - (int)roundedIndex : 
                 (int)roundedIndex]);
             var secondNearestValue = new Fix64(SinLut[flipHorizontal ? 
-                SinLut.Length - 1 - (int)roundedIndex - Sign(indexError) : 
-                (int)roundedIndex + Sign(indexError)]);
+                SinLut.Length - 1 - (int)roundedIndex - SignI(indexError) : 
+                (int)roundedIndex + SignI(indexError)]);
 
             var delta = (indexError * Abs(nearestValue - secondNearestValue)).m_rawValue;
             var interpolatedValue = nearestValue.m_rawValue + (flipHorizontal ? -delta : delta);
@@ -782,7 +792,7 @@ namespace FixMath.NET
             var indexError = rawIndex - roundedIndex;
 
             var nearestValue = new Fix64(TanLut[(int)roundedIndex]);
-            var secondNearestValue = new Fix64(TanLut[(int)roundedIndex + Sign(indexError)]);
+            var secondNearestValue = new Fix64(TanLut[(int)roundedIndex + SignI(indexError)]);
 
             var delta = (indexError * Abs(nearestValue - secondNearestValue)).m_rawValue;
             var interpolatedValue = nearestValue.m_rawValue + delta;

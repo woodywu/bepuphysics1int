@@ -19,10 +19,11 @@ namespace FixMath.NET
 		public static readonly Fix64 Two = (Fix64)2;
 		public static readonly Fix64 Three = (Fix64)3;
 		public static readonly Fix64 Zero = new Fix64();
-        /// <summary>
-        /// The value of Pi
-        /// </summary>
-        public static readonly Fix64 Pi = new Fix64(PI);
+		public static readonly Fix64 C0p28 = (Fix64)0.28m;
+		/// <summary>
+		/// The value of Pi
+		/// </summary>
+		public static readonly Fix64 Pi = new Fix64(PI);
         public static readonly Fix64 PiOver2 = new Fix64(PI_OVER_2);
 		public static readonly Fix64 PiOver4 = new Fix64(PI_OVER_4);
 		public static readonly Fix64 PiTimes2 = new Fix64(PI_TIMES_2);
@@ -111,10 +112,10 @@ namespace FixMath.NET
 		
 		public static Fix64 Exp(Fix64 x)
 		{
-			if (x == Zero) return One;
+			if (x.m_rawValue == 0) return One;
 			if (x == One) return E;
 			if (x >= LnMax) return MaxValue;
-			if (x <= LnMin) return 0;
+			if (x <= LnMin) return Zero;
 
 			/* The algorithm is based on the power series for exp(x):
 			 * http://en.wikipedia.org/wiki/Exponential_function#Formal_definition
@@ -125,7 +126,7 @@ namespace FixMath.NET
 
 			// The power-series converges much faster on positive values
 			// and exp(-x) = 1/exp(x).
-			bool neg = (x < Zero);
+			bool neg = (x.RawValue < 0);
 			if (neg) x = -x;
 
 			Fix64 result = x + One;
@@ -133,10 +134,10 @@ namespace FixMath.NET
 						
 			for (int i = 2; i < 40; i++)
 			{
-				term = x * term / i;
+				term = x * term / (Fix64)i;
 				result += term;
 
-				if (term == 0)
+				if (term.m_rawValue == 0)
 					break;
 			}
 
@@ -147,7 +148,7 @@ namespace FixMath.NET
 
 		public static Fix64 Ln(Fix64 x)
 		{
-			if (x < 0)
+			if (x.m_rawValue < 0)
 				throw new ArgumentOutOfRangeException("Negative value passed to Ln", "x");
 
 			int scaling = 0;
@@ -179,9 +180,9 @@ namespace FixMath.NET
 					delta = Three;
 
 				guess += delta;
-			} while ((count++ < 10) && (delta != 0));
+			} while ((count++ < 10) && (delta.m_rawValue != 0));
 
-			return guess + scaling;
+			return guess + (Fix64)scaling;
 			
 		}
 
@@ -189,9 +190,9 @@ namespace FixMath.NET
 		{
 			if (b == One)
 				return One;
-			if (exp == Zero)
+			if (exp.m_rawValue == 0)
 				return One;
-			if (b == Zero)
+			if (b.m_rawValue == 0)
 				return Zero;
 
 			Fix64 ln = Ln(b);
@@ -203,11 +204,11 @@ namespace FixMath.NET
 		/// </summary>
 		public static Fix64 Acos(Fix64 x)
 		{
-			if (x == Fix64.Zero)
+			if (x.m_rawValue == 0)
 				return Fix64.PiOver2;
 
-			Fix64 result = Fix64.Atan(Fix64.Sqrt(1 - x * x) / x);
-			if (x < 0)
+			Fix64 result = Fix64.Atan(Fix64.Sqrt(One - x * x) / x);
+			if (x.m_rawValue < 0)
 				return result + Fix64.Pi;
 			else
 				return result;
@@ -805,12 +806,12 @@ namespace FixMath.NET
             var z = y / x;
 
 			// Deal with overflow
-			if (SafeAdd(One, SafeMul(SafeMul((Fix64)0.28M, z), z)) == MaxValue) {
-				return y < Zero ? -PiOver2 : PiOver2;
+			if (SafeAdd(One, SafeMul(SafeMul(C0p28, z), z)) == MaxValue) {
+				return y.m_rawValue < 0 ? -PiOver2 : PiOver2;
             }
 
             if (Abs(z) < One) {
-                atan = z / (One + (Fix64)0.28M * z * z);
+                atan = z / (One + C0p28 * z * z);
                 if (xl < 0) {
                     if (yl < 0) {
                         return atan - Pi;
@@ -819,7 +820,7 @@ namespace FixMath.NET
                 }
             }
             else {
-                atan = PiOver2 - z / (z * z + (Fix64)0.28M);
+                atan = PiOver2 - z / (z * z + C0p28);
                 if (yl < 0) {
                     return atan - Pi;
                 }
@@ -832,12 +833,12 @@ namespace FixMath.NET
 		/// </summary>
 		public static Fix64 Atan(Fix64 z)
 		{
-			if (z == Zero)
+			if (z.m_rawValue == 0)
 				return Zero;
 
 			// Force positive values for argument
 			// Atan(-z) = -Atan(z).
-			bool neg = (z < Zero);
+			bool neg = (z.m_rawValue < 0);
 			if (neg) z = -z;
 
 			Fix64 result;
@@ -847,17 +848,17 @@ namespace FixMath.NET
 			else
 			{
 				bool invert = z > One;
-				if (invert) z = 1 / z;
+				if (invert) z = One / z;
 				
-				result = 1;
-				Fix64 term = 1;
+				result = One;
+				Fix64 term = One;
 				
 				Fix64 zSq = z * z;
-				Fix64 zSq2 = zSq * 2;
+				Fix64 zSq2 = zSq * Two;
 				Fix64 zSqPlusOne = zSq + One;
-				Fix64 zSq12 = zSqPlusOne * 2;
+				Fix64 zSq12 = zSqPlusOne * Two;
 				Fix64 dividend = zSq2;
-				Fix64 divisor = zSqPlusOne * 3;
+				Fix64 divisor = zSqPlusOne * Three;
 
 				for (int i = 2; i < 30; i++)
 				{
@@ -867,7 +868,7 @@ namespace FixMath.NET
 					dividend += zSq2;
 					divisor += zSq12;
 
-					if (term == 0)
+					if (term.m_rawValue == 0)
 						break;
 				}
 
@@ -899,7 +900,7 @@ namespace FixMath.NET
 			// Deal with overflow
 			if (SafeAdd(One, SafeMul(SafeMul((Fix64)0.28M, z), z)) == MaxValue)
 			{
-				return y < Zero ? -PiOver2 : PiOver2;
+				return y.m_rawValue < 0 ? -PiOver2 : PiOver2;
 			}
 			Fix64 atan = Atan(z);
 
@@ -913,7 +914,7 @@ namespace FixMath.NET
 			return atan;
 		}
 
-		public static implicit operator Fix64(int value)
+		public static explicit operator Fix64(int value)
 		{
 			return new Fix64(value);
 		}
@@ -935,7 +936,7 @@ namespace FixMath.NET
         public static explicit operator double(Fix64 value) {
             return (double)value.m_rawValue / ONE;
         }
-        public static implicit operator Fix64(decimal value) {
+        public static explicit operator Fix64(decimal value) {
             return new Fix64((long)(value * ONE));
         }
         public static explicit operator decimal(Fix64 value) {

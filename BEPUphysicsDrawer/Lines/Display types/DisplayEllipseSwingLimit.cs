@@ -43,7 +43,7 @@ namespace BEPUphysicsDrawer.Lines
         {
             //Move lines around
             axis.PositionA = MathConverter.Convert(LineObject.ConnectionB.Position);
-            axis.PositionB = MathConverter.Convert(LineObject.ConnectionB.Position + LineObject.TwistAxisB * BEPUutilities.Fix64Utils.OnePointFive);
+            axis.PositionB = MathConverter.Convert(LineObject.ConnectionB.Position + LineObject.TwistAxisB * BEPUutilities.F64.C1p5);
 
 
 			Fix64 angleIncrement = 4 * BEPUutilities.MathHelper.Pi / (Fix64)limitLines.Length; //Each loop iteration moves this many radians forward.

@@ -145,12 +145,12 @@ namespace BEPUphysicsDemos.SampleCode
                 else if (entityDistanceFromTornado > Toolbox.Epsilon)
                 {
                     //inside tornado
-                    forceMultiplier = Fix64Utils.PointFive + Fix64Utils.PointFive * entityDistanceFromTornado / tornadoRadius;
+                    forceMultiplier = F64.C0p5 + F64.C0p5 * entityDistanceFromTornado / tornadoRadius;
                     posClosest = (closestPoint - entityPosition) / entityDistanceFromTornado;
                 }
                 else
                 {
-                    forceMultiplier = Fix64Utils.PointFive;
+                    forceMultiplier = F64.C0p5;
                     posClosest = Toolbox.ZeroVector;
                 }
 

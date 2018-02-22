@@ -128,7 +128,7 @@ namespace BEPUphysicsDemos.SampleCode
             linearMotor.Settings.Servo.SpringSettings.Stiffness = 60000 * e.Mass;
             linearMotor.Settings.Servo.SpringSettings.Damping = 9000 * e.Mass;
 
-            angularMotor.Settings.VelocityMotor.Softness = Fix64Utils.PointOne / e.Mass;
+            angularMotor.Settings.VelocityMotor.Softness = 0.1m / e.Mass;
             //An unlimited motor will gladly push the entity through other objects.
             //Putting a limit on the strength of the motor will prevent it from doing so.
             linearMotor.Settings.MaximumForce = 1000 * e.Mass;

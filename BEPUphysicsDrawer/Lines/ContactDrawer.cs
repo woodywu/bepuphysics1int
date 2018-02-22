@@ -38,14 +38,14 @@ namespace BEPUphysicsDrawer.Lines
                             contactLines.Add(new VertexPositionColor(MathConverter.Convert(information.Contact.Position), Color.Blue));
                             contactLines.Add(new VertexPositionColor(MathConverter.Convert(information.Contact.Position + information.Contact.Normal * information.Contact.PenetrationDepth), Color.White));
                             contactLines.Add(new VertexPositionColor(MathConverter.Convert(information.Contact.Position), Color.White));
-                            contactLines.Add(new VertexPositionColor(MathConverter.Convert(information.Contact.Position + information.Contact.Normal * Fix64Utils.PointThree), Color.White));
+                            contactLines.Add(new VertexPositionColor(MathConverter.Convert(information.Contact.Position + information.Contact.Normal * F64.C0p3), Color.White));
                         }
                         else
                         {
                             contactLines.Add(new VertexPositionColor(MathConverter.Convert(information.Contact.Position), Color.White));
                             contactLines.Add(new VertexPositionColor(MathConverter.Convert(information.Contact.Position + information.Contact.Normal * information.Contact.PenetrationDepth), Color.Red));
                             contactLines.Add(new VertexPositionColor(MathConverter.Convert(information.Contact.Position + information.Contact.Normal * information.Contact.PenetrationDepth), Color.White));
-                            contactLines.Add(new VertexPositionColor(MathConverter.Convert(information.Contact.Position + information.Contact.Normal * (information.Contact.PenetrationDepth + Fix64Utils.PointThree)), Color.White));
+                            contactLines.Add(new VertexPositionColor(MathConverter.Convert(information.Contact.Position + information.Contact.Normal * (information.Contact.PenetrationDepth + F64.C0p3)), Color.White));
                         }
 
                     }

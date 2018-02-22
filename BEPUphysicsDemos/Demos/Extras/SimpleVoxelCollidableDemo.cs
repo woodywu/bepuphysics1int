@@ -224,9 +224,9 @@ namespace BEPUphysicsDemos.Demos.Extras
             boxCollidable.Shape.Length = voxelGrid.Shape.CellWidth;
             pair.Initialize(convex, boxCollidable);
             boxCollidable.WorldTransform = new RigidTransform(new Vector3(
-                voxelGrid.Position.X + (position.X + Fix64Utils.PointFive) * voxelGrid.Shape.CellWidth,
-                voxelGrid.Position.Y + (position.Y + Fix64Utils.PointFive) * voxelGrid.Shape.CellWidth,
-                voxelGrid.Position.Z + (position.Z + Fix64Utils.PointFive) * voxelGrid.Shape.CellWidth));
+                voxelGrid.Position.X + (position.X + F64.C0p5) * voxelGrid.Shape.CellWidth,
+                voxelGrid.Position.Y + (position.Y + F64.C0p5) * voxelGrid.Shape.CellWidth,
+                voxelGrid.Position.Z + (position.Z + F64.C0p5) * voxelGrid.Shape.CellWidth));
             return pair;
         }
 
@@ -559,13 +559,13 @@ namespace BEPUphysicsDemos.Demos.Extras
                 {
                     for (int k = 0; k < cellCountZ; ++k)
                     {
-                        cells[i, j, k] = (Fix64.Sin(i * (Fix64)0.55m + 6 + j * (Fix64)(-0.325m)) + Fix64.Sin(j * (Fix64)0.35m - Fix64Utils.PointFive + MathHelper.PiOver2) + Fix64.Sin(k * Fix64Utils.PointFive + MathHelper.Pi + 6 + j * Fix64Utils.PointTwoFive)) > 0;
+                        cells[i, j, k] = (Fix64.Sin(i * (Fix64)0.55m + 6 + j * (Fix64)(-0.325m)) + Fix64.Sin(j * (Fix64)0.35m - (Fix64)0.5m + MathHelper.PiOver2) + Fix64.Sin(k * (Fix64)0.5m + MathHelper.Pi + 6 + j * (Fix64)0.25f)) > 0;
                     }
                 }
             }
             var cellWidth = 1;
             var shape = new VoxelGridShape(cells, cellWidth);
-            var grid = new VoxelGrid(shape, new Vector3(-cellCountX * cellWidth * Fix64Utils.PointFive, -cellCountY * cellWidth, -cellCountZ * cellWidth * Fix64Utils.PointFive));
+            var grid = new VoxelGrid(shape, new Vector3(-cellCountX * cellWidth * (Fix64)0.5m, -cellCountY * cellWidth, -cellCountZ * cellWidth * (Fix64)0.5m));
             Space.Add(grid);
 
             int width = 10;
@@ -581,8 +581,8 @@ namespace BEPUphysicsDemos.Demos.Extras
                     var toAdd =
                         new Box(
                             new Vector3(
-                                i * blockWidth + Fix64Utils.PointFive * blockWidth * (j % 2) - width * blockWidth * Fix64Utils.PointFive,
-                                blockHeight * Fix64Utils.PointFive + j * (blockHeight),
+                                i * blockWidth + (Fix64)0.5m * blockWidth * (j % 2) - width * blockWidth * (Fix64)0.5m,
+                                blockHeight * (Fix64)0.5m + j * (blockHeight),
                                 0),
                             blockWidth, blockHeight, blockLength, 10);
                     Space.Add(toAdd);
@@ -602,7 +602,7 @@ namespace BEPUphysicsDemos.Demos.Extras
                             //This is a turbo-inefficient way to render things, but good enough for now. If you want to visualize a larger amount... you'll probably have to write your own.
                             game.ModelDrawer.Add(new DisplayModel(game.Content.Load<Model>("cube"), game.ModelDrawer)
                                 {
-                                    WorldTransform = Matrix.CreateWorldRH(grid.Position + new Vector3((i + Fix64Utils.PointFive) * cellWidth, (j + Fix64Utils.PointFive) * cellWidth, (k + Fix64Utils.PointFive) * cellWidth), Vector3.Forward, Vector3.Up)
+                                    WorldTransform = Matrix.CreateWorldRH(grid.Position + new Vector3((i + (Fix64)0.5m) * cellWidth, (j + (Fix64)0.5m) * cellWidth, (k + (Fix64)0.5m) * cellWidth), Vector3.Forward, Vector3.Up)
                                 });
                         }
                     }

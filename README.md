@@ -1,4 +1,4 @@
-# BEPUphysics v1
+# BEPUphysicsint v1
 
 *This is a fork of the awesome [bepuphysics v1](https://github.com/bepu/bepuphysics1)*
 

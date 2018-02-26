@@ -1,5 +1,6 @@
 ﻿using BEPUbenchmark;
 using BEPUbenchmark.Benchmarks;
+using System;
 using System.Text;
 using Xunit;
 using Xunit.Abstractions;
@@ -13,6 +14,25 @@ namespace BEPUtests
 		public CrossPlatformDeterminismTests(ITestOutputHelper output)
 		{
 			this.output = output;
+		}
+
+		private void GetExpectedHash(Benchmark b, StringBuilder result)
+		{
+			result.AppendFormat("{{\"{0}\", new string[] {{", b.GetName());
+
+			b.Initialize();
+			long startTime = DateTime.Now.Ticks;
+			for (int i = 0; i < 50; i++)
+			{
+				string expectedHash = b.RunToNextHash();
+				if (i != 0)
+					result.Append(",\n");
+				result.AppendFormat("\"{0}\"", expectedHash);
+
+				if (i > 5 && DateTime.Now.Ticks - startTime > TimeSpan.TicksPerSecond * 5)
+					break;
+			}
+			result.AppendLine("}}");
 		}
 
 		//[Fact]
@@ -34,23 +54,13 @@ public static readonly Dictionary<string, string[]> Hashes = new Dictionary<stri
 			{
 				if (!first)
 					result.Append(",\n");
-				result.AppendFormat("{{\"{0}\", new string[] {{", b.GetName());
-
+				GetExpectedHash(b, result);
 				first = false;
-				b.Initialize();
-				for (int i = 0; i < 50; i++)
-				{
-					string expectedHash = b.RunToNextHash();
-					if (i != 0)
-						result.Append(",\n");
-					result.AppendFormat("\"{0}\"", expectedHash);
-				}
-				result.AppendLine("}}");
 			}
 			result.AppendLine("};\n}\n}\n");
 			output.WriteLine(result.ToString());
 		}
-
+		
 		//[Fact]
 		public void OutputExpectedHashesForBenchmark()
 		{
@@ -58,17 +68,7 @@ public static readonly Dictionary<string, string[]> Hashes = new Dictionary<stri
 
 			StringBuilder result = new StringBuilder();
 
-			result.AppendFormat("{{\"{0}\", new string[] {{", b.GetName());
-
-			b.Initialize();
-			for (int i = 0; i < 50; i++)
-			{
-				string expectedHash = b.RunToNextHash();
-				if (i != 0)
-					result.Append(",\n");
-				result.AppendFormat("\"{0}\"", expectedHash);
-			}
-			result.AppendLine("}}");
+			GetExpectedHash(b, result);
 			output.WriteLine(result.ToString());
 		}
 

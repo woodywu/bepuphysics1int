@@ -309,7 +309,7 @@ namespace BEPUutilities
                 cosHalfTheta = -cosHalfTheta;
             }
             // If the orientations are similar enough, then just pick one of the inputs.
-            if (cosHalfTheta > 1 - 1e-12f)
+            if (cosHalfTheta > F64.C1m1em12)
             {
                 result.W = start.W;
                 result.X = start.X;
@@ -799,7 +799,7 @@ namespace BEPUutilities
             Vector3.Dot(ref v1, ref v2, out dot);
             //For non-normal vectors, the multiplying the axes length squared would be necessary:
             //Fix64 w = dot + (Fix64)Math.Sqrt(v1.LengthSquared() * v2.LengthSquared());
-            if (dot < -0.9999f) //parallel, opposing direction
+            if (dot < F64.Cm0p9999) //parallel, opposing direction
             {
                 //If this occurs, the rotation required is ~180 degrees.
                 //The problem is that we could choose any perpendicular axis for the rotation. It's not uniquely defined.

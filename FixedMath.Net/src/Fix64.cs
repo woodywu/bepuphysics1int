@@ -935,13 +935,13 @@ namespace FixMath.NET
         public static explicit operator long(Fix64 value) {
             return value.RawValue >> FRACTIONAL_PLACES;
         }
-        public static implicit operator Fix64(float value) {
+        public static explicit operator Fix64(float value) {
             return new Fix64((long)(value * ONE));
         }
         public static explicit operator float(Fix64 value) {
             return (float)value.RawValue / ONE;
         }
-        public static implicit operator Fix64(double value) {
+        public static explicit operator Fix64(double value) {
             return new Fix64((long)(value * ONE));
         }
         public static explicit operator double(Fix64 value) {

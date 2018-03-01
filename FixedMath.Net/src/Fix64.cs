@@ -34,8 +34,8 @@ namespace FixMath.NET
 		public static readonly Fix64 E = new Fix64(E_RAW);
 		public static readonly Fix64 EPow4 = new Fix64(EPOW4);
 		public static readonly Fix64 Ln2 = new Fix64(LN2);
-		public static readonly Fix64 LnMax = new Fix64(LNMAX);
-		public static readonly Fix64 LnMin = new Fix64(LNMIN);
+		public static readonly Fix64 Log2Max = new Fix64(LOG2MAX);
+		public static readonly Fix64 Log2Min = new Fix64(LOG2MIN);
 
 		static readonly Fix64 LutInterval = (Fix64)(LUT_SIZE - 1) / PiOver2;
         const long MAX_VALUE = long.MaxValue;
@@ -50,9 +50,9 @@ namespace FixMath.NET
 		const long E_RAW = 0x2B7E15162;
 		const long EPOW4 = 0x3699205C4E;
 		const long LN2 = 0xB17217F7;
+		const long LOG2MAX = 0x1F00000000;
+		const long LOG2MIN = -0x2000000000;
 		const int LUT_SIZE = (int)(PI_OVER_2 >> 15);
-		const long LNMAX = 0x157CD0E702;
-		const long LNMIN = -0x162E42FEFA;
 
 		/// <summary>
 		/// Returns a number indicating the sign of a Fix64 number.
@@ -98,103 +98,88 @@ namespace FixMath.NET
             return new Fix64((long)((ulong)value.RawValue & 0xFFFFFFFF00000000));
         }
 
-		private static Fix64 Pow(Fix64 x, long n)
+		public static Fix64 Log2(Fix64 x)
 		{
-			if (n == 0)
-				return One;
+			if (x.RawValue <= 0)
+				throw new ArgumentOutOfRangeException("Non-positive value passed to Ln", "x");
 
-			Fix64 y = One;
-			while (n > 1)
-			{				
-				if ((n & 1L) == 0)	// n is even
-				{
-					x = x * x;
-					n = n >> 1;
-				}
-				else
-				{
-					y = x * y;
-					x = x * x;
-					n = (n - 1) >> 1;
-				}
-			}
-			return x * y;
-		}
-		
-		public static Fix64 Exp(Fix64 x)
-		{
-			if (x.RawValue == 0) return One;
-			if (x == One) return E;
-			if (x >= LnMax) return MaxValue;
-			if (x <= LnMin) return Zero;
+			// This implementation is based on Clay. S. Turner's fast binary logarithm
+			// algorithm[1].
 
-			/* The algorithm is based on the power series for exp(x):
-			 * http://en.wikipedia.org/wiki/Exponential_function#Formal_definition
-			 * 
-			 * From term n, we get term n+1 by multiplying with x/n.
-			 * When the sum term drops to zero, we can stop summing.
-			 */
+			long b = 1U << (FRACTIONAL_PLACES - 1);
+			long y = 0;
 
-			// The power-series converges much faster on positive values
-			// and exp(-x) = 1/exp(x).
-			bool neg = (x.RawValue < 0);
-			if (neg) x = -x;
-
-			Fix64 result = x + One;
-			Fix64 term = x;
-						
-			for (int i = 2; i < 40; i++)
+			long rawX = x.RawValue;
+			while (rawX < ONE)
 			{
-				term = x * term / (Fix64)i;
-				result += term;
-
-				if (term.RawValue == 0)
-					break;
+				rawX <<= 1;
+				y -= ONE;
 			}
 
-			if (neg) result = One / result;
+			while (rawX >= (ONE << 1))
+			{
+				rawX >>= 1;
+				y += ONE;
+			}
 
-			return result;
+			Fix64 z = Fix64.FromRaw(rawX);
+
+			for (int i = 0; i < FRACTIONAL_PLACES; i++)
+			{
+				z = z * z;
+				if (z.RawValue >= (ONE << 1))
+				{
+					z = Fix64.FromRaw(z.RawValue >> 1);
+					y += b;
+				}
+				b >>= 1;
+			}
+
+			return Fix64.FromRaw(y);
 		}
 
 		public static Fix64 Ln(Fix64 x)
 		{
-			if (x.RawValue < 0)
-				throw new ArgumentOutOfRangeException("Negative value passed to Ln", "x");
+			return Log2(x) * Ln2;
+		}
 
-			int scaling = 0;
-			while (x > EPow4)
+		public static Fix64 Pow2(Fix64 x)
+		{
+			if (x.RawValue == 0) return One;
+
+			// Avoid negative arguments by exploiting that exp(-x) = 1/exp(x).
+			bool neg = (x.RawValue < 0);
+			if (neg) x = -x;
+
+			if (x == One)
+				return neg ? One / Two : Two;
+			if (x >= Log2Max) return neg ? One / MaxValue : MaxValue;
+			if (x <= Log2Min) return neg ? MaxValue : Zero;
+
+			/* The algorithm is based on the power series for exp(x):
+             * http://en.wikipedia.org/wiki/Exponential_function#Formal_definition
+             * 
+             * From term n, we get term n+1 by multiplying with x/n.
+             * When the sum term drops to zero, we can stop summing.
+             */
+
+			int integerPart = (int)Floor(x);
+			x = FractionalPart(x);
+
+			Fix64 result = One;
+			Fix64 term = One;
+			int i = 1;
+			while (term.RawValue != 0)
 			{
-				x /= EPow4;
-				scaling += 4;
+				term = x * term * Ln2 / (Fix64)i;
+				result += term;
+				i++;
 			}
 
-			while (x < One)
-			{
-				x *= EPow4;
-				scaling -= 4;
-			}
+			result = FromRaw(result.RawValue << integerPart);
+			if (neg) result = One / result;
 
-			Fix64 guess = new Fix64(2);
-			Fix64 delta;
-			int count = 0;
-			do
-			{
-				// Solving e(x) = y using Newton's method
-				// f(x) = e(x) - y
-				// f'(x) = e(x)
-				Fix64 e = Exp(guess);
-				delta = (x - e)/e;
-
-				// It's unlikely that logarithm is very large, so avoid overshooting.
-				if (delta > Three)
-					delta = Three;
-
-				guess += delta;
-			} while ((count++ < 10) && (delta.RawValue != 0));
-
-			return guess + (Fix64)scaling;
-			
+			return result;
 		}
 
 		public static Fix64 Pow(Fix64 b, Fix64 exp)
@@ -206,8 +191,8 @@ namespace FixMath.NET
 			if (b.RawValue == 0)
 				return Zero;
 
-			Fix64 ln = Ln(b);
-			return Exp(exp * ln);			
+			Fix64 log2 = Log2(b);
+			return Pow2(SafeMul(exp, log2));
 		}
 
 		/// <summary>
@@ -233,11 +218,19 @@ namespace FixMath.NET
             return hasFractionalPart ? Floor(value) + One : value;
         }
 
-        /// <summary>
-        /// Rounds a value to the nearest integral value.
-        /// If the value is halfway between an even and an uneven value, returns the even value.
-        /// </summary>
-        public static Fix64 Round(Fix64 value) {
+		/// <summary>
+		/// Returns the fractional part of the specified number.
+		/// </summary>
+		public static Fix64 FractionalPart(Fix64 value)
+		{
+			return Fix64.FromRaw(value.RawValue & 0x00000000FFFFFFFF);
+		}
+
+		/// <summary>
+		/// Rounds a value to the nearest integral value.
+		/// If the value is halfway between an even and an uneven value, returns the even value.
+		/// </summary>
+		public static Fix64 Round(Fix64 value) {
             var fractionalPart = value.RawValue & 0x00000000FFFFFFFF;
             var integralPart = Floor(value);
             if (fractionalPart < 0x80000000) {

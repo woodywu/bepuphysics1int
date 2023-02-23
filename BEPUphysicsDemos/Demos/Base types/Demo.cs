@@ -40,8 +40,7 @@ namespace BEPUphysicsDemos.Demos
             }
 #endif
 
-            Space = new Space(parallelLooper);
-
+            Space = new Space();
 
             game.Camera.LockedUp = Vector3.Up;
             game.Camera.ViewDirection = new Vector3(0, 0, -1);

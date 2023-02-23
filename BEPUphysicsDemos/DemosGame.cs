@@ -171,12 +171,11 @@ namespace BEPUphysicsDemos
             Type demoType = demoTypes[currentSimulationIndex - 1];
 
 #if !WINDOWS
-
             currentSimulation = (Demo)demoType.GetConstructor(new[] { typeof(DemosGame) }).Invoke(new object[] { this });
-
 #else
             currentSimulation = (Demo)Activator.CreateInstance(demoType, new object[] { this });
 #endif
+
             #region DisplayObject creation
             foreach (Entity e in currentSimulation.Space.Entities)
             {

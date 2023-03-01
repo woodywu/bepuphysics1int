@@ -112,6 +112,7 @@ namespace BEPUphysicsDemos.Demos
 
             game.Camera.Position = new Vector3(0, 0, 30);
 
+            BEPUphysics.Settings.CollisionDetectionSettings.AllowedPenetration = (Fix64).1m;
         }
 
 
